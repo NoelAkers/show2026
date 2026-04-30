@@ -2,6 +2,6 @@
 ## 1. Project Overview
 ## 2. Key Features
 ## 3. Technical Requirements
-Laravel 13
-Tailwind
-MySQL
+- Laravel 13
+- Tailwind 4
+- MySQL
