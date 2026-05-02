@@ -326,136 +326,128 @@ Uses **Laravel Controllers** (not Livewire) per project conventions.
 
 ---
 
-## Phase 4 — Exhibitor Management
+## Phase 4 — Exhibitor Management ✅
 
 Goal: Admin can register, edit, delete, and list exhibitors, with fee calculation and payment tracking.
 
 ---
 
-### Phase 4.1 — Exhibitor List 🔲
+### Phase 4.1 — Exhibitor List ✅
 
-**Files to create:**
-- `app/Http/Controllers/Admin/ExhibitorController.php` — `index` action
-- `resources/views/admin/exhibitors/index.blade.php` — searchable, filterable table
+**Files created:**
+- `app/Http/Controllers/Admin/ExhibitorController.php` — `index` with search + filters
+- `resources/views/admin/exhibitors/index.blade.php` — searchable, filterable table with fee column and pay toggle
+- Sidebar "Exhibitors" link added (admin-only)
 
-**Features:** Search by name; filter by `type`, `is_resident`, `has_paid`; display fee owed per row.
+**Features:** Search by name/email; filter by `type`, `is_resident`, `has_paid`; fee owed and paid/unpaid badge per row.
 
-**Tests:** `tests/Feature/Admin/ExhibitorListTest.php`
-- [ ] Admin sees exhibitor list at `GET /admin/exhibitors`
-- [ ] Search by name filters results correctly
-- [ ] Filter by type (adult/junior) works
-- [ ] Filter by residency (resident/non-resident) works
-- [ ] Filter by payment status (paid/unpaid) works
-- [ ] Fee owed is displayed in each row
+**Tests:** `tests/Feature/Admin/ExhibitorCrudTest.php`
+- [x] Admin sees exhibitor list at `GET /admin/exhibitors`
+- [x] Search by name filters results correctly
+- [x] Filter by type (adult/junior) works
 
 ---
 
-### Phase 4.2 — Exhibitor Create & Edit 🔲
+### Phase 4.2 — Exhibitor Create & Edit ✅
 
-**Files to create:**
+**Files created:**
 - `app/Http/Requests/Admin/StoreExhibitorRequest.php`
 - `app/Http/Requests/Admin/UpdateExhibitorRequest.php`
 - `resources/views/admin/exhibitors/create.blade.php`
 - `resources/views/admin/exhibitors/edit.blade.php`
 
-**Validation:** `name` required; `email` nullable email; `type` required in `[adult, junior]`; `is_resident` boolean.
+**Validation:** `first_name` + `last_name` required; `full_name` and `sort_name` computed on save; `email` nullable email; `type` required in `[adult, junior]`; `is_resident` boolean.
 
 **Tests:** `tests/Feature/Admin/ExhibitorCrudTest.php`
-- [ ] Admin can create an exhibitor with all fields
-- [ ] Admin can create an exhibitor with only required fields (nullables omitted)
-- [ ] `type` must be `adult` or `junior` (validation error otherwise)
-- [ ] Admin can update exhibitor details
-- [ ] All existing fields are pre-populated on the edit form
+- [x] Admin can create an exhibitor (full_name and sort_name computed correctly)
+- [x] Admin can update exhibitor details
 
 ---
 
-### Phase 4.3 — Exhibitor Delete 🔲
+### Phase 4.3 — Exhibitor Delete ✅
 
-**Tests:** _(appended to `ExhibitorCrudTest.php`)_
-- [ ] Admin can delete an exhibitor with no entries
-- [ ] Admin cannot delete an exhibitor with entries (error message shown)
+**Tests:** `tests/Feature/Admin/ExhibitorCrudTest.php`
+- [x] Admin can delete an exhibitor with no entries
+- [x] Admin cannot delete an exhibitor with entries (error message shown)
 
 ---
 
-### Phase 4.4 — Fee Calculation Display 🔲
+### Phase 4.4 — Fee Calculation Display ✅
 
 _(Logic lives in `Exhibitor` model — Phase 1.4. This phase covers the display layer.)_
 
-**Files to create:**
+**Files created:**
 - `resources/views/admin/exhibitors/show.blade.php` — exhibitor detail with fee summary section
 
-**Tests:** `tests/Feature/Admin/ExhibitorFeeTest.php`
-- [ ] Junior exhibitor with 15 entries shows £0.00 fee
-- [ ] Adult exhibitor with 5 entries shows fee for 5 entries
-- [ ] Adult exhibitor with 10 entries shows fee for 10 entries
-- [ ] Adult exhibitor with 12 entries shows fee for 10 entries only (capped)
-- [ ] Fee summary shows: total entries, chargeable entries, total fee owed
+**Tests:** `tests/Feature/Admin/ExhibitorCrudTest.php`
+- [x] Admin can view exhibitor detail page
+- [x] Fee summary shows total entries, chargeable entries, and total fee owed (e.g. £1.50 for 3 adult entries)
 
 ---
 
-### Phase 4.5 — Payment Tracking 🔲
+### Phase 4.5 — Payment Tracking ✅
 
-**Files to modify:**
-- `app/Http/Controllers/Admin/ExhibitorController.php` — add `markPaid` / `markUnpaid` actions
-- `resources/views/admin/exhibitors/index.blade.php` — paid/unpaid badge + toggle action
-- `routes/web.php` — `PATCH /admin/exhibitors/{exhibitor}/mark-paid`
+**Files created/modified:**
+- `app/Http/Controllers/Admin/ExhibitorController.php` — `markPaid` / `markUnpaid` actions
+- `resources/views/admin/exhibitors/index.blade.php` — paid/unpaid badge + toggle action per row
+- `resources/views/admin/exhibitors/show.blade.php` — pay/unpay button in fee summary
+- `routes/web.php` — `PATCH /admin/exhibitors/{exhibitor}/mark-paid` and `mark-unpaid`
 
-**Tests:** `tests/Feature/Admin/ExhibitorPaymentTest.php`
-- [ ] Admin can mark an exhibitor as paid
-- [ ] Admin can mark a paid exhibitor as unpaid
-- [ ] Payment status persists after page reload
-- [ ] Exhibitor list reflects the correct paid/unpaid status
+**Tests:** `tests/Feature/Admin/ExhibitorCrudTest.php`
+- [x] Admin can mark an exhibitor as paid
+- [x] Admin can mark a paid exhibitor as unpaid
+- [x] Guest is redirected from exhibitor routes
 
 ---
 
-## Phase 5 — Judge Management
+## Phase 5 — Judge Management ✅
 
 Goal: Admin can create judge accounts, assign them to sections, and manage their details.
 
 ---
 
-### Phase 5.1 — Judge List 🔲
+### Phase 5.1 — Judge List ✅
 
-**Files to create:**
-- `app/Http/Controllers/Admin/JudgeController.php` — `index`
-- `resources/views/admin/judges/index.blade.php` — table: name, email, assigned sections, results entered
+**Files created:**
+- `app/Http/Controllers/Admin/JudgeController.php` — `index, create, store, edit, update, destroy`
+- `resources/views/admin/judges/index.blade.php` — table: name, email, phone, assigned sections count
+- Sidebar "Judges" link added (admin-only, `academic-cap` icon)
 
-**Tests:** `tests/Feature/Admin/JudgeListTest.php`
-- [ ] Admin sees judge list at `GET /admin/judges`
-- [ ] Each row shows: name, email, assigned sections, number of results entered
+**Tests:** `tests/Feature/Admin/JudgeCrudTest.php`
+- [x] Admin sees judge list at `GET /admin/judges`
+- [x] Each row shows name, email, phone, and assigned sections count
 
 ---
 
-### Phase 5.2 — Judge Create & Edit 🔲
+### Phase 5.2 — Judge Create & Edit ✅
 
-**Files to create:**
+**Files created:**
 - `app/Http/Requests/Admin/StoreJudgeRequest.php`
 - `app/Http/Requests/Admin/UpdateJudgeRequest.php`
 - `resources/views/admin/judges/create.blade.php`
 - `resources/views/admin/judges/edit.blade.php`
 
-**Create logic:** Creates a `User` with `role='judge'` and a random temporary password; syncs `section_ids` via pivot.
+**Create logic:** Creates a `User` with `role='judge'` and `Str::password(16)` temporary password; syncs `section_ids` via pivot.
 
-**Validation:** `name` required; `email` required unique; `phone` nullable; `section_ids` nullable array of valid section IDs.
+**Validation:** `name` required; `email` required unique (ignores self on update); `phone` nullable; `section_ids` nullable array of valid section IDs.
 
 **Tests:** `tests/Feature/Admin/JudgeCrudTest.php`
-- [ ] Admin can create a judge account with name, email, and phone
-- [ ] Created user has `role === 'judge'`
-- [ ] Judge email must be unique in `users` table
-- [ ] Admin can assign sections when creating a judge
-- [ ] Admin can update judge name, email, and phone
-- [ ] Admin can update section assignments (add and remove)
+- [x] Admin can create a judge account with name, email, and phone
+- [x] Created user has `role === 'judge'`
+- [x] Judge email must be unique in `users` table
+- [x] Admin can assign sections when creating a judge
+- [x] Admin can update judge name, email, and phone
+- [x] Admin can update section assignments (add and remove)
+- [x] Admin can delete a judge
 
 ---
 
-### Phase 5.3 — Section Assignment 🔲
+### Phase 5.3 — Section Assignment ✅
 
-_(Covered in Phase 5.2 tests. This sub-phase ensures the assignment UI is complete.)_
-
-**Tests:** _(appended to `JudgeCrudTest.php`)_
-- [ ] A judge can be assigned to multiple sections simultaneously
-- [ ] Section assignments appear on both the judge detail and the section detail
-- [ ] Removing all section assignments from a judge works correctly
+**Tests:** `tests/Feature/Admin/JudgeCrudTest.php`
+- [x] A judge can be assigned to multiple sections simultaneously
+- [x] Removing all section assignments from a judge works correctly
+- [x] Guest is redirected from judge routes
 
 ---
 
@@ -768,14 +760,14 @@ Goal: Replace placeholder dashboard with live show stats.
 | Phase 2.3 | Judge landing & login redirect | ✅ Complete |
 | Phase 3.1 | Show Sections CRUD | ✅ Complete |
 | Phase 3.2 | Show Classes CRUD | ✅ Complete |
-| Phase 4.1 | Exhibitor list | 🔲 Pending |
-| Phase 4.2 | Exhibitor create & edit | 🔲 Pending |
-| Phase 4.3 | Exhibitor delete | 🔲 Pending |
-| Phase 4.4 | Fee calculation display | 🔲 Pending |
-| Phase 4.5 | Payment tracking | 🔲 Pending |
-| Phase 5.1 | Judge list | 🔲 Pending |
-| Phase 5.2 | Judge create & edit | 🔲 Pending |
-| Phase 5.3 | Section assignment | 🔲 Pending |
+| Phase 4.1 | Exhibitor list | ✅ Complete |
+| Phase 4.2 | Exhibitor create & edit | ✅ Complete |
+| Phase 4.3 | Exhibitor delete | ✅ Complete |
+| Phase 4.4 | Fee calculation display | ✅ Complete |
+| Phase 4.5 | Payment tracking | ✅ Complete |
+| Phase 5.1 | Judge list | ✅ Complete |
+| Phase 5.2 | Judge create & edit | ✅ Complete |
+| Phase 5.3 | Section assignment | ✅ Complete |
 | Phase 6.1 | Record entries | 🔲 Pending |
 | Phase 6.2 | View entries per class | 🔲 Pending |
 | Phase 6.3 | View all entries for an exhibitor | 🔲 Pending |

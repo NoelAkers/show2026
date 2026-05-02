@@ -22,6 +22,12 @@
                         <flux:sidebar.item icon="rectangle-stack" :href="route('admin.show-sections.index')" :current="request()->routeIs('admin.show-sections.*')" wire:navigate>
                             {{ __('Sections') }}
                         </flux:sidebar.item>
+                        <flux:sidebar.item icon="users" :href="route('admin.exhibitors.index')" :current="request()->routeIs('admin.exhibitors.*')" wire:navigate>
+                            {{ __('Exhibitors') }}
+                        </flux:sidebar.item>
+                        <flux:sidebar.item icon="academic-cap" :href="route('admin.judges.index')" :current="request()->routeIs('admin.judges.*')" wire:navigate>
+                            {{ __('Judges') }}
+                        </flux:sidebar.item>
                     </flux:sidebar.group>
                 @endif
             </flux:sidebar.nav>
