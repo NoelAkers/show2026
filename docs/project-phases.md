@@ -14,7 +14,7 @@ Login, logout, password reset, email verification, and 2FA are fully implemented
 
 ---
 
-## Phase 1 — Database Structure
+## Phase 1 — Database Structure ✅
 
 Goal: All domain models, migrations, factories, and seeders in place. No UI yet.
 
@@ -39,27 +39,27 @@ Goal: All domain models, migrations, factories, and seeders in place. No UI yet.
 
 ---
 
-### Phase 1.1 — Extend Users Table 🔲
+### Phase 1.1 — Extend Users Table ✅
 
 Add `role` and `phone` to the existing `users` table.
 
 **Files to create/modify:**
-- `database/migrations/YYYY_MM_DD_add_role_and_phone_to_users_table.php`
+- `database/migrations/2026_05_01_202102_add_role_and_phone_to_users_table.php`
 - `app/Models/User.php` — add `role`, `phone` to `$fillable`; add `isAdmin()` / `isJudge()` helpers
 - `database/factories/UserFactory.php` — add `admin()` and `judge()` factory states
 
 **Tests:** `tests/Feature/UserRoleTest.php`
-- [ ] `User::factory()->admin()->create()` has `role === 'admin'`
-- [ ] `User::factory()->judge()->create()` has `role === 'judge'`
-- [ ] `isAdmin()` returns `true` only for admin role
-- [ ] `isJudge()` returns `true` only for judge role
+- [x] `User::factory()->admin()->create()` has `role === 'admin'`
+- [x] `User::factory()->judge()->create()` has `role === 'judge'`
+- [x] `isAdmin()` returns `true` only for admin role
+- [x] `isJudge()` returns `true` only for judge role
 
 ---
 
-### Phase 1.2 — ShowSection Model 🔲
+### Phase 1.2 — ShowSection Model ✅
 
 **Files to create:**
-- `database/migrations/YYYY_create_show_sections_table.php`
+- `database/migrations/2026_05_02_134049_create_show_sections_table.php`
 - `app/Models/ShowSection.php`
 - `database/factories/ShowSectionFactory.php`
 
@@ -69,17 +69,17 @@ Add `role` and `phone` to the existing `users` table.
 - Scope: `ordered()` → `orderBy('sort_order')`
 
 **Tests:** `tests/Feature/ShowSectionTest.php`
-- [ ] Factory creates a valid `ShowSection`
-- [ ] `name` is required
-- [ ] `sort_order` defaults to 0
-- [ ] `ordered()` scope returns sections in `sort_order` ASC
+- [x] Factory creates a valid `ShowSection`
+- [x] `name` is required
+- [x] `sort_order` defaults to 0
+- [x] `ordered()` scope returns sections in `sort_order` ASC
 
 ---
 
-### Phase 1.3 — ShowClass Model 🔲
+### Phase 1.3 — ShowClass Model ✅
 
 **Files to create:**
-- `database/migrations/YYYY_create_show_classes_table.php`
+- `database/migrations/2026_05_02_134214_create_show_classes_table.php`
 - `app/Models/ShowClass.php`
 - `database/factories/ShowClassFactory.php`
 
@@ -90,18 +90,19 @@ Add `role` and `phone` to the existing `users` table.
 - Unique index: `[show_section_id, name]`
 
 **Tests:** `tests/Feature/ShowClassTest.php`
-- [ ] Factory creates a valid `ShowClass` linked to a `ShowSection`
-- [ ] `show_section_id` is required
-- [ ] `name` must be unique within a section
-- [ ] `max_entries_per_exhibitor` defaults to 1
-- [ ] Deleting a `ShowClass` with entries is prevented
+- [x] Factory creates a valid `ShowClass` linked to a `ShowSection`
+- [x] `show_section_id` is required
+- [x] `name` must be unique within a section
+- [x] Same class name in two different sections is allowed
+- [x] `max_entries_per_exhibitor` defaults to 5
+- [x] Deleting a `ShowClass` with entries is prevented (tested via EntryTest)
 
 ---
 
-### Phase 1.4 — Exhibitor Model 🔲
+### Phase 1.4 — Exhibitor Model ✅
 
 **Files to create:**
-- `database/migrations/YYYY_create_exhibitors_table.php`
+- `database/migrations/2026_05_02_134329_create_exhibitors_table.php`
 - `app/Models/Exhibitor.php`
 - `database/factories/ExhibitorFactory.php`
 
@@ -113,34 +114,34 @@ Add `role` and `phone` to the existing `users` table.
 - Fee logic: juniors always £0; adults pay for entries 1–10 (`min(count, 10) × config('show.entry_fee_pence')`)
 - Factory states: `adult()`, `junior()`, `resident()`, `nonResident()`
 
-**Tests:** `tests/Feature/ExhibitorTest.php`
-- [ ] Factory creates valid adult and junior exhibitors
-- [ ] `feeOwedPence()` returns 0 for juniors regardless of entry count
-- [ ] `feeOwedPence()` charges for entries 1–10 for adults
-- [ ] `feeOwedPence()` caps at 10 chargeable entries for adults with 11+ entries
-- [ ] `chargeableEntries()` returns 0 for juniors
+**Tests:** `tests/Feature/ExhibitorTest.php` + `tests/Feature/EntryTest.php`
+- [x] Factory creates valid adult and junior exhibitors
+- [x] `feeOwedPence()` returns 0 for juniors regardless of entry count (EntryTest)
+- [x] `feeOwedPence()` charges for entries 1–10 for adults (EntryTest)
+- [x] `feeOwedPence()` caps at 10 chargeable entries for adults with 11+ entries (EntryTest)
+- [x] `chargeableEntries()` returns 0 for juniors (EntryTest)
 
 ---
 
-### Phase 1.5 — Judge-Section Pivot 🔲
+### Phase 1.5 — Judge-Section Pivot ✅
 
 **Files to create:**
-- `database/migrations/YYYY_create_show_section_user_table.php`
+- `database/migrations/2026_05_02_134439_create_show_section_user_table.php`
 
 **Migration:** composite primary key on `(user_id, show_section_id)`; both FK with cascade on delete.
 
 **Model updates:**
-- `User.php` — add `belongsToMany(ShowSection::class)` as `assignedSections()`
-- `ShowSection.php` — `belongsToMany(User::class)` as `judges()` (already planned in 1.2)
+- `User.php` — `belongsToMany(ShowSection::class)` as `assignedSections()`
+- `ShowSection.php` — `belongsToMany(User::class)` as `judges()`
 
 **Tests:** covered in Phase 2.3 access control tests
 
 ---
 
-### Phase 1.6 — Entry Model 🔲
+### Phase 1.6 — Entry Model ✅
 
 **Files to create:**
-- `database/migrations/YYYY_create_entries_table.php`
+- `database/migrations/2026_05_02_134504_create_entries_table.php`
 - `app/Models/Entry.php`
 - `database/factories/EntryFactory.php`
 
@@ -151,17 +152,17 @@ Add `role` and `phone` to the existing `users` table.
 - Helper: `hasResult()`
 
 **Tests:** `tests/Feature/EntryTest.php`
-- [ ] Factory creates a valid `Entry` with an auto-assigned `entry_number`
-- [ ] `entry_number` is globally unique (DB unique constraint)
-- [ ] Two entries in the same seeding sequence get consecutive numbers
-- [ ] `hasResult()` returns `false` when no result exists and `true` when it does
+- [x] Factory creates a valid `Entry` with an auto-assigned `entry_number`
+- [x] `entry_number` is globally unique (DB unique constraint)
+- [x] Two entries in the same seeding sequence get consecutive numbers
+- [x] `hasResult()` returns `false` when no result exists and `true` when it does (ResultTest)
 
 ---
 
-### Phase 1.7 — Result Model 🔲
+### Phase 1.7 — Result Model ✅
 
 **Files to create:**
-- `database/migrations/YYYY_create_results_table.php`
+- `database/migrations/2026_05_02_134635_create_results_table.php`
 - `app/Models/Result.php`
 - `database/factories/ResultFactory.php`
 
@@ -172,18 +173,18 @@ Add `role` and `phone` to the existing `users` table.
 - `placementLabel()` — human-readable string
 
 **Tests:** `tests/Feature/ResultTest.php`
-- [ ] Factory creates a valid `Result`
-- [ ] `points()` returns correct values for each placement value
-- [ ] `points()` returns 0 for null placement
-- [ ] One result per entry enforced (DB unique on `entry_id`)
+- [x] Factory creates a valid `Result`
+- [x] `points()` returns correct values for each placement value
+- [x] `points()` returns 0 for null placement
+- [x] One result per entry enforced (DB unique on `entry_id`)
 
 ---
 
-### Phase 1.8 — Trophy Model & Pivot 🔲
+### Phase 1.8 — Trophy Model & Pivot ✅
 
 **Files to create:**
-- `database/migrations/YYYY_create_trophies_table.php`
-- `database/migrations/YYYY_create_show_class_trophy_table.php`
+- `database/migrations/2026_05_02_134730_create_trophies_table.php`
+- `database/migrations/2026_05_02_134731_create_show_class_trophy_table.php`
 - `app/Models/Trophy.php`
 - `database/factories/TrophyFactory.php`
 
@@ -193,21 +194,21 @@ Add `role` and `phone` to the existing `users` table.
 - `winners()` — returns a collection of `['exhibitor' => Exhibitor, 'points' => int]` for the top scorer(s) across this trophy's classes
 
 **Tests:** `tests/Feature/TrophyTest.php`
-- [ ] Factory creates a valid `Trophy`
-- [ ] `winners()` returns the exhibitor with the most points across assigned classes
-- [ ] `winners()` returns all exhibitors when there is a points tie
-- [ ] `winners()` returns an empty collection when no results are entered
-- [ ] A `ShowClass` can be assigned to multiple trophies
+- [x] Factory creates a valid `Trophy`
+- [x] `winners()` returns the exhibitor with the most points across assigned classes
+- [x] `winners()` returns all exhibitors when there is a points tie
+- [x] `winners()` returns an empty collection when no results are entered
+- [x] A `ShowClass` can be assigned to multiple trophies
 
 ---
 
-### Phase 1.9 — Config & Database Seeder 🔲
+### Phase 1.9 — Config & Database Seeder ✅
 
 **Files to create/modify:**
 - `config/show.php` — `entry_fee_pence` (default `50` = £0.50 per entry)
-- `database/seeders/DatabaseSeeder.php` — seed 3 sections, 5–10 classes each, 20 exhibitors (mix of adult/junior/resident), 2 judge users with assigned sections, entries across classes
+- `database/seeders/DatabaseSeeder.php` — 3 sections, 5–10 classes each, 20 exhibitors (mix of adult/junior/resident), 2 judge users with assigned sections, entries across classes
 
-**Verification:** `php artisan migrate:fresh --seed` completes without errors
+**Verification:** `php artisan migrate:fresh --seed` completes without errors ✅
 
 ---
 
@@ -752,15 +753,15 @@ Goal: Replace placeholder dashboard with live show stats.
 | Phase | Description | Status |
 |-------|-------------|--------|
 | Auth (Fortify) | Login, logout, password reset, 2FA | ✅ Complete |
-| Phase 1.1 | Extend users table (role + phone) | 🔲 Pending |
-| Phase 1.2 | ShowSection model | 🔲 Pending |
-| Phase 1.3 | ShowClass model | 🔲 Pending |
-| Phase 1.4 | Exhibitor model | 🔲 Pending |
-| Phase 1.5 | Judge-Section pivot | 🔲 Pending |
-| Phase 1.6 | Entry model | 🔲 Pending |
-| Phase 1.7 | Result model | 🔲 Pending |
-| Phase 1.8 | Trophy model & pivot | 🔲 Pending |
-| Phase 1.9 | Config & seeder | 🔲 Pending |
+| Phase 1.1 | Extend users table (role + phone) | ✅ Complete |
+| Phase 1.2 | ShowSection model | ✅ Complete |
+| Phase 1.3 | ShowClass model | ✅ Complete |
+| Phase 1.4 | Exhibitor model | ✅ Complete |
+| Phase 1.5 | Judge-Section pivot | ✅ Complete |
+| Phase 1.6 | Entry model | ✅ Complete |
+| Phase 1.7 | Result model | ✅ Complete |
+| Phase 1.8 | Trophy model & pivot | ✅ Complete |
+| Phase 1.9 | Config & seeder | ✅ Complete |
 | Phase 2.1 | Role middleware | 🔲 Pending |
 | Phase 2.2 | Admin route group | 🔲 Pending |
 | Phase 2.3 | Judge landing & login redirect | 🔲 Pending |

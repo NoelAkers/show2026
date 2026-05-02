@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string('phone')->nullable();
             $table->string('address')->nullable();
             $table->string('type')->comment('adult|junior');
-            $table->boolean('is_resident')->default(false);
+            $table->boolean('is_resident')->default(true);
             $table->boolean('has_paid')->default(false);
             $table->timestamps();
         });
