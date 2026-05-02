@@ -24,15 +24,25 @@
                     <flux:table.column>Description</flux:table.column>
                     <flux:table.column>Sort Order</flux:table.column>
                     <flux:table.column>Classes</flux:table.column>
+                    <flux:table.column>Judge</flux:table.column>
                     <flux:table.column></flux:table.column>
                 </flux:table.columns>
                 <flux:table.rows>
                     @foreach ($sections as $section)
                         <flux:table.row :key="$section->id">
-                            <flux:table.cell variant="strong">{{ $section->name }}</flux:table.cell>
+                            <flux:table.cell variant="strong">
+                                <a href="{{ route('admin.show-sections.show-classes.index', $section) }}" class="hover:underline" wire:navigate>
+                                    {{ $section->name }}
+                                </a>
+                            </flux:table.cell>
                             <flux:table.cell>{{ $section->description ?? '—' }}</flux:table.cell>
                             <flux:table.cell>{{ $section->sort_order }}</flux:table.cell>
                             <flux:table.cell>{{ $section->showClasses()->count() }}</flux:table.cell>
+                            <flux:table.cell>
+                                <a href="{{ route('admin.judges.index') }}" class="hover:underline" wire:navigate>
+                                    {{ $section->judges->isNotEmpty() ? $section->judges->pluck('name')->join(', ') : 'TBC' }}
+                                </a>
+                            </flux:table.cell>
                             <flux:table.cell>
                                 <div class="flex gap-2">
                                     <flux:button size="sm" :href="route('admin.show-sections.edit', $section)" wire:navigate>Edit</flux:button>

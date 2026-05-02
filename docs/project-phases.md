@@ -292,6 +292,9 @@ Uses **Laravel Controllers** (not Livewire) per project conventions.
 - [x] Admin can update an existing section
 - [x] Admin can delete a section that has no classes
 - [x] Admin cannot delete a section that has classes (error message returned)
+- [x] Sections list shows the assigned judge's name
+- [x] Sections list shows "TBC" when no judge is assigned
+- [x] Judge column links to the judges index
 - [x] Guest is redirected to `/login` on section routes
 - [x] Judge receives 403 on section routes
 
@@ -299,13 +302,14 @@ Uses **Laravel Controllers** (not Livewire) per project conventions.
 
 ### Phase 3.2 — Show Classes CRUD ✅
 
-**Files created:**
+**Files created/modified:**
 - `app/Http/Controllers/Admin/ShowClassController.php` — `index, create, store, edit, update, destroy` (scoped to section)
 - `app/Http/Requests/Admin/StoreShowClassRequest.php`
 - `app/Http/Requests/Admin/UpdateShowClassRequest.php`
 - `resources/views/admin/show-classes/index.blade.php`
 - `resources/views/admin/show-classes/create.blade.php`
 - `resources/views/admin/show-classes/edit.blade.php`
+- `resources/views/admin/show-sections/index.blade.php` — section name is a link to its classes list
 
 **Routes:** `Route::resource('show-sections.show-classes', …)` → `admin/show-sections/{show_section}/show-classes`
 
@@ -313,7 +317,8 @@ Uses **Laravel Controllers** (not Livewire) per project conventions.
 
 **Delete rule:** Blocked if the class has any entries (flash `error` and redirect back).
 
-**Tests:** `tests/Feature/Admin/ShowClassCrudTest.php`
+**Tests:** `tests/Feature/Admin/ShowSectionCrudTest.php` + `tests/Feature/Admin/ShowClassCrudTest.php`
+- [x] Section name in sections list links to the class list for that section
 - [x] Admin can view class list for a section
 - [x] Admin can create a class with valid data
 - [x] Duplicate class name within the same section fails validation

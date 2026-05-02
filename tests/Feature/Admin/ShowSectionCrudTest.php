@@ -85,6 +85,44 @@ it('admin cannot delete a section that has classes', function () {
     $this->assertDatabaseHas('show_sections', ['id' => $section->id]);
 });
 
+it('sections list shows assigned judge name', function () {
+    $section = ShowSection::factory()->create(['name' => 'Flowers']);
+    $judge = User::factory()->judge()->create(['name' => 'Jane Judge']);
+    $section->judges()->attach($judge);
+
+    $this->actingAs(adminUser())
+        ->get(route('admin.show-sections.index'))
+        ->assertOk()
+        ->assertSee('Jane Judge');
+});
+
+it('sections list shows TBC when no judge is assigned', function () {
+    ShowSection::factory()->create(['name' => 'Flowers']);
+
+    $this->actingAs(adminUser())
+        ->get(route('admin.show-sections.index'))
+        ->assertOk()
+        ->assertSee('TBC');
+});
+
+it('judge column links to the judges index', function () {
+    ShowSection::factory()->create();
+
+    $this->actingAs(adminUser())
+        ->get(route('admin.show-sections.index'))
+        ->assertOk()
+        ->assertSee(route('admin.judges.index'));
+});
+
+it('section name links to the class list for that section', function () {
+    $section = ShowSection::factory()->create(['name' => 'Vegetables']);
+
+    $this->actingAs(adminUser())
+        ->get(route('admin.show-sections.index'))
+        ->assertOk()
+        ->assertSee(route('admin.show-sections.show-classes.index', $section));
+});
+
 it('guest is redirected to login on section index', function () {
     $this->get(route('admin.show-sections.index'))->assertRedirect(route('login'));
 });

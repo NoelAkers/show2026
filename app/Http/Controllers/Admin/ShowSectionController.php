@@ -13,7 +13,7 @@ class ShowSectionController extends Controller
 {
     public function index(): View
     {
-        $sections = ShowSection::ordered()->get();
+        $sections = ShowSection::with('judges')->ordered()->get();
 
         return view('admin.show-sections.index', compact('sections'));
     }
