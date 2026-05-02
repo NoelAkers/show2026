@@ -262,7 +262,7 @@ After login, judges are redirected to `/judge/sections`; admins go to `/dashboar
 
 ---
 
-## Phase 3 — Show Structure Management
+## Phase 3 — Show Structure Management ✅
 
 Goal: Admin can create, edit, delete, and list show sections and classes.
 
@@ -270,36 +270,36 @@ Uses **Laravel Controllers** (not Livewire) per project conventions.
 
 ---
 
-### Phase 3.1 — Show Sections CRUD 🔲
+### Phase 3.1 — Show Sections CRUD ✅
 
-**Files to create:**
+**Files created:**
 - `app/Http/Controllers/Admin/ShowSectionController.php` — `index, create, store, edit, update, destroy`
 - `app/Http/Requests/Admin/StoreShowSectionRequest.php`
 - `app/Http/Requests/Admin/UpdateShowSectionRequest.php`
 - `resources/views/admin/show-sections/index.blade.php`
 - `resources/views/admin/show-sections/create.blade.php`
 - `resources/views/admin/show-sections/edit.blade.php`
-- Sidebar navigation link added
+- Sidebar "Show Management → Sections" link added (admin-only)
 
-**Validation:** `name` required unique; `sort_order` required integer ≥ 0.
+**Validation:** `name` required unique; `description` nullable; `sort_order` required integer ≥ 0.
 
-**Delete rule:** Blocked if the section has any classes (return back with error message).
+**Delete rule:** Blocked if the section has any classes (flash `error` and redirect back).
 
 **Tests:** `tests/Feature/Admin/ShowSectionCrudTest.php`
-- [ ] Admin can view sections list at `GET /admin/show-sections`
-- [ ] Admin can create a section with valid data
-- [ ] Creating a section with a duplicate name fails validation
-- [ ] Admin can update an existing section
-- [ ] Admin can delete a section that has no classes
-- [ ] Admin cannot delete a section that has classes (error message returned)
-- [ ] Guest is redirected to `/login` on all section routes
-- [ ] Judge receives 403 on all section routes
+- [x] Admin can view sections list at `GET /admin/show-sections`
+- [x] Admin can create a section with valid data
+- [x] Creating a section with a duplicate name fails validation
+- [x] Admin can update an existing section
+- [x] Admin can delete a section that has no classes
+- [x] Admin cannot delete a section that has classes (error message returned)
+- [x] Guest is redirected to `/login` on section routes
+- [x] Judge receives 403 on section routes
 
 ---
 
-### Phase 3.2 — Show Classes CRUD 🔲
+### Phase 3.2 — Show Classes CRUD ✅
 
-**Files to create:**
+**Files created:**
 - `app/Http/Controllers/Admin/ShowClassController.php` — `index, create, store, edit, update, destroy` (scoped to section)
 - `app/Http/Requests/Admin/StoreShowClassRequest.php`
 - `app/Http/Requests/Admin/UpdateShowClassRequest.php`
@@ -307,21 +307,22 @@ Uses **Laravel Controllers** (not Livewire) per project conventions.
 - `resources/views/admin/show-classes/create.blade.php`
 - `resources/views/admin/show-classes/edit.blade.php`
 
-**Routes:** Nested under sections — `admin/show-sections/{section}/classes`
+**Routes:** `Route::resource('show-sections.show-classes', …)` → `admin/show-sections/{show_section}/show-classes`
 
-**Validation:** `name` unique within section; `max_entries_per_exhibitor` integer ≥ 1; `sort_order` integer ≥ 0.
+**Validation:** `name` unique within section (scoped `Rule::unique`); `max_entries_per_exhibitor` integer ≥ 1; `sort_order` integer ≥ 0.
 
-**Delete rule:** Blocked if the class has any entries.
+**Delete rule:** Blocked if the class has any entries (flash `error` and redirect back).
 
 **Tests:** `tests/Feature/Admin/ShowClassCrudTest.php`
-- [ ] Admin can view class list for a section
-- [ ] Admin can create a class with valid data
-- [ ] Duplicate class name within the same section fails validation
-- [ ] Same class name in two different sections is allowed
-- [ ] Admin can update a class
-- [ ] Admin can delete a class with no entries
-- [ ] Admin cannot delete a class with entries
-- [ ] Guest / judge access returns redirect / 403
+- [x] Admin can view class list for a section
+- [x] Admin can create a class with valid data
+- [x] Duplicate class name within the same section fails validation
+- [x] Same class name in two different sections is allowed
+- [x] Admin can update a class
+- [x] Admin can delete a class with no entries
+- [x] Admin cannot delete a class with entries
+- [x] Guest is redirected to `/login` on class routes
+- [x] Judge receives 403 on class routes
 
 ---
 
@@ -765,8 +766,8 @@ Goal: Replace placeholder dashboard with live show stats.
 | Phase 2.1 | Role middleware | ✅ Complete |
 | Phase 2.2 | Admin route group | ✅ Complete |
 | Phase 2.3 | Judge landing & login redirect | ✅ Complete |
-| Phase 3.1 | Show Sections CRUD | 🔲 Pending |
-| Phase 3.2 | Show Classes CRUD | 🔲 Pending |
+| Phase 3.1 | Show Sections CRUD | ✅ Complete |
+| Phase 3.2 | Show Classes CRUD | ✅ Complete |
 | Phase 4.1 | Exhibitor list | 🔲 Pending |
 | Phase 4.2 | Exhibitor create & edit | 🔲 Pending |
 | Phase 4.3 | Exhibitor delete | 🔲 Pending |

@@ -16,6 +16,14 @@
                         {{ __('Dashboard') }}
                     </flux:sidebar.item>
                 </flux:sidebar.group>
+
+                @if (auth()->user()?->isAdmin())
+                    <flux:sidebar.group :heading="__('Show Management')" class="grid">
+                        <flux:sidebar.item icon="rectangle-stack" :href="route('admin.show-sections.index')" :current="request()->routeIs('admin.show-sections.*')" wire:navigate>
+                            {{ __('Sections') }}
+                        </flux:sidebar.item>
+                    </flux:sidebar.group>
+                @endif
             </flux:sidebar.nav>
 
             <flux:spacer />
