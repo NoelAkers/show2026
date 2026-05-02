@@ -212,53 +212,53 @@ Add `role` and `phone` to the existing `users` table.
 
 ---
 
-## Phase 2 — Roles & Access Control
+## Phase 2 — Roles & Access Control ✅
 
 Goal: Role-based routing. Admins can access all admin routes. Judges can access only their result-entry area. Guests are redirected to login.
 
 ---
 
-### Phase 2.1 — Role Middleware 🔲
+### Phase 2.1 — Role Middleware ✅
 
-**Files to create:**
-- `app/Http/Middleware/RequireAdmin.php` — abort 403 if `auth()->user()->role !== 'admin'`
-- `app/Http/Middleware/RequireJudge.php` — passes for both `'admin'` and `'judge'` roles; aborts 403 otherwise
-- Register both aliases in `bootstrap/app.php`
+**Files created:**
+- `app/Http/Middleware/RequireAdmin.php` — aborts 403 if `user()->role !== 'admin'`
+- `app/Http/Middleware/RequireJudge.php` — passes for `'admin'` and `'judge'`; aborts 403 otherwise
+- `bootstrap/app.php` — aliases `admin` → `RequireAdmin`, `judge` → `RequireJudge`
 
 **Tests:** `tests/Feature/MiddlewareTest.php`
-- [ ] Guest is redirected to `/login` on `GET /admin/show-sections`
-- [ ] Judge user receives 403 on an admin-only route
-- [ ] Admin user can access admin routes
-- [ ] Judge user can access judge routes
-- [ ] Admin user can also access judge routes (admin is a superset)
+- [x] Guest is redirected to `/login` on `GET /admin/show-sections`
+- [x] Judge user receives 403 on an admin-only route
+- [x] Admin user can access admin routes
+- [x] Judge user can access judge routes
+- [x] Admin user can also access judge routes (admin is a superset)
 
 ---
 
-### Phase 2.2 — Admin Route Group 🔲
+### Phase 2.2 — Admin Route Group ✅
 
-**Files to modify:**
-- `routes/web.php` — wrap all admin routes in `prefix('admin')->name('admin.')->middleware(['auth', 'admin'])` group
+**Files modified:**
+- `routes/web.php` — `prefix('admin')->name('admin.')->middleware(['auth', 'admin'])` group with placeholder `show-sections` route; `prefix('judge')->name('judge.')->middleware(['auth', 'judge'])` group
 
 **Status:** No additional tests beyond Phase 2.1
 
 ---
 
-### Phase 2.3 — Judge Landing & Login Redirect 🔲
+### Phase 2.3 — Judge Landing & Login Redirect ✅
 
 After login, judges are redirected to `/judge/sections`; admins go to `/dashboard`.
 
-**Files to create/modify:**
-- `app/Providers/FortifyServiceProvider.php` — update `Fortify::redirectsUsersTo()` callback to check role
-- `app/Http/Controllers/Judge/SectionController.php` — index: shows sections assigned to the logged-in judge
-- `resources/views/judge/sections/index.blade.php`
-- `routes/web.php` — add `/judge` prefix group with `middleware(['auth', 'judge'])`
+**Files created/modified:**
+- `app/Providers/FortifyServiceProvider.php` — binds `LoginResponse` contract; redirects by role
+- `app/Http/Controllers/Judge/SectionController.php` — `index` returns judge's assigned sections in sort order
+- `resources/views/judge/sections/index.blade.php` — Flux table; empty-state for no assignments
+- `routes/web.php` — judge route group added
 
 **Tests:** `tests/Feature/JudgeAccessTest.php`
-- [ ] Judge user is redirected to `/judge/sections` after login
-- [ ] Admin user is redirected to `/dashboard` after login
-- [ ] Judge sees only their assigned sections on `/judge/sections`
-- [ ] Judge sees an empty-state message when assigned to no sections
-- [ ] Judge receives 403 on `GET /admin/show-sections`
+- [x] Judge user is redirected to `/judge/sections` after login
+- [x] Admin user is redirected to `/dashboard` after login
+- [x] Judge sees only their assigned sections on `/judge/sections`
+- [x] Judge sees an empty-state message when assigned to no sections
+- [x] Judge receives 403 on `GET /admin/show-sections`
 
 ---
 
@@ -762,9 +762,9 @@ Goal: Replace placeholder dashboard with live show stats.
 | Phase 1.7 | Result model | ✅ Complete |
 | Phase 1.8 | Trophy model & pivot | ✅ Complete |
 | Phase 1.9 | Config & seeder | ✅ Complete |
-| Phase 2.1 | Role middleware | 🔲 Pending |
-| Phase 2.2 | Admin route group | 🔲 Pending |
-| Phase 2.3 | Judge landing & login redirect | 🔲 Pending |
+| Phase 2.1 | Role middleware | ✅ Complete |
+| Phase 2.2 | Admin route group | ✅ Complete |
+| Phase 2.3 | Judge landing & login redirect | ✅ Complete |
 | Phase 3.1 | Show Sections CRUD | 🔲 Pending |
 | Phase 3.2 | Show Classes CRUD | 🔲 Pending |
 | Phase 4.1 | Exhibitor list | 🔲 Pending |
