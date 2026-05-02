@@ -24,8 +24,8 @@ Goal: All domain models, migrations, factories, and seeders in place. No UI yet.
 |-------|-------------|
 | `users` | + `role` string(20) default `'admin'`, + `phone` nullable — comment: `'admin'\|'judge'` |
 | `show_sections` | `id, name, description (nullable), sort_order (int default 0), timestamps` |
-| `show_classes` | `id, show_section_id (FK), name, description (nullable), max_entries_per_exhibitor (tinyint default 1), sort_order (int default 0), timestamps` |
-| `exhibitors` | `id, name, email (nullable), phone (nullable), address (nullable), type (string comment:'adult\|junior'), is_resident (bool), has_paid (bool), timestamps` |
+| `show_classes` | `id, show_section_id (FK), name, description (nullable), max_entries_per_exhibitor (tinyint default 5), sort_order (int default 0), timestamps` |
+| `exhibitors` | `id, first_name, last_name, full_name, sort_name, email (nullable), phone (nullable), address (nullable), type (string comment:'adult\|junior'), is_resident (bool), has_paid (bool), timestamps` |
 | `show_section_user` | pivot: `user_id, show_section_id` — judge-to-section assignments |
 | `entries` | `id, show_class_id (FK), exhibitor_id (FK), entry_number (uint unique), timestamps` |
 | `results` | `id, entry_id (FK unique), entered_by_user_id (nullable FK→users), placement (nullable string comment:'1st\|2nd\|3rd\|highly_commended'), notes (nullable text), timestamps` |
