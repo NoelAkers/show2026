@@ -63,6 +63,19 @@ it('admin can update an existing section', function () {
     expect($section->fresh()->name)->toBe('New Name');
 });
 
+it('admin can save a section with its existing name unchanged', function () {
+    $section = ShowSection::factory()->create(['name' => 'Flowers', 'sort_order' => 1]);
+
+    $this->actingAs(adminUser())
+        ->put(route('admin.show-sections.update', $section), [
+            'name' => 'Flowers',
+            'sort_order' => 1,
+        ])
+        ->assertRedirect(route('admin.show-sections.index'));
+
+    expect($section->fresh()->name)->toBe('Flowers');
+});
+
 it('admin can delete a section with no classes', function () {
     $section = ShowSection::factory()->create();
 

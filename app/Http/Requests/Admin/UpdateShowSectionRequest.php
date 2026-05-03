@@ -21,7 +21,7 @@ class UpdateShowSectionRequest extends FormRequest
         return [
             'name' => [
                 'required', 'string', 'max:255',
-                Rule::unique('show_sections')->ignore($this->route('showSection'))],
+                Rule::unique('show_sections')->ignore($this->route('show_section'))],
             'description' => ['nullable', 'string', 'max:255'],
             'sort_order' => ['required', 'integer', 'min:0'],
         ];
