@@ -96,5 +96,43 @@
                 </div>
             </div>
         </div>
+
+            <div class="rounded-lg border border-zinc-200 p-4 dark:border-zinc-700">
+                <flux:heading size="lg" class="mb-3">Entries</flux:heading>
+
+                @if ($exhibitor->entries->isEmpty())
+                    <p class="text-sm text-zinc-500">No entries yet.</p>
+                @else
+                    <flux:table>
+                        <flux:table.columns>
+                            <flux:table.column>#</flux:table.column>
+                            <flux:table.column>Section</flux:table.column>
+                            <flux:table.column>Class</flux:table.column>
+                            <flux:table.column>Placement</flux:table.column>
+                        </flux:table.columns>
+                        <flux:table.rows>
+                            @foreach ($exhibitor->entries as $entry)
+                                <flux:table.row :key="$entry->id">
+                                    <flux:table.cell class="tabular-nums">{{ $entry->entry_number }}</flux:table.cell>
+                                    <flux:table.cell>{{ $entry->showClass->showSection->name }}</flux:table.cell>
+                                    <flux:table.cell variant="strong">
+                                        <a href="{{ route('admin.show-sections.show-classes.show', [$entry->showClass->showSection, $entry->showClass]) }}" class="hover:underline" wire:navigate>
+                                            {{ $entry->showClass->name }}
+                                        </a>
+                                    </flux:table.cell>
+                                    <flux:table.cell>
+                                        @if ($entry->result)
+                                            <flux:badge color="green">{{ $entry->result->placementLabel() }}</flux:badge>
+                                        @else
+                                            <flux:badge color="zinc">Pending</flux:badge>
+                                        @endif
+                                    </flux:table.cell>
+                                </flux:table.row>
+                            @endforeach
+                        </flux:table.rows>
+                    </flux:table>
+                @endif
+            </div>
+        </div>
     </div>
 </x-layouts::app>

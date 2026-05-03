@@ -456,65 +456,65 @@ Goal: Admin can create judge accounts, assign them to sections, and manage their
 
 ---
 
-## Phase 6 — Entry Management
+## Phase 6 — Entry Management ✅
 
 Goal: Admin can record entries (exhibitor + class), view entries per class and per exhibitor, and delete entries.
 
 ---
 
-### Phase 6.1 — Record Entries 🔲
+### Phase 6.1 — Record Entries ✅
 
-**Files to create:**
+**Files created:**
 - `app/Http/Controllers/Admin/EntryController.php` — `store` (scoped to `ShowClass`)
 - `app/Http/Requests/Admin/StoreEntryRequest.php`
 - `resources/views/admin/show-classes/show.blade.php` — class detail page: entries list + add entry form
 
 **Custom validation rule:** Exhibitor has not exceeded `max_entries_per_exhibitor` for this class.
 
-**Routes:** `POST /admin/show-classes/{class}/entries`
+**Routes:** `POST /admin/show-sections/{show_section}/show-classes/{show_class}/entries`
 
-**Tests:** `tests/Feature/Admin/EntryManagementTest.php`
-- [ ] Admin can record an entry linking an exhibitor to a class
-- [ ] `entry_number` is auto-assigned and globally unique
-- [ ] Exhibitor cannot exceed `max_entries_per_exhibitor` for a class (validation error returned)
-- [ ] Entry appears in the class entry list after creation
-- [ ] Exhibitor's chargeable fee recalculates after adding an entry
+**Tests:** `tests/Feature/EntryManagementTest.php`
+- [x] Admin can record an entry linking an exhibitor to a class
+- [x] `entry_number` is auto-assigned and globally unique
+- [x] Exhibitor cannot exceed `max_entries_per_exhibitor` for a class (validation error returned)
+- [x] Entry appears in the class entry list after creation
+- [x] Exhibitor's chargeable fee recalculates after adding an entry
 
 ---
 
-### Phase 6.2 — View Entries per Class 🔲
+### Phase 6.2 — View Entries per Class ✅
 
 _(Covered by the class show page in Phase 6.1.)_
 
 **Tests:** _(appended to `EntryManagementTest.php`)_
-- [ ] Entry list shows: entry number, exhibitor name, exhibitor type, result status
-- [ ] Result status indicator is correct (no result / result entered)
+- [x] Entry list shows: entry number, exhibitor name, exhibitor type, result status
+- [x] Result status indicator is correct (no result / result entered)
 
 ---
 
-### Phase 6.3 — View All Entries for an Exhibitor 🔲
+### Phase 6.3 — View All Entries for an Exhibitor ✅
 
-**Files to create/modify:**
-- `resources/views/admin/exhibitors/show.blade.php` — full entry history section
+**Files modified:**
+- `resources/views/admin/exhibitors/show.blade.php` — full entry history section added
 
-**Tests:** `tests/Feature/Admin/ExhibitorDetailTest.php`
-- [ ] Admin views exhibitor detail at `GET /admin/exhibitors/{exhibitor}`
-- [ ] Entry list shows: class name, section name, entry number, result placement
-- [ ] Fee summary is current and correct
+**Tests:** `tests/Feature/ExhibitorDetailTest.php`
+- [x] Admin views exhibitor detail at `GET /admin/exhibitors/{exhibitor}`
+- [x] Entry list shows: class name, section name, entry number, result placement
+- [x] Fee summary is current and correct
 
 ---
 
-### Phase 6.4 — Delete Entry 🔲
+### Phase 6.4 — Delete Entry ✅
 
-**Files to modify:**
-- `app/Http/Controllers/Admin/EntryController.php` — add `destroy` action
+**Files modified:**
+- `app/Http/Controllers/Admin/EntryController.php` — `destroy` action added
 
-**Route:** `DELETE /admin/show-classes/{class}/entries/{entry}`
+**Route:** `DELETE /admin/show-sections/{show_section}/show-classes/{show_class}/entries/{entry}`
 
 **Tests:** _(appended to `EntryManagementTest.php`)_
-- [ ] Admin can delete an entry that has no result
-- [ ] Admin cannot delete an entry that already has a result (error shown)
-- [ ] Exhibitor's fee recalculates after deleting an entry
+- [x] Admin can delete an entry that has no result
+- [x] Admin cannot delete an entry that already has a result (error shown)
+- [x] Exhibitor's fee recalculates after deleting an entry
 
 ---
 
@@ -773,10 +773,10 @@ Goal: Replace placeholder dashboard with live show stats.
 | Phase 5.1 | Judge list | ✅ Complete |
 | Phase 5.2 | Judge create & edit | ✅ Complete |
 | Phase 5.3 | Section assignment | ✅ Complete |
-| Phase 6.1 | Record entries | 🔲 Pending |
-| Phase 6.2 | View entries per class | 🔲 Pending |
-| Phase 6.3 | View all entries for an exhibitor | 🔲 Pending |
-| Phase 6.4 | Delete entry | 🔲 Pending |
+| Phase 6.1 | Record entries | ✅ Complete |
+| Phase 6.2 | View entries per class | ✅ Complete |
+| Phase 6.3 | View all entries for an exhibitor | ✅ Complete |
+| Phase 6.4 | Delete entry | ✅ Complete |
 | Phase 7.1 | Judge results entry view | 🔲 Pending |
 | Phase 7.2 | Edit result (judge) | 🔲 Pending |
 | Phase 7.3 | Admin results management | 🔲 Pending |

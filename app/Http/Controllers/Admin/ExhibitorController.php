@@ -47,6 +47,8 @@ class ExhibitorController extends Controller
 
     public function show(Exhibitor $exhibitor): View
     {
+        $exhibitor->load(['entries.showClass.showSection', 'entries.result']);
+
         return view('admin.exhibitors.show', compact('exhibitor'));
     }
 

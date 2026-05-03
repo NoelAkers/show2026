@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\StoreShowClassRequest;
 use App\Http\Requests\Admin\UpdateShowClassRequest;
+use App\Models\Exhibitor;
 use App\Models\ShowClass;
 use App\Models\ShowSection;
 use Illuminate\Http\RedirectResponse;
@@ -30,6 +31,14 @@ class ShowClassController extends Controller
 
         return redirect()->route('admin.show-sections.show-classes.index', $showSection)
             ->with('success', 'Class created.');
+    }
+
+    public function show(ShowSection $showSection, ShowClass $showClass): View
+    {
+        $showClass->load(['entries.exhibitor', 'entries.result']);
+        $exhibitors = Exhibitor::orderBy('sort_name')->get();
+
+        return view('admin.show-classes.show', compact('showSection', 'showClass', 'exhibitors'));
     }
 
     public function edit(ShowSection $showSection, ShowClass $showClass): View

@@ -33,7 +33,9 @@
                 <flux:table.rows>
                     @foreach ($classes as $class)
                         <flux:table.row :key="$class->id">
-                            <flux:table.cell variant="strong">{{ $class->name }}</flux:table.cell>
+                            <flux:table.cell variant="strong">
+                                <a href="{{ route('admin.show-sections.show-classes.show', [$showSection, $class]) }}" class="hover:underline" wire:navigate>{{ $class->name }}</a>
+                            </flux:table.cell>
                             <flux:table.cell>{{ $class->description ?? '—' }}</flux:table.cell>
                             <flux:table.cell>{{ $class->max_entries_per_exhibitor }}</flux:table.cell>
                             <flux:table.cell>{{ $class->sort_order }}</flux:table.cell>
