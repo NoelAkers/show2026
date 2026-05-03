@@ -393,6 +393,23 @@ This document contains user stories for the Village Show MVP — a web applicati
 
 ---
 
+### US-6.5: Record Entries from the Exhibitor Record
+**As an** Admin
+**I want to** add entries for an exhibitor directly from their record
+**So that** I can quickly process an exhibitor who arrives at the desk with a list of classes they want to enter.
+
+**Acceptance Criteria:**
+- [ ] "Add Entries" button on each row of the exhibitors list
+- [ ] "Add Entry" button on the exhibitor detail page
+- [ ] Dedicated per-exhibitor page with cascading Section → Class dropdowns (section chosen first; class list updates to show only classes in that section)
+- [ ] All max_entries_per_exhibitor validation still applies
+- [ ] After adding each entry the page reloads at the top, showing a success flash; existing entries list below updates to include the new entry
+- [ ] Admin can add multiple entries in sequence without leaving the page
+
+**Expected Result:** Admin can process an exhibitor's full entry list from a single page without navigating to each class.
+
+---
+
 ## 7. Results & Judging
 
 ### US-7.1: Enter Result for an Entry (Judge)
@@ -626,6 +643,7 @@ This document contains user stories for the Village Show MVP — a web applicati
 | US-6.2 | Delete an Entry | Medium | Pending |
 | US-6.3 | View Entries for a Class | High | Pending |
 | US-6.4 | View All Entries for Exhibitor | Medium | Pending |
+| US-6.5 | Record Entries from Exhibitor Record | High | Pending |
 | US-7.1 | Enter Result (Judge) | High | Pending |
 | US-7.2 | Edit Result (Judge) | Medium | Pending |
 | US-7.3 | Enter / Edit Result (Admin) | High | Pending |

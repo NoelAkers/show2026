@@ -8,6 +8,7 @@
                 <flux:heading size="xl">{{ $exhibitor->full_name }}</flux:heading>
             </div>
             <div class="flex gap-2">
+                <flux:button :href="route('admin.exhibitors.add-entry', $exhibitor)" variant="primary" wire:navigate>Add Entry</flux:button>
                 <flux:button :href="route('admin.exhibitors.edit', $exhibitor)" wire:navigate>Edit</flux:button>
                 <form method="POST" action="{{ route('admin.exhibitors.destroy', $exhibitor) }}">
                     @csrf

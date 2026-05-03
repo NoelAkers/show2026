@@ -77,6 +77,7 @@
                             </flux:table.cell>
                             <flux:table.cell>
                                 <div class="flex gap-2">
+                                    <flux:button size="sm" variant="primary" :href="route('admin.exhibitors.add-entry', $exhibitor)" wire:navigate>Add Entries</flux:button>
                                     <flux:button size="sm" :href="route('admin.exhibitors.edit', $exhibitor)" wire:navigate>Edit</flux:button>
                                     @if ($exhibitor->has_paid)
                                         <form method="POST" action="{{ route('admin.exhibitors.mark-unpaid', $exhibitor) }}">

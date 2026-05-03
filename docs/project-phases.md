@@ -518,6 +518,26 @@ _(Covered by the class show page in Phase 6.1.)_
 
 ---
 
+### Phase 6.5 — Exhibitor-centric Entry Creation ✅
+
+**Files created/modified:**
+- `app/Http/Requests/Admin/StoreExhibitorEntryRequest.php` — validates `show_class_id` with max-entries closure
+- `app/Http/Controllers/Admin/ExhibitorController.php` — `addEntry` and `storeEntry` actions
+- `resources/views/admin/exhibitors/add-entry.blade.php` — cascading Section → Class dropdowns (Alpine.js), existing entries table
+- `routes/web.php` — `GET/POST exhibitors/{exhibitor}/add-entry`
+- `resources/views/admin/exhibitors/index.blade.php` — "Add Entries" button per row
+- `resources/views/admin/exhibitors/show.blade.php` — "Add Entry" button in header
+
+**Tests:** `tests/Feature/Admin/ExhibitorAddEntryTest.php`
+- [x] Add entries page loads for an exhibitor
+- [x] Admin can add an entry by selecting section and class
+- [x] Entry appears in the exhibitor's entry list after creation
+- [x] Exhibitor cannot exceed max_entries_per_exhibitor via add entry page
+- [x] Page stays on add-entry after each successful entry
+- [x] Guest is redirected to login
+
+---
+
 ## Phase 7 — Results & Judging
 
 Goal: Judges enter and edit results for their assigned sections. Admins can manage all results. Points leaderboard available.

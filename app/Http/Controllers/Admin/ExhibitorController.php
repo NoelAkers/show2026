@@ -3,9 +3,12 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\StoreExhibitorEntryRequest;
 use App\Http\Requests\Admin\StoreExhibitorRequest;
 use App\Http\Requests\Admin\UpdateExhibitorRequest;
+use App\Models\Entry;
 use App\Models\Exhibitor;
+use App\Models\ShowSection;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -79,6 +82,25 @@ class ExhibitorController extends Controller
 
         return redirect()->route('admin.exhibitors.index')
             ->with('success', 'Exhibitor deleted.');
+    }
+
+    public function addEntry(Exhibitor $exhibitor): View
+    {
+        $exhibitor->load(['entries.showClass.showSection', 'entries.result']);
+        $sections = ShowSection::with(['showClasses' => fn ($q) => $q->ordered()])->ordered()->get();
+
+        return view('admin.exhibitors.add-entry', compact('exhibitor', 'sections'));
+    }
+
+    public function storeEntry(StoreExhibitorEntryRequest $request, Exhibitor $exhibitor): RedirectResponse
+    {
+        Entry::create([
+            'show_class_id' => $request->validated('show_class_id'),
+            'exhibitor_id' => $exhibitor->id,
+        ]);
+
+        return redirect()->route('admin.exhibitors.add-entry', $exhibitor)
+            ->with('success', 'Entry added.');
     }
 
     public function markPaid(Exhibitor $exhibitor): RedirectResponse
