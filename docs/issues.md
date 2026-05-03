@@ -22,7 +22,7 @@
    store and update form requests, and saved via `$model->update($request->validated())` in both
    ShowSectionController and ShowClassController. No discrepancy exists between create and update flows.
 
-3.  When editing Sections, it seems to not accept any changes. The Name field is highlighted in red even if unchanged, suggesting that it is in error, but there is no message shown to clarify the error. The only option is to Cancel out of the edit.                        [RESOLVED]
+3.  When editing Sections, it seems to not accept any changes. The Name field is highlighted in red even if unchanged, suggesting that it is in error, but there is no message shown to clarify the error. The only option is to Cancel out of the edit. The suggested Resolution below does NOT fix the issue, further investigation required! Note:  `UpdateShowClassRequest` DOES work correctly                                                      []
 
    **Root cause:** `UpdateShowSectionRequest` referenced `$this->showSection` in the unique rule's
    `ignore()` clause, which is not a valid `FormRequest` property and resolves to `null`. This meant

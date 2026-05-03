@@ -19,7 +19,9 @@ class UpdateShowSectionRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'string', 'max:255', Rule::unique('show_sections')->ignore($this->route('showSection'))],
+            'name' => [
+                'required', 'string', 'max:255',
+                Rule::unique('show_sections')->ignore($this->route('showSection'))],
             'description' => ['nullable', 'string', 'max:255'],
             'sort_order' => ['required', 'integer', 'min:0'],
         ];
