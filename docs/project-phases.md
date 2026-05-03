@@ -521,20 +521,31 @@ _(Covered by the class show page in Phase 6.1.)_
 ### Phase 6.5 — Exhibitor-centric Entry Creation ✅
 
 **Files created/modified:**
-- `app/Http/Requests/Admin/StoreExhibitorEntryRequest.php` — validates `show_class_id` with max-entries closure
-- `app/Http/Controllers/Admin/ExhibitorController.php` — `addEntry` and `storeEntry` actions
-- `resources/views/admin/exhibitors/add-entry.blade.php` — cascading Section → Class dropdowns (Alpine.js), existing entries table
-- `routes/web.php` — `GET/POST exhibitors/{exhibitor}/add-entry`
+- `app/Http/Requests/Admin/StoreExhibitorEntryRequest.php` — validates `show_class_id` and `quantity`; closure checks existing + quantity ≤ max_entries_per_exhibitor
+- `app/Http/Controllers/Admin/ExhibitorController.php` — `addEntry`, `storeEntry`, and `labels` actions
+- `resources/views/admin/exhibitors/add-entry.blade.php` — cascading Section → Class dropdowns (Alpine.js); quantity number input whose max updates dynamically to the exhibitor's remaining capacity in the chosen class; existing entries table
+- `resources/views/admin/exhibitors/labels.blade.php` — standalone print-optimised page (no app chrome); 3-column label grid with section name, class name, exhibitor name, entry number, and a CODE128 barcode; "Print" button triggers `window.print()`
+- `routes/web.php` — `GET/POST exhibitors/{exhibitor}/add-entry`; `GET exhibitors/{exhibitor}/labels`
 - `resources/views/admin/exhibitors/index.blade.php` — "Add Entries" button per row
-- `resources/views/admin/exhibitors/show.blade.php` — "Add Entry" button in header
+- `resources/views/admin/exhibitors/show.blade.php` — "Add Entry" and "Print Labels" buttons in header
+- `public/vendor/jsbarcode.min.js` — self-hosted JsBarcode bundle (copied from npm package `jsbarcode@3.11.6`)
+- `resources/js/labels.js` + `vite.config.js` — Vite entry point ready to replace the self-hosted bundle once Node ≥ 20 is available
+
+**Behaviour:**
+- Admin selects section → class list filters to that section; selects class → quantity input activates with max set to remaining capacity for that exhibitor in that class
+- Submitting creates N entries in one request; the system immediately redirects to the labels page showing only the newly created entries, pre-filtered for printing
+- "Print All Labels" links on the exhibitor show and add-entry pages open the labels page (no filter) in a new tab for reprinting
 
 **Tests:** `tests/Feature/Admin/ExhibitorAddEntryTest.php`
 - [x] Add entries page loads for an exhibitor
 - [x] Admin can add an entry by selecting section and class
+- [x] Admin can add multiple entries at once (quantity > 1)
+- [x] Successful entry redirects to labels page
 - [x] Entry appears in the exhibitor's entry list after creation
 - [x] Exhibitor cannot exceed max_entries_per_exhibitor via add entry page
-- [x] Page stays on add-entry after each successful entry
-- [x] Guest is redirected to login
+- [x] Labels page loads and shows entry numbers
+- [x] Labels page filters to specified entries when IDs provided
+- [x] Guest is redirected to login (add-entry and labels)
 
 ---
 

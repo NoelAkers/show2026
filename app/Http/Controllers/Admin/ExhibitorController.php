@@ -94,13 +94,34 @@ class ExhibitorController extends Controller
 
     public function storeEntry(StoreExhibitorEntryRequest $request, Exhibitor $exhibitor): RedirectResponse
     {
-        Entry::create([
-            'show_class_id' => $request->validated('show_class_id'),
-            'exhibitor_id' => $exhibitor->id,
-        ]);
+        $classId = $request->validated('show_class_id');
+        $quantity = $request->validated('quantity');
 
-        return redirect()->route('admin.exhibitors.add-entry', $exhibitor)
-            ->with('success', 'Entry added.');
+        $newEntries = collect();
+        for ($i = 0; $i < $quantity; $i++) {
+            $newEntries->push(Entry::create([
+                'show_class_id' => $classId,
+                'exhibitor_id' => $exhibitor->id,
+            ]));
+        }
+
+        $message = $quantity === 1 ? 'Entry added.' : "{$quantity} entries added.";
+        $labelUrl = route('admin.exhibitors.labels', $exhibitor).'?'.http_build_query(['entries' => $newEntries->pluck('id')->all()]);
+
+        return redirect($labelUrl)->with('success', $message);
+    }
+
+    public function labels(Request $request, Exhibitor $exhibitor): View
+    {
+        $entryIds = array_filter((array) $request->query('entries', []));
+
+        $entries = $exhibitor->entries()
+            ->with(['showClass.showSection'])
+            ->when(! empty($entryIds), fn ($q) => $q->whereIn('id', $entryIds))
+            ->orderBy('entry_number')
+            ->get();
+
+        return view('admin.exhibitors.labels', compact('exhibitor', 'entries'));
     }
 
     public function markPaid(Exhibitor $exhibitor): RedirectResponse

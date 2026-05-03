@@ -7,6 +7,9 @@
                 </flux:button>
                 <flux:heading size="xl">Add Entry</flux:heading>
             </div>
+            @if ($exhibitor->entries->isNotEmpty())
+                <flux:button :href="route('admin.exhibitors.labels', $exhibitor)" target="_blank" icon="printer" size="sm">Print All Labels</flux:button>
+            @endif
         </div>
 
         @if (session('success'))
@@ -18,8 +21,13 @@
         @endif
 
         @php
+            $entriesCountByClass = $exhibitor->entries->groupBy('show_class_id')->map->count();
             $classesBySection = $sections->mapWithKeys(fn ($s) => [
-                $s->id => $s->showClasses->map(fn ($c) => ['id' => $c->id, 'name' => $c->name])->values(),
+                $s->id => $s->showClasses->map(fn ($c) => [
+                    'id' => $c->id,
+                    'name' => $c->name,
+                    'remaining' => max(0, $c->max_entries_per_exhibitor - ($entriesCountByClass[$c->id] ?? 0)),
+                ])->values(),
             ]);
         @endphp
 
@@ -28,9 +36,12 @@
             x-data="{
                 sectionId: '',
                 classId: '',
+                quantity: 1,
                 classesBySection: {{ Js::from($classesBySection) }},
                 get classes() { return this.sectionId ? (this.classesBySection[this.sectionId] ?? []) : []; },
-                resetClass() { this.classId = ''; }
+                get selectedClass() { return this.classId ? (this.classes.find(c => c.id == this.classId) ?? null) : null; },
+                get maxQuantity() { return this.selectedClass ? this.selectedClass.remaining : 1; },
+                resetClass() { this.classId = ''; this.quantity = 1; }
             }"
         >
             <flux:heading size="lg" class="mb-3">Add Entry</flux:heading>
@@ -53,7 +64,7 @@
 
                     <flux:field>
                         <flux:label>Class</flux:label>
-                        <flux:select name="show_class_id" x-model="classId" x-bind:disabled="!sectionId">
+                        <flux:select name="show_class_id" x-model="classId" x-bind:disabled="!sectionId" @change="quantity = 1">
                             <option value="">Select class…</option>
                             <template x-for="cls in classes" :key="cls.id">
                                 <option :value="cls.id" x-text="cls.name"></option>
@@ -62,8 +73,13 @@
                         @error('show_class_id') <flux:error>{{ $message }}</flux:error> @enderror
                     </flux:field>
 
-                    <div>
-                        <flux:button type="submit" variant="primary" x-bind:disabled="!classId">Add Entry</flux:button>
+                    <div class="flex items-end gap-3">
+                        <flux:field class="w-28">
+                            <flux:label>Entries</flux:label>
+                            <flux:input type="number" name="quantity" x-model.number="quantity" min="1" x-bind:max="maxQuantity" x-bind:disabled="!classId" />
+                            @error('quantity') <flux:error>{{ $message }}</flux:error> @enderror
+                        </flux:field>
+                        <flux:button type="submit" variant="primary" x-bind:disabled="!classId">Add Entries</flux:button>
                     </div>
                 </form>
             @endif

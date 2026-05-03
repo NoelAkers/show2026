@@ -9,6 +9,9 @@
             </div>
             <div class="flex gap-2">
                 <flux:button :href="route('admin.exhibitors.add-entry', $exhibitor)" variant="primary" wire:navigate>Add Entry</flux:button>
+                @if ($exhibitor->entries->isNotEmpty())
+                    <flux:button :href="route('admin.exhibitors.labels', $exhibitor)" target="_blank" icon="printer">Print Labels</flux:button>
+                @endif
                 <flux:button :href="route('admin.exhibitors.edit', $exhibitor)" wire:navigate>Edit</flux:button>
                 <form method="POST" action="{{ route('admin.exhibitors.destroy', $exhibitor) }}">
                     @csrf
