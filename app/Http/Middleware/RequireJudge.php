@@ -15,7 +15,9 @@ class RequireJudge
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (! in_array($request->user()?->role, ['admin', 'judge'], true)) {
+        $user = $request->user();
+
+        if (! $user?->isAdmin() && ! $user?->isJudge()) {
             abort(403);
         }
 

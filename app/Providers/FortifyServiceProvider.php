@@ -23,7 +23,8 @@ class FortifyServiceProvider extends ServiceProvider
         {
             public function toResponse($request)
             {
-                $redirect = $request->user()->isJudge()
+                $user = $request->user();
+                $redirect = ! $user->isAdmin() && $user->isJudge()
                     ? route('judge.sections.index')
                     : route('dashboard');
 

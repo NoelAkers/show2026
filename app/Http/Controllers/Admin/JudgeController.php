@@ -15,7 +15,7 @@ class JudgeController extends Controller
 {
     public function index(): View
     {
-        $judges = User::where('role', 'judge')
+        $judges = User::where('is_judge', true)
             ->withCount(['assignedSections'])
             ->orderBy('name')
             ->get();
@@ -32,14 +32,18 @@ class JudgeController extends Controller
 
     public function store(StoreJudgeRequest $request): RedirectResponse
     {
-        $judge = User::create([
-            'name' => $request->validated('name'),
-            'email' => $request->validated('email'),
-            'phone' => $request->validated('phone'),
-            'role' => 'judge',
-            'password' => Str::password(16),
-        ]);
+        $judge = User::firstOrCreate(
+            ['email' => $request->validated('email')],
+            [
+                'name' => $request->validated('name'),
+                'phone' => $request->validated('phone'),
+                'role' => 'judge',
+                'is_judge' => true,
+                'password' => Str::password(16),
+            ]
+        );
 
+        $judge->update(['is_judge' => true]);
         $judge->assignedSections()->sync($request->validated('section_ids', []));
 
         return redirect()->route('admin.judges.index')
@@ -65,7 +69,12 @@ class JudgeController extends Controller
     public function destroy(User $judge): RedirectResponse
     {
         $judge->assignedSections()->detach();
-        $judge->delete();
+
+        if ($judge->isAdmin()) {
+            $judge->update(['is_judge' => false]);
+        } else {
+            $judge->delete();
+        }
 
         return redirect()->route('admin.judges.index')
             ->with('success', 'Judge removed.');

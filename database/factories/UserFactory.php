@@ -60,6 +60,7 @@ class UserFactory extends Factory
     {
         return $this->state(fn (array $attributes) => [
             'role' => 'judge',
+            'is_judge' => true,
         ]);
     }
 }

@@ -54,3 +54,23 @@ it('judge receives 403 on admin show-sections route', function () {
         ->get(route('admin.show-sections.index'))
         ->assertForbidden();
 });
+
+it('admin who is also a judge is redirected to dashboard after login', function () {
+    $adminJudge = User::factory()->admin()->create(['is_judge' => true]);
+
+    $this->post(route('login'), [
+        'email' => $adminJudge->email,
+        'password' => 'password',
+    ])->assertRedirect(route('dashboard'));
+});
+
+it('admin who is also a judge can access judge sections', function () {
+    $adminJudge = User::factory()->admin()->create(['is_judge' => true]);
+    $section = ShowSection::factory()->create(['name' => 'My Section']);
+    $adminJudge->assignedSections()->attach($section);
+
+    $this->actingAs($adminJudge)
+        ->get(route('judge.sections.index'))
+        ->assertOk()
+        ->assertSee('My Section');
+});

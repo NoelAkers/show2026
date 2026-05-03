@@ -31,7 +31,7 @@ it('judge list shows assigned section count', function () {
         ->assertSee('Judge Two');
 });
 
-it('admin can create a judge account', function () {
+it('admin can create a new judge account', function () {
     $this->actingAs(judgeAdmin())
         ->post(route('admin.judges.store'), [
             'name' => 'New Judge',
@@ -43,28 +43,23 @@ it('admin can create a judge account', function () {
         'name' => 'New Judge',
         'email' => 'newjudge@example.com',
         'role' => 'judge',
+        'is_judge' => true,
     ]);
 });
 
-it('created judge has role judge', function () {
-    $this->actingAs(judgeAdmin())
-        ->post(route('admin.judges.store'), [
-            'name' => 'A Judge',
-            'email' => 'ajudge@example.com',
-        ]);
-
-    expect(User::where('email', 'ajudge@example.com')->first()->role)->toBe('judge');
-});
-
-it('judge email must be unique', function () {
-    User::factory()->create(['email' => 'taken@example.com']);
+it('adding an existing user as judge grants them judge status without creating a new account', function () {
+    $existingUser = User::factory()->admin()->create(['email' => 'admin@example.com']);
 
     $this->actingAs(judgeAdmin())
         ->post(route('admin.judges.store'), [
-            'name' => 'Someone',
-            'email' => 'taken@example.com',
+            'name' => 'Some Name',
+            'email' => 'admin@example.com',
         ])
-        ->assertSessionHasErrors('email');
+        ->assertRedirect(route('admin.judges.index'));
+
+    expect(User::where('email', 'admin@example.com')->count())->toBe(1)
+        ->and($existingUser->fresh()->isJudge())->toBeTrue()
+        ->and($existingUser->fresh()->isAdmin())->toBeTrue();
 });
 
 it('admin can assign sections when creating a judge', function () {
@@ -131,7 +126,7 @@ it('admin can remove all section assignments', function () {
     expect($judge->fresh()->assignedSections()->count())->toBe(0);
 });
 
-it('admin can delete a judge', function () {
+it('removing a standalone judge deletes their account', function () {
     $judge = User::factory()->judge()->create();
 
     $this->actingAs(judgeAdmin())
@@ -139,6 +134,18 @@ it('admin can delete a judge', function () {
         ->assertRedirect(route('admin.judges.index'));
 
     $this->assertDatabaseMissing('users', ['id' => $judge->id]);
+});
+
+it('removing an admin-judge revokes judge status without deleting their account', function () {
+    $adminJudge = User::factory()->admin()->create(['is_judge' => true]);
+
+    $this->actingAs(judgeAdmin())
+        ->delete(route('admin.judges.destroy', $adminJudge))
+        ->assertRedirect(route('admin.judges.index'));
+
+    $this->assertDatabaseHas('users', ['id' => $adminJudge->id]);
+    expect($adminJudge->fresh()->isJudge())->toBeFalse()
+        ->and($adminJudge->fresh()->isAdmin())->toBeTrue();
 });
 
 it('guest is redirected from judge routes', function () {
