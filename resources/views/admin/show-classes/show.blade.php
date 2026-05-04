@@ -18,6 +18,14 @@
             <flux:callout variant="danger" icon="x-circle">{{ session('error') }}</flux:callout>
         @endif
 
+        @if ($errors->any())
+            <flux:callout variant="danger" icon="x-circle">
+                @foreach ($errors->all() as $error)
+                    <div>{{ $error }}</div>
+                @endforeach
+            </flux:callout>
+        @endif
+
         @if ($showClass->description)
             <p class="max-w-2xl text-sm text-zinc-600 dark:text-zinc-400">{{ $showClass->description }}</p>
         @endif
@@ -75,21 +83,53 @@
                                     </a>
                                 </flux:table.cell>
                                 <flux:table.cell>{{ ucfirst($entry->exhibitor->type) }}</flux:table.cell>
+
+                                {{-- Inline result form --}}
                                 <flux:table.cell>
                                     @if ($entry->result)
-                                        <flux:badge color="green">{{ $entry->result->placementLabel() }}</flux:badge>
+                                        <form method="POST" action="{{ route('admin.show-sections.show-classes.results.update', [$showSection, $showClass, $entry->result]) }}" class="flex items-center gap-2">
+                                            @csrf
+                                            @method('PATCH')
+                                            <flux:select name="placement" class="w-44">
+                                                <flux:select.option value="">No placement</flux:select.option>
+                                                <flux:select.option value="1st" :selected="$entry->result->placement === '1st'">1st Place</flux:select.option>
+                                                <flux:select.option value="2nd" :selected="$entry->result->placement === '2nd'">2nd Place</flux:select.option>
+                                                <flux:select.option value="3rd" :selected="$entry->result->placement === '3rd'">3rd Place</flux:select.option>
+                                                <flux:select.option value="highly_commended" :selected="$entry->result->placement === 'highly_commended'">Highly Commended</flux:select.option>
+                                            </flux:select>
+                                            <flux:button size="sm" type="submit">Save</flux:button>
+                                        </form>
                                     @else
-                                        <flux:badge color="zinc">No result</flux:badge>
+                                        <form method="POST" action="{{ route('admin.show-sections.show-classes.results.store', [$showSection, $showClass]) }}" class="flex items-center gap-2">
+                                            @csrf
+                                            <input type="hidden" name="entry_id" value="{{ $entry->id }}">
+                                            <flux:select name="placement" class="w-44">
+                                                <flux:select.option value="">No placement</flux:select.option>
+                                                <flux:select.option value="1st">1st Place</flux:select.option>
+                                                <flux:select.option value="2nd">2nd Place</flux:select.option>
+                                                <flux:select.option value="3rd">3rd Place</flux:select.option>
+                                                <flux:select.option value="highly_commended">Highly Commended</flux:select.option>
+                                            </flux:select>
+                                            <flux:button size="sm" type="submit">Save</flux:button>
+                                        </form>
                                     @endif
                                 </flux:table.cell>
+
+                                {{-- Delete action --}}
                                 <flux:table.cell>
-                                    @unless ($entry->hasResult())
+                                    @if ($entry->result)
+                                        <form method="POST" action="{{ route('admin.show-sections.show-classes.results.destroy', [$showSection, $showClass, $entry->result]) }}">
+                                            @csrf
+                                            @method('DELETE')
+                                            <flux:button size="sm" variant="danger" type="submit">Delete Result</flux:button>
+                                        </form>
+                                    @else
                                         <form method="POST" action="{{ route('admin.show-sections.show-classes.entries.destroy', [$showSection, $showClass, $entry]) }}">
                                             @csrf
                                             @method('DELETE')
-                                            <flux:button size="sm" variant="danger" type="submit">Delete</flux:button>
+                                            <flux:button size="sm" variant="danger" type="submit">Delete Entry</flux:button>
                                         </form>
-                                    @endunless
+                                    @endif
                                 </flux:table.cell>
                             </flux:table.row>
                         @endforeach

@@ -99,7 +99,7 @@ it('entry list shows entry number, exhibitor name, type, and result status', fun
         ->assertOk()
         ->assertSee('John Smith')
         ->assertSee('Adult')
-        ->assertSee('No result')
+        ->assertSee('No placement')
         ->assertSee((string) $entry->entry_number);
 });
 

@@ -28,6 +28,9 @@
                         <flux:sidebar.item icon="academic-cap" :href="route('admin.judges.index')" :current="request()->routeIs('admin.judges.*')" wire:navigate>
                             {{ __('Judges') }}
                         </flux:sidebar.item>
+                        <flux:sidebar.item icon="trophy" :href="route('admin.leaderboard')" :current="request()->routeIs('admin.leaderboard')" wire:navigate>
+                            {{ __('Leaderboard') }}
+                        </flux:sidebar.item>
                     </flux:sidebar.group>
                 @endif
             </flux:sidebar.nav>

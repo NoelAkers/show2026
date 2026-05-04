@@ -9,12 +9,18 @@
                 <flux:table.columns>
                     <flux:table.column>Section</flux:table.column>
                     <flux:table.column>Description</flux:table.column>
+                    <flux:table.column></flux:table.column>
                 </flux:table.columns>
                 <flux:table.rows>
                     @foreach ($sections as $section)
                         <flux:table.row :key="$section->id">
-                            <flux:table.cell>{{ $section->name }}</flux:table.cell>
+                            <flux:table.cell variant="strong">
+                                <a href="{{ route('judge.sections.show', $section) }}" class="hover:underline" wire:navigate>{{ $section->name }}</a>
+                            </flux:table.cell>
                             <flux:table.cell>{{ $section->description ?? '—' }}</flux:table.cell>
+                            <flux:table.cell>
+                                <flux:button :href="route('judge.sections.show', $section)" size="sm" wire:navigate>Enter Results</flux:button>
+                            </flux:table.cell>
                         </flux:table.row>
                     @endforeach
                 </flux:table.rows>
