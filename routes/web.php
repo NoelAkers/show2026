@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\LeaderboardController;
 use App\Http\Controllers\Admin\ResultController as AdminResultController;
 use App\Http\Controllers\Admin\ShowClassController;
 use App\Http\Controllers\Admin\ShowSectionController;
+use App\Http\Controllers\Admin\TrophyController;
 use App\Http\Controllers\Judge\ResultController as JudgeResultController;
 use App\Http\Controllers\Judge\SectionController;
 use Illuminate\Support\Facades\Route;
@@ -33,6 +34,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     Route::patch('show-sections/{show_section}/show-classes/{show_class}/results/{result}', [AdminResultController::class, 'update'])->name('show-sections.show-classes.results.update');
     Route::delete('show-sections/{show_section}/show-classes/{show_class}/results/{result}', [AdminResultController::class, 'destroy'])->name('show-sections.show-classes.results.destroy');
     Route::get('leaderboard', [LeaderboardController::class, 'index'])->name('leaderboard');
+    Route::resource('trophies', TrophyController::class)->except(['show']);
 });
 
 Route::prefix('judge')->name('judge.')->middleware(['auth', 'judge'])->group(function () {

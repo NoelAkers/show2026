@@ -555,124 +555,134 @@ Goal: Judges enter and edit results for their assigned sections. Admins can mana
 
 ---
 
-### Phase 7.1 — Judge Results Entry View 🔲
+### Phase 7.1 — Judge Results Entry View ✅
 
-**Files to create:**
-- `app/Http/Controllers/Judge/ResultController.php` — `index` (classes in assigned sections), `store`, `update`
-- `resources/views/judge/results/index.blade.php` — entries in a class with inline result form per entry
+**Files created:**
+- `app/Http/Controllers/Judge/ResultController.php` — `index`, `store`, `update`
+- `app/Http/Controllers/Judge/SectionController.php` — `show` added (classes listing for a section)
+- `app/Http/Requests/StoreResultRequest.php` — shared; validates entry_id, placement, notes; enforces 1st/2nd/3rd uniqueness per class
+- `resources/views/judge/sections/index.blade.php` — updated with "Enter Results" links
+- `resources/views/judge/classes/index.blade.php` — NEW: classes within an assigned section
+- `resources/views/judge/results/index.blade.php` — entries with inline placement + notes form per entry
 
 **Valid placements:** `1st`, `2nd`, `3rd`, `highly_commended`, or clear (null)
 
 **Uniqueness rule:** A class may have at most one `1st`, one `2nd`, and one `3rd`; any number of `highly_commended`.
 
-**Routes:** `/judge/sections/{section}/classes/{class}/results` under `judge` middleware group
+**Routes:** `GET /judge/sections/{show_section}/classes`, `GET/POST /judge/sections/{show_section}/classes/{show_class}/results` under `judge` middleware group
 
 **Tests:** `tests/Feature/Judge/ResultEntryTest.php`
-- [ ] Judge sees only classes in their assigned sections
-- [ ] Judge can enter a placement and notes for an entry
-- [ ] Judge cannot assign a second `1st` place in the same class
-- [ ] Judge cannot assign a second `2nd` place in the same class
-- [ ] Judge cannot assign a second `3rd` place in the same class
-- [ ] Multiple `highly_commended` in one class is allowed
-- [ ] Judge can clear a placement (set to null)
-- [ ] Entered result is immediately visible to admin
+- [x] Judge sees only classes in their assigned sections
+- [x] Judge can enter a placement and notes for an entry
+- [x] Judge cannot assign a second `1st` place in the same class
+- [x] Judge cannot assign a second `2nd` place in the same class
+- [x] Judge cannot assign a second `3rd` place in the same class
+- [x] Multiple `highly_commended` in one class is allowed
+- [x] Judge can clear a placement (set to null)
+- [x] Entered result is immediately visible to admin
 
 ---
 
-### Phase 7.2 — Edit Result (Judge) 🔲
+### Phase 7.2 — Edit Result (Judge) ✅
 
 _(Store + update in Phase 7.1 controller.)_
 
+**Files created:**
+- `app/Http/Requests/UpdateResultRequest.php` — shared; validates placement, notes; excludes current result from uniqueness check
+
 **Tests:** _(appended to `ResultEntryTest.php`)_
-- [ ] Judge can change an existing placement
-- [ ] Uniqueness rule is enforced when updating (swapping placements between entries)
-- [ ] Exhibitor points total changes after updating a result
+- [x] Judge can change an existing placement
+- [x] Uniqueness rule is enforced when updating (swapping placements between entries)
+- [x] Exhibitor points total changes after updating a result
 
 ---
 
-### Phase 7.3 — Admin Results Management 🔲
+### Phase 7.3 — Admin Results Management ✅
 
-**Files to create:**
+**Files created:**
 - `app/Http/Controllers/Admin/ResultController.php` — `store`, `update`, `destroy` (any class)
-- Inline result entry added to `resources/views/admin/show-classes/show.blade.php`
+- `resources/views/admin/show-classes/show.blade.php` — inline placement dropdown + Save per entry row; Delete Result / Delete Entry in actions column
 
 **Behaviour:** Same uniqueness constraints as judge; `entered_by_user_id` set to the acting admin's ID.
 
 **Tests:** `tests/Feature/Admin/ResultManagementTest.php`
-- [ ] Admin can enter a result for any class in any section
-- [ ] Admin can update any result
-- [ ] Admin cannot create a duplicate `1st`/`2nd`/`3rd` in a class
-- [ ] `entered_by_user_id` is set to the admin's user ID
-- [ ] Judge receives 403 when accessing admin result routes
+- [x] Admin can enter a result for any class in any section
+- [x] Admin can update any result
+- [x] Admin cannot create a duplicate `1st`/`2nd`/`3rd` in a class
+- [x] `entered_by_user_id` is set to the admin's user ID
+- [x] Judge receives 403 when accessing admin result routes
 
 ---
 
-### Phase 7.4 — Points Leaderboard 🔲
+### Phase 7.4 — Points Leaderboard ✅
 
-**Files to create:**
+**Files created:**
 - `app/Http/Controllers/Admin/LeaderboardController.php`
 - `resources/views/admin/leaderboard/index.blade.php`
+- Sidebar "Leaderboard" link added (trophy icon, admin-only)
 
-**Logic:** Aggregate `results.placement` → points per exhibitor; optional section filter via query param.
+**Logic:** Aggregate `results.placement` → points per exhibitor in PHP; optional section filter via query param; tied exhibitors share rank.
 
 **Tests:** `tests/Feature/Admin/LeaderboardTest.php`
-- [ ] Leaderboard shows exhibitors in descending points order
-- [ ] Section filter shows only points from that section's classes
-- [ ] Exhibitor with no results shows 0 points
-- [ ] Tied exhibitors appear at the same rank position
+- [x] Leaderboard shows exhibitors in descending points order
+- [x] Section filter shows only points from that section's classes
+- [x] Exhibitor with no results shows 0 points
+- [x] Tied exhibitors appear at the same rank position
 
 ---
 
-## Phase 8 — Trophies
+## Phase 8 — Trophies ✅
 
 Goal: Admin configures trophies (assigning classes); system auto-calculates winners.
 
 ---
 
-### Phase 8.1 — Trophy CRUD 🔲
+### Phase 8.1 — Trophy CRUD ✅
 
-**Files to create:**
+**Files created:**
 - `app/Http/Controllers/Admin/TrophyController.php` — `index, create, store, edit, update, destroy`
 - `app/Http/Requests/Admin/StoreTrophyRequest.php`
 - `app/Http/Requests/Admin/UpdateTrophyRequest.php`
 - `resources/views/admin/trophies/index.blade.php`
 - `resources/views/admin/trophies/create.blade.php`
 - `resources/views/admin/trophies/edit.blade.php`
+- `routes/web.php` — `Route::resource('trophies', TrophyController::class)` inside admin group
+- Sidebar "Trophies" link added (`gift` icon, admin-only)
 
 **Validation:** `name` required; `class_ids` nullable array of valid `ShowClass` IDs.
 
 **Tests:** `tests/Feature/Admin/TrophyCrudTest.php`
-- [ ] Admin can create a trophy with a name and class assignments
-- [ ] Admin can create a trophy with no class assignments
-- [ ] Admin can update name, description, and class assignments
-- [ ] A class can be assigned to multiple trophies simultaneously
-- [ ] Admin can delete a trophy
-- [ ] Guest / judge access returns redirect / 403
+- [x] Admin can create a trophy with a name and class assignments
+- [x] Admin can create a trophy with no class assignments
+- [x] Admin can update name, description, and class assignments
+- [x] A class can be assigned to multiple trophies simultaneously
+- [x] Admin can delete a trophy
+- [x] Guest / judge access returns redirect / 403
 
 ---
 
-### Phase 8.2 — Trophy Winner Calculation 🔲
+### Phase 8.2 — Trophy Winner Calculation ✅
 
 _(Logic in `Trophy::winners()` — Phase 1.8.)_
 
 **Tests:** `tests/Feature/TrophyWinnerTest.php`
-- [ ] Winner is the exhibitor with the most points across the trophy's assigned classes
-- [ ] All tied exhibitors are returned when points are equal
-- [ ] Adding a new result updates the winner output
-- [ ] Trophy with no assigned classes returns empty winner list
-- [ ] Trophy with assigned classes but no results returns empty winner list
+- [x] Winner is the exhibitor with the most points across the trophy's assigned classes
+- [x] All tied exhibitors are returned when points are equal
+- [x] Adding a new result updates the winner output
+- [x] Trophy with no assigned classes returns empty winner list
+- [x] Trophy with assigned classes but no results returns empty winner list
 
 ---
 
-### Phase 8.3 — Trophy List with Winners 🔲
+### Phase 8.3 — Trophy List with Winners ✅
 
-**Files to modify:**
+**Files modified:**
 - `resources/views/admin/trophies/index.blade.php` — current winner(s) per row
 
 **Tests:** _(appended to `TrophyCrudTest.php`)_
-- [ ] Trophy index shows the current winner for each trophy
-- [ ] "No winner yet" displayed when no results entered
-- [ ] All tied winners are listed when there is a tie
+- [x] Trophy index shows the current winner for each trophy
+- [x] "No winner yet" displayed when no results entered
+- [x] All tied winners are listed when there is a tie
 
 ---
 
@@ -808,13 +818,13 @@ Goal: Replace placeholder dashboard with live show stats.
 | Phase 6.2 | View entries per class | ✅ Complete |
 | Phase 6.3 | View all entries for an exhibitor | ✅ Complete |
 | Phase 6.4 | Delete entry | ✅ Complete |
-| Phase 7.1 | Judge results entry view | 🔲 Pending |
-| Phase 7.2 | Edit result (judge) | 🔲 Pending |
-| Phase 7.3 | Admin results management | 🔲 Pending |
-| Phase 7.4 | Points leaderboard | 🔲 Pending |
-| Phase 8.1 | Trophy CRUD | 🔲 Pending |
-| Phase 8.2 | Trophy winner calculation | 🔲 Pending |
-| Phase 8.3 | Trophy list with winners | 🔲 Pending |
+| Phase 7.1 | Judge results entry view | ✅ Complete |
+| Phase 7.2 | Edit result (judge) | ✅ Complete |
+| Phase 7.3 | Admin results management | ✅ Complete |
+| Phase 7.4 | Points leaderboard | ✅ Complete |
+| Phase 8.1 | Trophy CRUD | ✅ Complete |
+| Phase 8.2 | Trophy winner calculation | ✅ Complete |
+| Phase 8.3 | Trophy list with winners | ✅ Complete |
 | Phase 9.1 | Public show schedule | 🔲 Pending |
 | Phase 9.2 | Public results | 🔲 Pending |
 | Phase 9.3 | Public trophy winners | 🔲 Pending |

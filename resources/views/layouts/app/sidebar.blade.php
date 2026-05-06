@@ -31,6 +31,9 @@
                         <flux:sidebar.item icon="trophy" :href="route('admin.leaderboard')" :current="request()->routeIs('admin.leaderboard')" wire:navigate>
                             {{ __('Leaderboard') }}
                         </flux:sidebar.item>
+                        <flux:sidebar.item icon="gift" :href="route('admin.trophies.index')" :current="request()->routeIs('admin.trophies.*')" wire:navigate>
+                            {{ __('Trophies') }}
+                        </flux:sidebar.item>
                     </flux:sidebar.group>
                 @endif
             </flux:sidebar.nav>
