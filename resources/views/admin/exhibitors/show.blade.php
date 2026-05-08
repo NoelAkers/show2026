@@ -42,6 +42,10 @@
                         <dd>{{ $exhibitor->is_resident ? 'Yes' : 'No' }}</dd>
                     </div>
                     <div>
+                        <dt class="font-medium text-zinc-500">Novice</dt>
+                        <dd>{{ $exhibitor->is_novice ? 'Yes' : 'No' }}</dd>
+                    </div>
+                    <div>
                         <dt class="font-medium text-zinc-500">Email</dt>
                         <dd>{{ $exhibitor->email ?? '—' }}</dd>
                     </div>

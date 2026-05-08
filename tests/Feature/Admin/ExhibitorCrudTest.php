@@ -145,6 +145,37 @@ it('show page displays fee summary correctly', function () {
         ->assertSee('£1.50'); // 3 × 50p = £1.50
 });
 
+it('exhibitor defaults to novice on creation', function () {
+    $this->actingAs(exhibitorAdmin())
+        ->post(route('admin.exhibitors.store'), [
+            'first_name' => 'Jane',
+            'last_name' => 'Doe',
+            'type' => 'adult',
+        ])
+        ->assertRedirect(route('admin.exhibitors.index'));
+
+    $this->assertDatabaseHas('exhibitors', [
+        'first_name' => 'Jane',
+        'last_name' => 'Doe',
+        'is_novice' => true,
+    ]);
+});
+
+it('admin can set an exhibitor as not a novice', function () {
+    $exhibitor = Exhibitor::factory()->novice()->create(['first_name' => 'Old', 'last_name' => 'Name', 'full_name' => 'Old Name', 'sort_name' => 'Name, Old']);
+
+    $this->actingAs(exhibitorAdmin())
+        ->put(route('admin.exhibitors.update', $exhibitor), [
+            'first_name' => 'Old',
+            'last_name' => 'Name',
+            'type' => 'adult',
+            'is_novice' => '0',
+        ])
+        ->assertRedirect(route('admin.exhibitors.show', $exhibitor));
+
+    expect($exhibitor->fresh()->is_novice)->toBeFalse();
+});
+
 it('guest is redirected from exhibitor index', function () {
     $this->get(route('admin.exhibitors.index'))
         ->assertRedirect(route('login'));

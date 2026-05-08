@@ -26,6 +26,7 @@ class UpdateExhibitorRequest extends FormRequest
             'type' => ['required', 'in:adult,junior'],
             'is_resident' => ['boolean'],
             'has_paid' => ['boolean'],
+            'is_novice' => ['boolean'],
         ];
     }
 }

@@ -33,3 +33,10 @@
 
    **Resolution:** Changed to `$this->route('show_section')`. Added a test for saving a section with
    its existing name unchanged, which would have caught this immediately.
+
+4. Exhibitor needs an additional boolean field to indicate if they are a novice. It should default to true. [RESOLVED]
+
+   **Resolution:** Added `is_novice boolean default true` column to the `exhibitors` table via migration.
+   Updated the `Exhibitor` model (`#[Fillable]` and cast), `ExhibitorFactory` (default + `novice()`/`notNovice()` states),
+   `StoreExhibitorRequest` and `UpdateExhibitorRequest` (validation rule), create/edit views (checkbox), and show view (detail row).
+   Two new tests cover the default value on create and the ability to un-mark a novice.
