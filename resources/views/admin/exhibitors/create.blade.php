@@ -57,6 +57,12 @@
                 @error('is_resident') <flux:error>{{ $message }}</flux:error> @enderror
             </flux:field>
 
+            <flux:field>
+                <flux:checkbox name="is_novice" value="1" :checked="old('is_novice', true)" />
+                <flux:label>Novice</flux:label>
+                @error('is_novice') <flux:error>{{ $message }}</flux:error> @enderror
+            </flux:field>
+
             <div class="flex gap-2">
                 <flux:button type="submit" variant="primary">Add Exhibitor</flux:button>
                 <flux:button :href="route('admin.exhibitors.index')" variant="ghost" wire:navigate>Cancel</flux:button>

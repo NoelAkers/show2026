@@ -29,6 +29,7 @@ class ExhibitorFactory extends Factory
             'type' => 'adult',
             'is_resident' => false,
             'has_paid' => false,
+            'is_novice' => true,
         ];
     }
 
@@ -50,5 +51,15 @@ class ExhibitorFactory extends Factory
     public function nonResident(): static
     {
         return $this->state(fn (array $attributes) => ['is_resident' => false]);
+    }
+
+    public function novice(): static
+    {
+        return $this->state(fn (array $attributes) => ['is_novice' => true]);
+    }
+
+    public function notNovice(): static
+    {
+        return $this->state(fn (array $attributes) => ['is_novice' => false]);
     }
 }
