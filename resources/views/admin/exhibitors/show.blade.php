@@ -72,8 +72,22 @@
                         <dd>{{ $exhibitor->chargeableEntries() }}</dd>
                     </div>
                     <div>
-                        <dt class="font-medium text-zinc-500">Total Fee Owed</dt>
+                        <dt class="font-medium text-zinc-500">Fee Owed</dt>
                         <dd class="font-semibold">£{{ number_format($exhibitor->feeOwedPence() / 100, 2) }}</dd>
+                    </div>
+                    <div>
+                        <dt class="font-medium text-zinc-500">Amount Paid</dt>
+                        <dd class="font-semibold">£{{ number_format($exhibitor->amount_paid_pence / 100, 2) }}</dd>
+                    </div>
+                    <div>
+                        <dt class="font-medium text-zinc-500">Balance</dt>
+                        <dd class="font-semibold {{ $exhibitor->balancePence() > 0 ? 'text-amber-600 dark:text-amber-400' : 'text-green-600 dark:text-green-400' }}">
+                            @if ($exhibitor->balancePence() < 0)
+                                −£{{ number_format(abs($exhibitor->balancePence()) / 100, 2) }} (refund owed)
+                            @else
+                                £{{ number_format($exhibitor->balancePence() / 100, 2) }}
+                            @endif
+                        </dd>
                     </div>
                     <div>
                         <dt class="font-medium text-zinc-500">Payment Status</dt>
@@ -87,20 +101,34 @@
                     </div>
                 </dl>
 
-                <div class="mt-4">
-                    @if ($exhibitor->has_paid)
-                        <form method="POST" action="{{ route('admin.exhibitors.mark-unpaid', $exhibitor) }}">
-                            @csrf
-                            @method('PATCH')
-                            <flux:button variant="ghost" type="submit">Mark as Unpaid</flux:button>
-                        </form>
-                    @else
-                        <form method="POST" action="{{ route('admin.exhibitors.mark-paid', $exhibitor) }}">
-                            @csrf
-                            @method('PATCH')
-                            <flux:button variant="primary" type="submit">Mark as Paid</flux:button>
-                        </form>
-                    @endif
+                <div class="mt-4 flex flex-wrap items-end gap-4">
+                    <form method="POST" action="{{ route('admin.exhibitors.update-payment', $exhibitor) }}">
+                        @csrf
+                        @method('PATCH')
+                        <flux:field>
+                            <flux:label>Amount Paid (pence)</flux:label>
+                            <div class="flex gap-2">
+                                <flux:input type="number" name="amount_paid_pence" :value="$exhibitor->amount_paid_pence" min="0" class="w-32" />
+                                <flux:button type="submit" size="sm">Update</flux:button>
+                            </div>
+                        </flux:field>
+                    </form>
+
+                    <div class="flex gap-2">
+                        @if ($exhibitor->has_paid)
+                            <form method="POST" action="{{ route('admin.exhibitors.mark-unpaid', $exhibitor) }}">
+                                @csrf
+                                @method('PATCH')
+                                <flux:button variant="ghost" type="submit">Mark as Unpaid</flux:button>
+                            </form>
+                        @else
+                            <form method="POST" action="{{ route('admin.exhibitors.mark-paid', $exhibitor) }}">
+                                @csrf
+                                @method('PATCH')
+                                <flux:button variant="primary" type="submit">Mark as Paid</flux:button>
+                            </form>
+                        @endif
+                    </div>
                 </div>
             </div>
         </div>

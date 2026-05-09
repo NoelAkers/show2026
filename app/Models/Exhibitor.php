@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 #[Fillable([
     'first_name', 'last_name', 'full_name', 'sort_name',
-    'email', 'phone', 'address', 'type', 'is_resident', 'has_paid', 'is_novice',
+    'email', 'phone', 'address', 'type', 'is_resident', 'has_paid', 'is_novice', 'amount_paid_pence',
 ])]
 class Exhibitor extends Model
 {
@@ -58,5 +58,10 @@ class Exhibitor extends Model
     public function feeOwedPence(): int
     {
         return $this->chargeableEntries() * config('show.entry_fee_pence');
+    }
+
+    public function balancePence(): int
+    {
+        return $this->feeOwedPence() - $this->amount_paid_pence;
     }
 }

@@ -29,6 +29,7 @@ class ExhibitorFactory extends Factory
             'type' => 'adult',
             'is_resident' => false,
             'has_paid' => false,
+            'amount_paid_pence' => 0,
             'is_novice' => true,
         ];
     }

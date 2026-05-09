@@ -113,23 +113,30 @@ it('admin cannot delete an exhibitor who has entries', function () {
 });
 
 it('admin can mark an exhibitor as paid', function () {
-    $exhibitor = Exhibitor::factory()->create(['has_paid' => false]);
+    $section = ShowSection::factory()->create();
+    $class = ShowClass::factory()->create(['show_section_id' => $section->id]);
+    $exhibitor = Exhibitor::factory()->adult()->create(['has_paid' => false, 'amount_paid_pence' => 0]);
+    Entry::factory()->count(2)->create(['show_class_id' => $class->id, 'exhibitor_id' => $exhibitor->id]);
 
     $this->actingAs(exhibitorAdmin())
         ->patch(route('admin.exhibitors.mark-paid', $exhibitor))
         ->assertRedirect();
 
-    expect($exhibitor->fresh()->has_paid)->toBeTrue();
+    $fresh = $exhibitor->fresh();
+    expect($fresh->has_paid)->toBeTrue()
+        ->and($fresh->amount_paid_pence)->toBe($exhibitor->feeOwedPence());
 });
 
 it('admin can mark an exhibitor as unpaid', function () {
-    $exhibitor = Exhibitor::factory()->create(['has_paid' => true]);
+    $exhibitor = Exhibitor::factory()->create(['has_paid' => true, 'amount_paid_pence' => 100]);
 
     $this->actingAs(exhibitorAdmin())
         ->patch(route('admin.exhibitors.mark-unpaid', $exhibitor))
         ->assertRedirect();
 
-    expect($exhibitor->fresh()->has_paid)->toBeFalse();
+    $fresh = $exhibitor->fresh();
+    expect($fresh->has_paid)->toBeFalse()
+        ->and($fresh->amount_paid_pence)->toBe(0);
 });
 
 it('show page displays fee summary correctly', function () {
@@ -141,8 +148,46 @@ it('show page displays fee summary correctly', function () {
     $this->actingAs(exhibitorAdmin())
         ->get(route('admin.exhibitors.show', $exhibitor))
         ->assertOk()
-        ->assertSee('3')      // total entries
-        ->assertSee('£1.50'); // 3 × 50p = £1.50
+        ->assertSee('3')         // total entries
+        ->assertSee('£1.50')     // fee owed: 3 × 50p = £1.50
+        ->assertSee('Amount Paid')
+        ->assertSee('Balance');
+});
+
+it('admin can update amount paid for an exhibitor', function () {
+    $exhibitor = Exhibitor::factory()->create(['amount_paid_pence' => 0]);
+
+    $this->actingAs(exhibitorAdmin())
+        ->patch(route('admin.exhibitors.update-payment', $exhibitor), ['amount_paid_pence' => 75])
+        ->assertRedirect();
+
+    expect($exhibitor->fresh()->amount_paid_pence)->toBe(75);
+});
+
+it('amount_paid_pence must be a non-negative integer', function () {
+    $exhibitor = Exhibitor::factory()->create();
+
+    $this->actingAs(exhibitorAdmin())
+        ->patch(route('admin.exhibitors.update-payment', $exhibitor), ['amount_paid_pence' => -10])
+        ->assertSessionHasErrors('amount_paid_pence');
+});
+
+it('balance is zero when amount paid equals fee owed', function () {
+    $section = ShowSection::factory()->create();
+    $class = ShowClass::factory()->create(['show_section_id' => $section->id]);
+    $exhibitor = Exhibitor::factory()->adult()->create(['amount_paid_pence' => 0]);
+    Entry::factory()->count(2)->create(['show_class_id' => $class->id, 'exhibitor_id' => $exhibitor->id]);
+
+    $exhibitor->update(['amount_paid_pence' => $exhibitor->feeOwedPence()]);
+
+    expect($exhibitor->balancePence())->toBe(0);
+});
+
+it('balance is negative when overpaid', function () {
+    $exhibitor = Exhibitor::factory()->adult()->create(['amount_paid_pence' => 500]);
+
+    // no entries, so fee owed = 0; 500 pence paid = refund owed
+    expect($exhibitor->balancePence())->toBe(-500);
 });
 
 it('exhibitor defaults to novice on creation', function () {

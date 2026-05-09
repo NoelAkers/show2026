@@ -22,22 +22,44 @@
                 <flux:table.columns>
                     <flux:table.column>Name</flux:table.column>
                     <flux:table.column>Description</flux:table.column>
+                    <flux:table.column>Type</flux:table.column>
                     <flux:table.column>Classes</flux:table.column>
                     <flux:table.column>Current Winner(s)</flux:table.column>
                     <flux:table.column></flux:table.column>
                 </flux:table.columns>
                 <flux:table.rows>
                     @foreach ($trophies as $trophy)
-                        @php $winners = $trophy->winners(); @endphp
                         <flux:table.row :key="$trophy->id">
                             <flux:table.cell variant="strong">{{ $trophy->name }}</flux:table.cell>
                             <flux:table.cell>{{ $trophy->description ?? '—' }}</flux:table.cell>
-                            <flux:table.cell>{{ $trophy->showClasses->count() }}</flux:table.cell>
                             <flux:table.cell>
-                                @if ($winners->isEmpty())
-                                    <span class="text-zinc-400">No winner yet</span>
+                                @if ($trophy->is_points_based)
+                                    <flux:badge color="blue">Points</flux:badge>
                                 @else
-                                    {{ $winners->pluck('exhibitor')->pluck('full_name')->join(', ') }}
+                                    <flux:badge color="purple">Judge</flux:badge>
+                                @endif
+                            </flux:table.cell>
+                            <flux:table.cell>
+                                @if ($trophy->is_points_based)
+                                    {{ $trophy->showClasses->count() }}
+                                @else
+                                    —
+                                @endif
+                            </flux:table.cell>
+                            <flux:table.cell>
+                                @if ($trophy->is_points_based)
+                                    @php $winners = $trophy->winners(); @endphp
+                                    @if ($winners->isEmpty())
+                                        <span class="text-zinc-400">No winner yet</span>
+                                    @else
+                                        {{ $winners->pluck('exhibitor')->pluck('full_name')->join(', ') }}
+                                    @endif
+                                @else
+                                    @if ($trophy->winningEntry)
+                                        {{ $trophy->winningEntry->exhibitor->full_name }}
+                                    @else
+                                        <span class="text-zinc-400">No winner yet</span>
+                                    @endif
                                 @endif
                             </flux:table.cell>
                             <flux:table.cell>

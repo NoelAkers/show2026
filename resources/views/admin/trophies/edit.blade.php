@@ -5,7 +5,8 @@
             <flux:heading size="xl">Edit Trophy</flux:heading>
         </div>
 
-        <form method="POST" action="{{ route('admin.trophies.update', $trophy) }}" class="max-w-lg space-y-4">
+        <form method="POST" action="{{ route('admin.trophies.update', $trophy) }}" class="max-w-lg space-y-4"
+              x-data="{ awardType: '{{ old('is_points_based', $trophy->is_points_based ? '1' : '0') }}' }">
             @csrf
             @method('PUT')
 
@@ -21,33 +22,80 @@
                 @error('description') <flux:error>{{ $message }}</flux:error> @enderror
             </flux:field>
 
-            @if ($sections->isNotEmpty())
-                <flux:field>
-                    <flux:label>Assigned Classes</flux:label>
-                    <div class="space-y-3">
-                        @foreach ($sections as $section)
-                            @if ($section->showClasses->isNotEmpty())
-                                <div>
-                                    <p class="mb-1 text-xs font-semibold uppercase tracking-wide text-zinc-500">{{ $section->name }}</p>
-                                    <div class="space-y-1 pl-2">
-                                        @foreach ($section->showClasses as $class)
-                                            <div class="flex items-center gap-2">
-                                                <flux:checkbox
-                                                    name="class_ids[]"
-                                                    value="{{ $class->id }}"
-                                                    :checked="in_array($class->id, old('class_ids', $trophy->showClasses->pluck('id')->toArray()))"
-                                                />
-                                                <span class="text-sm">{{ $class->name }}</span>
-                                            </div>
-                                        @endforeach
+            <flux:field>
+                <flux:label>Award Type</flux:label>
+                <flux:select name="is_points_based" x-model="awardType">
+                    <flux:select.option value="1">Points-based (awarded by class results)</flux:select.option>
+                    <flux:select.option value="0">Judge-awarded (selected by a judge)</flux:select.option>
+                </flux:select>
+                @error('is_points_based') <flux:error>{{ $message }}</flux:error> @enderror
+            </flux:field>
+
+            <div x-show="awardType === '1'">
+                @if ($sections->isNotEmpty())
+                    <flux:field>
+                        <flux:label>Assigned Classes</flux:label>
+                        <div class="space-y-3">
+                            @foreach ($sections as $section)
+                                @if ($section->showClasses->isNotEmpty())
+                                    <div>
+                                        <p class="mb-1 text-xs font-semibold uppercase tracking-wide text-zinc-500">{{ $section->name }}</p>
+                                        <div class="space-y-1 pl-2">
+                                            @foreach ($section->showClasses as $class)
+                                                <div class="flex items-center gap-2">
+                                                    <flux:checkbox
+                                                        name="class_ids[]"
+                                                        value="{{ $class->id }}"
+                                                        :checked="in_array($class->id, old('class_ids', $trophy->showClasses->pluck('id')->toArray()))"
+                                                    />
+                                                    <span class="text-sm">{{ $class->name }}</span>
+                                                </div>
+                                            @endforeach
+                                        </div>
                                     </div>
-                                </div>
-                            @endif
-                        @endforeach
-                    </div>
-                    @error('class_ids') <flux:error>{{ $message }}</flux:error> @enderror
+                                @endif
+                            @endforeach
+                        </div>
+                        @error('class_ids') <flux:error>{{ $message }}</flux:error> @enderror
+                    </flux:field>
+                @endif
+            </div>
+
+            <div x-show="awardType === '0'" class="space-y-4">
+                <flux:field>
+                    <flux:label>Judge</flux:label>
+                    @if ($judges->isNotEmpty())
+                        <flux:select name="judge_id">
+                            <flux:select.option value="">Select a judge…</flux:select.option>
+                            @foreach ($judges as $judge)
+                                <flux:select.option value="{{ $judge->id }}" :selected="old('judge_id', $trophy->judge_id) == $judge->id">
+                                    {{ $judge->name }}
+                                </flux:select.option>
+                            @endforeach
+                        </flux:select>
+                    @else
+                        <p class="text-sm text-zinc-500">No judges are set up yet.</p>
+                    @endif
+                    @error('judge_id') <flux:error>{{ $message }}</flux:error> @enderror
                 </flux:field>
-            @endif
+
+                <flux:field>
+                    <flux:label>Winning Entry</flux:label>
+                    @if ($entries->isNotEmpty())
+                        <flux:select name="winning_entry_id">
+                            <flux:select.option value="">No winner selected</flux:select.option>
+                            @foreach ($entries as $entry)
+                                <flux:select.option value="{{ $entry->id }}" :selected="old('winning_entry_id', $trophy->winning_entry_id) == $entry->id">
+                                    #{{ $entry->entry_number }} — {{ $entry->exhibitor->full_name }}
+                                </flux:select.option>
+                            @endforeach
+                        </flux:select>
+                    @else
+                        <p class="text-sm text-zinc-500">No entries exist yet.</p>
+                    @endif
+                    @error('winning_entry_id') <flux:error>{{ $message }}</flux:error> @enderror
+                </flux:field>
+            </div>
 
             <div class="flex gap-2">
                 <flux:button type="submit" variant="primary">Save Changes</flux:button>

@@ -18,6 +18,17 @@ class TrophyFactory extends Factory
         return [
             'name' => fake()->unique()->words(3, true),
             'description' => fake()->optional()->sentence(),
+            'is_points_based' => true,
         ];
+    }
+
+    public function pointsBased(): static
+    {
+        return $this->state(['is_points_based' => true]);
+    }
+
+    public function judgeAwarded(): static
+    {
+        return $this->state(['is_points_based' => false]);
     }
 }

@@ -29,6 +29,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     Route::get('exhibitors/{exhibitor}/add-entry', [ExhibitorController::class, 'addEntry'])->name('exhibitors.add-entry');
     Route::post('exhibitors/{exhibitor}/add-entry', [ExhibitorController::class, 'storeEntry'])->name('exhibitors.store-entry');
     Route::get('exhibitors/{exhibitor}/labels', [ExhibitorController::class, 'labels'])->name('exhibitors.labels');
+    Route::patch('exhibitors/{exhibitor}/update-payment', [ExhibitorController::class, 'updatePayment'])->name('exhibitors.update-payment');
     Route::resource('judges', JudgeController::class)->except(['show']);
     Route::post('show-sections/{show_section}/show-classes/{show_class}/results', [AdminResultController::class, 'store'])->name('show-sections.show-classes.results.store');
     Route::patch('show-sections/{show_section}/show-classes/{show_class}/results/{result}', [AdminResultController::class, 'update'])->name('show-sections.show-classes.results.update');

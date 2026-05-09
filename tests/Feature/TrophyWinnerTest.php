@@ -89,3 +89,22 @@ it('trophy with assigned classes but no results returns empty winner list', func
 
     expect($trophy->winners())->toBeEmpty();
 });
+
+it('judge-awarded trophy with no winning entry returns empty winner list', function () {
+    $trophy = Trophy::factory()->judgeAwarded()->create();
+
+    expect($trophy->winners())->toBeEmpty();
+});
+
+it('judge-awarded trophy returns the winning entry exhibitor as winner', function () {
+    $exhibitor = Exhibitor::factory()->create();
+    $class = ShowClass::factory()->create();
+    $entry = Entry::factory()->create(['show_class_id' => $class->id, 'exhibitor_id' => $exhibitor->id]);
+    $trophy = Trophy::factory()->judgeAwarded()->create(['winning_entry_id' => $entry->id]);
+
+    $winners = $trophy->winners();
+
+    expect($winners)->toHaveCount(1);
+    expect($winners->first()['exhibitor']->id)->toBe($exhibitor->id);
+    expect($winners->first()['points'])->toBeNull();
+});

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\StoreExhibitorEntryRequest;
 use App\Http\Requests\Admin\StoreExhibitorRequest;
+use App\Http\Requests\Admin\UpdateExhibitorPaymentRequest;
 use App\Http\Requests\Admin\UpdateExhibitorRequest;
 use App\Models\Entry;
 use App\Models\Exhibitor;
@@ -126,15 +127,28 @@ class ExhibitorController extends Controller
 
     public function markPaid(Exhibitor $exhibitor): RedirectResponse
     {
-        $exhibitor->update(['has_paid' => true]);
+        $exhibitor->update([
+            'has_paid' => true,
+            'amount_paid_pence' => $exhibitor->feeOwedPence(),
+        ]);
 
         return back()->with('success', "{$exhibitor->full_name} marked as paid.");
     }
 
     public function markUnpaid(Exhibitor $exhibitor): RedirectResponse
     {
-        $exhibitor->update(['has_paid' => false]);
+        $exhibitor->update([
+            'has_paid' => false,
+            'amount_paid_pence' => 0,
+        ]);
 
         return back()->with('success', "{$exhibitor->full_name} marked as unpaid.");
+    }
+
+    public function updatePayment(UpdateExhibitorPaymentRequest $request, Exhibitor $exhibitor): RedirectResponse
+    {
+        $exhibitor->update($request->validated());
+
+        return back()->with('success', 'Payment amount updated.');
     }
 }

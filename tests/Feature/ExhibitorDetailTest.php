@@ -58,5 +58,7 @@ it('fee summary on exhibitor detail is correct', function () {
     $this->actingAs(User::factory()->admin()->create())
         ->get(route('admin.exhibitors.show', $exhibitor))
         ->assertOk()
-        ->assertSee($expectedFee);
+        ->assertSee($expectedFee)
+        ->assertSee('Amount Paid')
+        ->assertSee('Balance');
 });

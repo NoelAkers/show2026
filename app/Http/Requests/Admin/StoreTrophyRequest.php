@@ -20,8 +20,11 @@ class StoreTrophyRequest extends FormRequest
         return [
             'name' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string', 'max:255'],
-            'class_ids' => ['nullable', 'array'],
+            'is_points_based' => ['boolean'],
+            'class_ids' => ['nullable', 'array', 'required_if:is_points_based,1'],
             'class_ids.*' => ['integer', 'exists:show_classes,id'],
+            'judge_id' => ['nullable', 'integer', 'exists:users,id', 'required_if:is_points_based,0'],
+            'winning_entry_id' => ['nullable', 'integer', 'exists:entries,id'],
         ];
     }
 }
