@@ -151,12 +151,12 @@
         <div class="labels-list">
             @foreach ($entries as $entry)
                 <div class="label">
-                    <div class="label-section">{{ $entry->showClass->showSection->name }}</div>
-                    <div class="label-class">{{ $entry->showClass->name }}</div>
+                    {{-- <div class="label-section">{{ $entry->showClass->showSection->name }}</div> --}}
+                    <div class="label-class">Class {{ $entry->showClass->id }}: {{ $entry->showClass->name }}</div>
                     <hr class="label-divider">
-                    <div class="label-exhibitor">{{ $exhibitor->sort_name }}</div>
-                    <div class="label-entry">{{ $entry->entry_number }}</div>
+                    <div class="label-exhibitor">Exhibitor: {{ $exhibitor->id }}</div>
                     <div class="label-barcode" data-value="{{ $entry->entry_number }}"></div>
+                    <div class="label-entry">{{ Str::padLeft($entry->entry_number, 4, '0') }}</div>
                 </div>
             @endforeach
         </div>
