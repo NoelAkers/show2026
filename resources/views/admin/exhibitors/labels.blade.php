@@ -7,27 +7,21 @@
     @vite(['resources/css/app.css'])
     <script src="{{ asset('vendor/jsbarcode.min.js') }}"></script>
     <style>
-        @page { margin: 10mm; }
-
-        .label-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 4mm;
-        }
+        @page { size: 2in 1in; margin: 1.5mm; }
 
         .label {
-            border: 1px dashed #bbb;
-            padding: 3mm 4mm;
+            padding: 1mm 2mm;
             display: flex;
             flex-direction: column;
             align-items: center;
             text-align: center;
-            gap: 1.5mm;
+            gap: 0.8mm;
             font-family: ui-sans-serif, system-ui, sans-serif;
+            box-sizing: border-box;
         }
 
         .label-section {
-            font-size: 8px;
+            font-size: 6px;
             text-transform: uppercase;
             letter-spacing: 0.06em;
             color: #888;
@@ -35,7 +29,7 @@
         }
 
         .label-class {
-            font-size: 11px;
+            font-size: 8px;
             font-weight: 700;
             line-height: 1.2;
         }
@@ -46,12 +40,12 @@
         }
 
         .label-exhibitor {
-            font-size: 9px;
+            font-size: 7px;
             color: #555;
         }
 
         .label-entry {
-            font-size: 28px;
+            font-size: 18px;
             font-weight: 900;
             letter-spacing: -0.02em;
             line-height: 1;
@@ -61,7 +55,7 @@
         .label-barcode svg {
             display: block;
             width: 100%;
-            max-width: 58mm;
+            max-width: 46mm;
             height: auto;
         }
 
@@ -114,16 +108,31 @@
 
             .btn-print:hover { background: #4338ca; }
 
-            .screen-body { padding: 20px; }
+            .labels-list {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 8px;
+                padding: 20px;
+            }
 
-            .label-grid { background: white; padding: 16px; border-radius: 8px; }
+            .label {
+                width: 2in;
+                height: 1in;
+                border: 1px dashed #bbb;
+                background: white;
+            }
         }
 
         @media print {
             .screen-header { display: none; }
-            .screen-body { padding: 0; }
-            .label-grid { background: none; padding: 0; border-radius: 0; }
-            .label { break-inside: avoid; page-break-inside: avoid; }
+            .label {
+                width: 100%;
+                border: none;
+                background: none;
+                break-after: page;
+                page-break-after: always;
+            }
         }
     </style>
 </head>
@@ -136,24 +145,22 @@
         <button class="btn-print" onclick="window.print()">Print</button>
     </div>
 
-    <div class="screen-body">
-        @if ($entries->isEmpty())
-            <p style="text-align:center; color:#6b7280; padding: 40px 0;">No entries to print.</p>
-        @else
-            <div class="label-grid">
-                @foreach ($entries as $entry)
-                    <div class="label">
-                        <div class="label-section">{{ $entry->showClass->showSection->name }}</div>
-                        <div class="label-class">{{ $entry->showClass->name }}</div>
-                        <hr class="label-divider">
-                        <div class="label-exhibitor">{{ $exhibitor->sort_name }}</div>
-                        <div class="label-entry">{{ $entry->entry_number }}</div>
-                        <div class="label-barcode" data-value="{{ $entry->entry_number }}"></div>
-                    </div>
-                @endforeach
-            </div>
-        @endif
-    </div>
+    @if ($entries->isEmpty())
+        <p style="text-align:center; color:#6b7280; padding: 40px 0;">No entries to print.</p>
+    @else
+        <div class="labels-list">
+            @foreach ($entries as $entry)
+                <div class="label">
+                    <div class="label-section">{{ $entry->showClass->showSection->name }}</div>
+                    <div class="label-class">{{ $entry->showClass->name }}</div>
+                    <hr class="label-divider">
+                    <div class="label-exhibitor">{{ $exhibitor->sort_name }}</div>
+                    <div class="label-entry">{{ $entry->entry_number }}</div>
+                    <div class="label-barcode" data-value="{{ $entry->entry_number }}"></div>
+                </div>
+            @endforeach
+        </div>
+    @endif
 
     <script>
         document.querySelectorAll('.label-barcode').forEach(function (el) {
@@ -162,7 +169,7 @@
             JsBarcode(svg, el.dataset.value, {
                 format: 'CODE128',
                 width: 1.5,
-                height: 36,
+                height: 18,
                 displayValue: false,
                 margin: 0,
             });
