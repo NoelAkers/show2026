@@ -16,7 +16,7 @@
         @endif
 
         <form method="GET" action="{{ route('admin.exhibitors.index') }}" class="flex flex-wrap gap-3">
-            <flux:input name="search" value="{{ request('search') }}" placeholder="Search by name or email…" class="w-64" />
+            <flux:input name="search" value="{{ request('search') }}" placeholder="Search by name…" class="w-64" />
 
             <flux:select name="type" class="w-36">
                 <flux:select.option value="">All types</flux:select.option>

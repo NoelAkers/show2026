@@ -25,24 +25,6 @@
             </div>
 
             <flux:field>
-                <flux:label>Email</flux:label>
-                <flux:input type="email" name="email" value="{{ old('email') }}" />
-                @error('email') <flux:error>{{ $message }}</flux:error> @enderror
-            </flux:field>
-
-            <flux:field>
-                <flux:label>Phone</flux:label>
-                <flux:input name="phone" value="{{ old('phone') }}" />
-                @error('phone') <flux:error>{{ $message }}</flux:error> @enderror
-            </flux:field>
-
-            <flux:field>
-                <flux:label>Address</flux:label>
-                <flux:input name="address" value="{{ old('address') }}" />
-                @error('address') <flux:error>{{ $message }}</flux:error> @enderror
-            </flux:field>
-
-            <flux:field>
                 <flux:label>Type</flux:label>
                 <flux:select name="type">
                     <flux:select.option value="adult" :selected="old('type', 'adult') === 'adult'">Adult</flux:select.option>

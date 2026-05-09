@@ -19,10 +19,7 @@ class ExhibitorController extends Controller
     public function index(Request $request): View
     {
         $exhibitors = Exhibitor::query()
-            ->when($request->filled('search'), fn ($q) => $q->where(function ($q) use ($request) {
-                $q->where('full_name', 'like', '%'.$request->search.'%')
-                    ->orWhere('email', 'like', '%'.$request->search.'%');
-            }))
+            ->when($request->filled('search'), fn ($q) => $q->where('full_name', 'like', '%'.$request->search.'%'))
             ->when($request->filled('type'), fn ($q) => $q->where('type', $request->type))
             ->when($request->filled('is_resident'), fn ($q) => $q->where('is_resident', (bool) $request->is_resident))
             ->when($request->filled('has_paid'), fn ($q) => $q->where('has_paid', (bool) $request->has_paid))

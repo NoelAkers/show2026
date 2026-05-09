@@ -45,18 +45,7 @@
                         <dt class="font-medium text-zinc-500">Novice</dt>
                         <dd>{{ $exhibitor->is_novice ? 'Yes' : 'No' }}</dd>
                     </div>
-                    <div>
-                        <dt class="font-medium text-zinc-500">Email</dt>
-                        <dd>{{ $exhibitor->email ?? '—' }}</dd>
-                    </div>
-                    <div>
-                        <dt class="font-medium text-zinc-500">Phone</dt>
-                        <dd>{{ $exhibitor->phone ?? '—' }}</dd>
-                    </div>
-                    <div class="col-span-2">
-                        <dt class="font-medium text-zinc-500">Address</dt>
-                        <dd>{{ $exhibitor->address ?? '—' }}</dd>
-                    </div>
+
                 </dl>
             </div>
 

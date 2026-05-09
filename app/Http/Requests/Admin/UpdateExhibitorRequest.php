@@ -20,9 +20,6 @@ class UpdateExhibitorRequest extends FormRequest
         return [
             'first_name' => ['required', 'string', 'max:255'],
             'last_name' => ['required', 'string', 'max:255'],
-            'email' => ['nullable', 'email', 'max:255'],
-            'phone' => ['nullable', 'string', 'max:50'],
-            'address' => ['nullable', 'string', 'max:500'],
             'type' => ['required', 'in:adult,junior'],
             'is_resident' => ['boolean'],
             'has_paid' => ['boolean'],
