@@ -10,6 +10,9 @@ use App\Http\Controllers\Admin\ShowSectionController;
 use App\Http\Controllers\Admin\TrophyController;
 use App\Http\Controllers\Judge\ResultController as JudgeResultController;
 use App\Http\Controllers\Judge\SectionController;
+use App\Http\Controllers\Public\ResultController as PublicResultController;
+use App\Http\Controllers\Public\ScheduleController;
+use App\Http\Controllers\Public\TrophyController as PublicTrophyController;
 use Illuminate\Support\Facades\Route;
 
 Route::view('/', 'welcome')->name('home');
@@ -44,6 +47,12 @@ Route::prefix('judge')->name('judge.')->middleware(['auth', 'judge'])->group(fun
     Route::get('sections/{show_section}/classes/{show_class}/results', [JudgeResultController::class, 'index'])->name('results.index');
     Route::post('sections/{show_section}/classes/{show_class}/results', [JudgeResultController::class, 'store'])->name('results.store');
     Route::patch('sections/{show_section}/classes/{show_class}/results/{result}', [JudgeResultController::class, 'update'])->name('results.update');
+});
+
+Route::prefix('public')->name('public.')->group(function () {
+    Route::get('schedule', [ScheduleController::class, 'index'])->name('schedule');
+    Route::get('results', [PublicResultController::class, 'index'])->name('results');
+    Route::get('trophies', [PublicTrophyController::class, 'index'])->name('trophies');
 });
 
 require __DIR__.'/settings.php';
