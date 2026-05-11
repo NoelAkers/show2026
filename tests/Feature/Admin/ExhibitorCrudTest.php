@@ -2,6 +2,8 @@
 
 use App\Models\Entry;
 use App\Models\Exhibitor;
+use App\Models\PrizeLevel;
+use App\Models\Result;
 use App\Models\ShowClass;
 use App\Models\ShowSection;
 use App\Models\User;
@@ -247,4 +249,58 @@ it('unchecking is_resident and is_novice on update saves false', function () {
 it('guest is redirected from exhibitor index', function () {
     $this->get(route('admin.exhibitors.index'))
         ->assertRedirect(route('login'));
+});
+
+it('winningsPence returns 0 when exhibitor has no placed results', function () {
+    $exhibitor = Exhibitor::factory()->adult()->create();
+    Entry::factory()->for($exhibitor)->create();
+
+    expect($exhibitor->winningsPence())->toBe(0);
+});
+
+it('winningsPence sums prize amounts for placed results', function () {
+    $prizeLevel = PrizeLevel::factory()->create([
+        'first_place_pence' => 300,
+        'second_place_pence' => 150,
+        'third_place_pence' => 75,
+    ]);
+    $class = ShowClass::factory()->for($prizeLevel, 'prizeLevel')->create();
+    $exhibitor = Exhibitor::factory()->adult()->create();
+
+    $entry1 = Entry::factory()->for($class, 'showClass')->for($exhibitor)->create();
+    Result::factory()->for($entry1)->create(['placement' => '1st']);
+
+    $entry2 = Entry::factory()->for($class, 'showClass')->for($exhibitor)->create();
+    Result::factory()->for($entry2)->create(['placement' => '3rd']);
+
+    expect($exhibitor->winningsPence())->toBe(375);
+});
+
+it('winningsPence returns 0 for highly_commended placement', function () {
+    $prizeLevel = PrizeLevel::factory()->create([
+        'first_place_pence' => 300,
+        'second_place_pence' => 150,
+        'third_place_pence' => 75,
+    ]);
+    $class = ShowClass::factory()->for($prizeLevel, 'prizeLevel')->create();
+    $exhibitor = Exhibitor::factory()->adult()->create();
+    $entry = Entry::factory()->for($class, 'showClass')->for($exhibitor)->create();
+    Result::factory()->for($entry)->create(['placement' => 'highly_commended']);
+
+    expect($exhibitor->winningsPence())->toBe(0);
+});
+
+it('balance is reduced by winnings', function () {
+    $prizeLevel = PrizeLevel::factory()->create([
+        'first_place_pence' => 200,
+        'second_place_pence' => 100,
+        'third_place_pence' => 50,
+    ]);
+    $class = ShowClass::factory()->for($prizeLevel, 'prizeLevel')->create();
+    $exhibitor = Exhibitor::factory()->adult()->create(['amount_paid_pence' => 0]);
+    $entry = Entry::factory()->for($class, 'showClass')->for($exhibitor)->create();
+    Result::factory()->for($entry)->create(['placement' => '1st']);
+
+    // feeOwedPence = 1 × 50p = 50, winnings = 200, amount_paid = 0 → balance = -150
+    expect($exhibitor->balancePence())->toBe(50 - 200);
 });

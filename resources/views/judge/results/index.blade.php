@@ -26,21 +26,18 @@
                 <flux:table.columns>
                     <flux:table.column>#</flux:table.column>
                     <flux:table.column>Exhibitor</flux:table.column>
-                    <flux:table.column>Placement</flux:table.column>
-                    <flux:table.column>Notes</flux:table.column>
-                    <flux:table.column></flux:table.column>
+                    <flux:table.column>Result</flux:table.column>
                 </flux:table.columns>
                 <flux:table.rows>
                     @foreach ($showClass->entries as $entry)
                         <flux:table.row :key="$entry->id">
                             <flux:table.cell class="tabular-nums">{{ $entry->entry_number }}</flux:table.cell>
                             <flux:table.cell variant="strong">{{ $entry->exhibitor->full_name }}</flux:table.cell>
-
-                            @if ($entry->result)
-                                <form method="POST" action="{{ route('judge.results.update', [$showSection, $showClass, $entry->result]) }}" class="contents">
-                                    @csrf
-                                    @method('PATCH')
-                                    <flux:table.cell>
+                            <flux:table.cell>
+                                @if ($entry->result)
+                                    <form method="POST" action="{{ route('judge.results.update', [$showSection, $showClass, $entry->result]) }}" class="flex items-center gap-2">
+                                        @csrf
+                                        @method('PATCH')
                                         <flux:select name="placement" class="w-44">
                                             <flux:select.option value="">No placement</flux:select.option>
                                             <flux:select.option value="1st" :selected="$entry->result->placement === '1st'">1st Place</flux:select.option>
@@ -48,19 +45,13 @@
                                             <flux:select.option value="3rd" :selected="$entry->result->placement === '3rd'">3rd Place</flux:select.option>
                                             <flux:select.option value="highly_commended" :selected="$entry->result->placement === 'highly_commended'">Highly Commended</flux:select.option>
                                         </flux:select>
-                                    </flux:table.cell>
-                                    <flux:table.cell>
                                         <flux:input name="notes" value="{{ $entry->result->notes }}" placeholder="Notes…" class="w-48" />
-                                    </flux:table.cell>
-                                    <flux:table.cell>
                                         <flux:button size="sm" type="submit">Save</flux:button>
-                                    </flux:table.cell>
-                                </form>
-                            @else
-                                <form method="POST" action="{{ route('judge.results.store', [$showSection, $showClass]) }}" class="contents">
-                                    @csrf
-                                    <input type="hidden" name="entry_id" value="{{ $entry->id }}">
-                                    <flux:table.cell>
+                                    </form>
+                                @else
+                                    <form method="POST" action="{{ route('judge.results.store', [$showSection, $showClass]) }}" class="flex items-center gap-2">
+                                        @csrf
+                                        <input type="hidden" name="entry_id" value="{{ $entry->id }}">
                                         <flux:select name="placement" class="w-44">
                                             <flux:select.option value="">No placement</flux:select.option>
                                             <flux:select.option value="1st">1st Place</flux:select.option>
@@ -68,15 +59,11 @@
                                             <flux:select.option value="3rd">3rd Place</flux:select.option>
                                             <flux:select.option value="highly_commended">Highly Commended</flux:select.option>
                                         </flux:select>
-                                    </flux:table.cell>
-                                    <flux:table.cell>
                                         <flux:input name="notes" placeholder="Notes…" class="w-48" />
-                                    </flux:table.cell>
-                                    <flux:table.cell>
                                         <flux:button size="sm" type="submit">Save</flux:button>
-                                    </flux:table.cell>
-                                </form>
-                            @endif
+                                    </form>
+                                @endif
+                            </flux:table.cell>
                         </flux:table.row>
                     @endforeach
                 </flux:table.rows>

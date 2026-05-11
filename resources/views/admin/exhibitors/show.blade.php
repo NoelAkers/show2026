@@ -65,6 +65,12 @@
                         <dd class="font-semibold">£{{ number_format($exhibitor->feeOwedPence() / 100, 2) }}</dd>
                     </div>
                     <div>
+                        <dt class="font-medium text-zinc-500">Winnings</dt>
+                        <dd class="font-semibold text-green-600 dark:text-green-400">
+                            £{{ number_format($exhibitor->winningsPence() / 100, 2) }}
+                        </dd>
+                    </div>
+                    <div>
                         <dt class="font-medium text-zinc-500">Amount Paid</dt>
                         <dd class="font-semibold">£{{ number_format($exhibitor->amount_paid_pence / 100, 2) }}</dd>
                     </div>

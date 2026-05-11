@@ -60,8 +60,30 @@ class Exhibitor extends Model
         return $this->chargeableEntries() * config('show.entry_fee_pence');
     }
 
+    public function winningsPence(): int
+    {
+        return $this->entries()
+            ->with(['result', 'showClass.prizeLevel'])
+            ->get()
+            ->sum(function (Entry $entry) {
+                $result = $entry->result;
+                $prizeLevel = $entry->showClass?->prizeLevel;
+
+                if (! $result || ! $prizeLevel) {
+                    return 0;
+                }
+
+                return match ($result->placement) {
+                    '1st' => $prizeLevel->first_place_pence,
+                    '2nd' => $prizeLevel->second_place_pence,
+                    '3rd' => $prizeLevel->third_place_pence,
+                    default => 0,
+                };
+            });
+    }
+
     public function balancePence(): int
     {
-        return $this->feeOwedPence() - $this->amount_paid_pence;
+        return $this->feeOwedPence() - $this->winningsPence() - $this->amount_paid_pence;
     }
 }
