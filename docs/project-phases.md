@@ -776,6 +776,112 @@ Goal: Replace placeholder dashboard with live show stats.
 
 ---
 
+## Phase 11 — Flutter API ✅
+
+Goal: REST API layer consumed by the Flutter "Show Results" app. Judges authenticate via bearer token and submit results from a mobile device without accessing the web interface.
+
+**Design decisions:**
+- `ShowClass.id` doubles as the public class number — no extra `number` column required
+- Placement values are translated at the API layer (`first`/`second`/`third`/`highlyCommended` ↔ `1st`/`2nd`/`3rd`/`highly_commended`); database and admin UI are unchanged
+- All five endpoints are versioned under `/api/`
+
+See `docs/flutter-laravel-API-contract.md` for the full contract and `docs/flutter-api-implementation-plan.md` for the original implementation plan.
+
+---
+
+### Phase 11.1 — Sanctum Setup & Auth Endpoints ✅
+
+**Files created/modified:**
+- `composer.json` — `laravel/sanctum ^4.3` added
+- `database/migrations/..._create_personal_access_tokens_table.php` — published Sanctum migration
+- `config/sanctum.php` — published config
+- `app/Models/User.php` — `HasApiTokens` trait added
+- `bootstrap/app.php` — `api: routes/api.php` registered in `->withRouting(...)`
+- `routes/api.php` — all API routes; `POST /api/login` public; remaining four protected by `auth:sanctum`
+- `app/Http/Controllers/Api/AuthController.php` — `login`, `logout`
+- `app/Http/Requests/Api/LoginRequest.php` — `email` (required, email), `password` (required, string)
+
+**Auth behaviour:**
+- `POST /api/login` — finds user by email where `is_judge = true`; returns 401 if not found or password wrong; issues a Sanctum bearer token and returns `{ token, user: { name } }` on success
+- `POST /api/logout` — deletes `currentAccessToken()`; returns 204
+
+**Tests:** `tests/Feature/Api/AuthTest.php`
+- [x] Judge can login and receives token + user name
+- [x] Non-judge user cannot login (401)
+- [x] Wrong password returns 401
+- [x] Login validates required fields (422)
+- [x] All protected endpoints return 401 without a token
+- [x] Logout deletes the token from the database
+
+---
+
+### Phase 11.2 — Show Class Lookup ✅
+
+**Files created:**
+- `app/Http/Controllers/Api/ShowClassController.php` — `lookup` action; `ShowClass::findOrFail($request->number)` — 404 if missing
+- `app/Http/Resources/ShowClassResource.php` — `id`, `number` (= `id`), `name`, `description`
+
+**Route:** `GET /api/show-classes?number={id}` (Sanctum auth required)
+
+**Tests:** `tests/Feature/Api/ShowClassLookupTest.php`
+- [x] Returns show class by id with all expected fields
+- [x] Returns 404 when class does not exist
+
+---
+
+### Phase 11.3 — Entry Lookup ✅
+
+**Files created:**
+- `app/Http/Controllers/Api/EntryController.php` — `lookup` action; finds entry by `entry_number` with `exhibitor` and `showClass` eager-loaded; 404 if entry number not in system
+- `app/Http/Resources/EntryResource.php` — `entry_number`, `exhibitor_name`, `show_class_id`, `show_class_name`, `belongs_to_class`
+
+**Route:** `GET /api/entries/{number}?show_class_id={id}` (Sanctum auth required)
+
+**`belongs_to_class` flag:** `true` when the entry belongs to the requested class; `false` when the entry exists but belongs to a different class. Used by the app to show a "wrong class" warning rather than a generic not-found error.
+
+**Tests:** `tests/Feature/Api/EntryLookupTest.php`
+- [x] Returns entry with `belongs_to_class: true` when entry is in the correct class
+- [x] Returns `belongs_to_class: false` when entry belongs to a different class
+- [x] Returns 404 when entry number does not exist
+
+---
+
+### Phase 11.4 — Result Submission ✅
+
+**Files created:**
+- `app/Http/Controllers/Api/ResultController.php` — `store` action with full business rule enforcement in a `DB::transaction()`
+- `app/Http/Requests/Api/StoreResultsRequest.php` — `show_class_id` (required, exists); `results` (required array); `results.*.entry_number` (required integer); `results.*.placement` (required, one of `first`/`second`/`third`/`highlyCommended`)
+
+**Route:** `POST /api/results` (Sanctum auth required)
+
+**Placement mapping:**
+
+| API value | Database value |
+|-----------|----------------|
+| `first` | `1st` |
+| `second` | `2nd` |
+| `third` | `3rd` |
+| `highlyCommended` | `highly_commended` |
+
+**Business rules enforced independently of the client (422 on failure):**
+1. All submitted entry numbers must exist in the database
+2. Every entry must belong to the submitted `show_class_id`
+3. At most one `first`, one `second`, one `third` within the submission
+4. No overwriting an existing `1st`/`2nd`/`3rd` already recorded in the database for the class
+5. `entered_by_user_id` set to the authenticated judge's ID on each result
+
+**Tests:** `tests/Feature/Api/ResultSubmissionTest.php`
+- [x] Judge can submit results for a class (201 returned)
+- [x] Placements are translated to database format on save
+- [x] Duplicate unique placement within the submission is rejected (422)
+- [x] Placement already in DB for the class is rejected with a descriptive message
+- [x] Entry belonging to a different class is rejected (422)
+- [x] Unknown entry number is rejected (422)
+- [x] Multiple `highlyCommended` entries in one submission are accepted
+- [x] Raw database placement values (e.g. `1st`) are rejected by validation
+
+---
+
 ## Verification (End-to-End)
 
 1. `php artisan migrate:fresh --seed` — all migrations run cleanly with demo data
@@ -818,6 +924,7 @@ Goal: Replace placeholder dashboard with live show stats.
 | Phase 6.2 | View entries per class | ✅ Complete |
 | Phase 6.3 | View all entries for an exhibitor | ✅ Complete |
 | Phase 6.4 | Delete entry | ✅ Complete |
+| Phase 6.5 | Exhibitor-centric entry creation + label printing | ✅ Complete |
 | Phase 7.1 | Judge results entry view | ✅ Complete |
 | Phase 7.2 | Edit result (judge) | ✅ Complete |
 | Phase 7.3 | Admin results management | ✅ Complete |
@@ -829,3 +936,7 @@ Goal: Replace placeholder dashboard with live show stats.
 | Phase 9.2 | Public results | ✅ Complete |
 | Phase 9.3 | Public trophy winners | ✅ Complete |
 | Phase 10.1 | Admin dashboard stats | ✅ Complete |
+| Phase 11.1 | Sanctum setup + auth endpoints (login/logout) | ✅ Complete |
+| Phase 11.2 | Show class lookup | ✅ Complete |
+| Phase 11.3 | Entry lookup | ✅ Complete |
+| Phase 11.4 | Result submission | ✅ Complete |
