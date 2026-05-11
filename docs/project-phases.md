@@ -782,8 +782,8 @@ Goal: Replace placeholder dashboard with live show stats.
 2. `php artisan test --compact` — all tests green
 3. Log in as admin → create section → create class → create exhibitor → record entry → enter result → confirm fee and points update
 4. Log in as judge → confirm only assigned sections visible → enter a result
-5. Visit `/schedule` and `/results` without logging in — pages load and contain no private data
-6. Visit `/trophies` publicly — winner shown once results are entered
+5. Visit `/public/schedule` and `/public/results` without logging in — pages load and contain no private data
+6. Visit `/public/trophies` publicly — winner shown once results are entered
 
 ---
 

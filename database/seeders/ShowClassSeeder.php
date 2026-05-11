@@ -9,22 +9,108 @@ class ShowClassSeeder extends Seeder
 {
     public function run(): void
     {
-        ShowClass::create([
-            'show_section_id' => 1,
-            'prize_level_id' => 1,
-            'name' => 'Calverley Master Gardener',
-            'description' => 'Calverley Master Gardener - for Calverley allotment holders Trug/Basket max 45cmx30cm. Min 6 different fruit or vegetables from your plot arranged for effect with a small vase of mixed flowers from your plot or garden. CHS vase provided.',
-            'max_entries_per_exhibitor' => 3,
-            'sort_order' => 1,
-        ]);
+        // Section 1 — Fruit & Veg
+        ShowClass::create(['show_section_id' => 1, 'prize_level_id' => 1, 'sort_order' => 1,  'name' => 'Calverley Master Gardener',                          'description' => 'Calverley Master Gardener - for Calverley allotment holders  Trug/Basket max 45cmx30cm. Min 6 different fruit or vegetables from your plot arranged for effect with a small vase of mixed flowers from your plot or garden. CHS vase provided.', 'max_entries_per_exhibitor' => 3]);
+        ShowClass::create(['show_section_id' => 1, 'prize_level_id' => 1, 'sort_order' => 2,  'name' => 'Garden Trug',                                        'description' => 'Garden Trug – Open to all  Trug/Basket max 45cmx30cm. Min 6 different fruit or vegetables from your plot/garden arranged for effect with optional herbs or flowers as garnish.', 'max_entries_per_exhibitor' => 3]);
+        ShowClass::create(['show_section_id' => 1, 'prize_level_id' => 1, 'sort_order' => 3,  'name' => 'Six pods dwarf/French beans',                        'description' => 'Six pods dwarf/French beans', 'max_entries_per_exhibitor' => 3]);
+        ShowClass::create(['show_section_id' => 1, 'prize_level_id' => 1, 'sort_order' => 4,  'name' => 'Six pods of runner beans',                           'description' => 'Six pods of runner beans', 'max_entries_per_exhibitor' => 3]);
+        ShowClass::create(['show_section_id' => 1, 'prize_level_id' => 1, 'sort_order' => 5,  'name' => 'Three beetroot',                                     'description' => 'Three beetroot. Any variety, tops trimmed.', 'max_entries_per_exhibitor' => 3]);
+        ShowClass::create(['show_section_id' => 1, 'prize_level_id' => 1, 'sort_order' => 6,  'name' => 'Three carrots',                                      'description' => 'Three carrots. Any variety. Tops trimmed to not more than 7.5cm.', 'max_entries_per_exhibitor' => 3]);
+        ShowClass::create(['show_section_id' => 1, 'prize_level_id' => 1, 'sort_order' => 7,  'name' => 'Two leeks',                                          'description' => 'Two leeks', 'max_entries_per_exhibitor' => 3]);
+        ShowClass::create(['show_section_id' => 1, 'prize_level_id' => 1, 'sort_order' => 8,  'name' => 'Three courgettes',                                   'description' => 'Three courgettes', 'max_entries_per_exhibitor' => 3]);
+        ShowClass::create(['show_section_id' => 1, 'prize_level_id' => 1, 'sort_order' => 9,  'name' => 'One squash/marrow',                                  'description' => 'One squash/marrow. Any variety, 30 cm max length or diameter', 'max_entries_per_exhibitor' => 3]);
+        ShowClass::create(['show_section_id' => 1, 'prize_level_id' => 1, 'sort_order' => 10, 'name' => 'Three onions from sets',                             'description' => 'Three onions from sets. Dressed. No roots', 'max_entries_per_exhibitor' => 3]);
+        ShowClass::create(['show_section_id' => 1, 'prize_level_id' => 1, 'sort_order' => 11, 'name' => 'Six pods of peas',                                   'description' => 'Six pods of peas', 'max_entries_per_exhibitor' => 3]);
+        ShowClass::create(['show_section_id' => 1, 'prize_level_id' => 1, 'sort_order' => 12, 'name' => 'Four coloured potatoes',                             'description' => 'Four coloured potatoes', 'max_entries_per_exhibitor' => 3]);
+        ShowClass::create(['show_section_id' => 1, 'prize_level_id' => 1, 'sort_order' => 13, 'name' => 'Four white potatoes',                                'description' => 'Four white potatoes', 'max_entries_per_exhibitor' => 3]);
+        ShowClass::create(['show_section_id' => 1, 'prize_level_id' => 1, 'sort_order' => 14, 'name' => 'Six cherry tomatoes',                                'description' => 'Six cherry tomatoes. Any colour', 'max_entries_per_exhibitor' => 3]);
+        ShowClass::create(['show_section_id' => 1, 'prize_level_id' => 1, 'sort_order' => 15, 'name' => 'Four medium tomatoes',                               'description' => 'Four medium tomatoes. Approximately 60mm diameter, any colour', 'max_entries_per_exhibitor' => 3]);
+        ShowClass::create(['show_section_id' => 1, 'prize_level_id' => 1, 'sort_order' => 16, 'name' => 'Two cucumbers',                                      'description' => 'Two cucumbers', 'max_entries_per_exhibitor' => 3]);
+        ShowClass::create(['show_section_id' => 1, 'prize_level_id' => 1, 'sort_order' => 17, 'name' => 'Three stems of rhubarb',                             'description' => 'Three stems of rhubarb, tops trimmed to 7.5cm', 'max_entries_per_exhibitor' => 3]);
+        ShowClass::create(['show_section_id' => 1, 'prize_level_id' => 1, 'sort_order' => 18, 'name' => 'Four different vegetables',                          'description' => 'Four different vegetables', 'max_entries_per_exhibitor' => 3]);
+        ShowClass::create(['show_section_id' => 1, 'prize_level_id' => 1, 'sort_order' => 19, 'name' => 'One vegetable not already categorised',              'description' => 'One vegetable not already categorised', 'max_entries_per_exhibitor' => 3]);
+        ShowClass::create(['show_section_id' => 1, 'prize_level_id' => 1, 'sort_order' => 20, 'name' => 'Four apples – culinary',                             'description' => 'Four apples – culinary', 'max_entries_per_exhibitor' => 3]);
+        ShowClass::create(['show_section_id' => 1, 'prize_level_id' => 1, 'sort_order' => 21, 'name' => 'Four apples – dessert',                              'description' => 'Four apples – dessert', 'max_entries_per_exhibitor' => 3]);
+        ShowClass::create(['show_section_id' => 1, 'prize_level_id' => 1, 'sort_order' => 22, 'name' => 'Soft and stone fruit',                               'description' => 'Soft and stone fruit. Dish of 6 fruit eg raspberry, blackberry, strawberry, currants, plum', 'max_entries_per_exhibitor' => 3]);
+        ShowClass::create(['show_section_id' => 1, 'prize_level_id' => 1, 'sort_order' => 23, 'name' => 'Pot of chilli peppers',                              'description' => 'Pot of chilli peppers', 'max_entries_per_exhibitor' => 3]);
+        ShowClass::create(['show_section_id' => 1, 'prize_level_id' => 1, 'sort_order' => 24, 'name' => 'Humorously shaped vegetable',                        'description' => 'Humorously shaped veg with caption – keep it clean!', 'max_entries_per_exhibitor' => 3]);
 
-        ShowClass::create([
-            'show_section_id' => 1,
-            'prize_level_id' => 1,
-            'name' => 'Garden Trug',
-            'description' => 'Garden Trug – Open to all Trug/Basket max 45cmx30cm. Min 6 different fruit or vegetables from your plot/garden arranged for effect with optional herbs or flowers as garnish.',
-            'max_entries_per_exhibitor' => 3,
-            'sort_order' => 2,
-        ]);
+        // Section 2 — Giant Veg
+        ShowClass::create(['show_section_id' => 2, 'prize_level_id' => 1, 'sort_order' => 25, 'name' => 'Longest runner bean',                                'description' => 'Longest runner bean', 'max_entries_per_exhibitor' => 3]);
+        ShowClass::create(['show_section_id' => 2, 'prize_level_id' => 1, 'sort_order' => 26, 'name' => 'Heaviest cabbage',                                   'description' => 'Heaviest cabbage. As grown. 5cm roots to remain', 'max_entries_per_exhibitor' => 3]);
+        ShowClass::create(['show_section_id' => 2, 'prize_level_id' => 1, 'sort_order' => 27, 'name' => 'Heaviest pumpkin/marrow',                            'description' => 'Heaviest pumpkin/marrow', 'max_entries_per_exhibitor' => 3]);
+        ShowClass::create(['show_section_id' => 2, 'prize_level_id' => 1, 'sort_order' => 28, 'name' => 'Largest truss of cherry tomatoes',                   'description' => 'Largest truss of cherry tomatoes (judged by the number of fruit)', 'max_entries_per_exhibitor' => 3]);
+        ShowClass::create(['show_section_id' => 2, 'prize_level_id' => 1, 'sort_order' => 29, 'name' => 'Heaviest potato',                                    'description' => 'Heaviest potato', 'max_entries_per_exhibitor' => 3]);
+        ShowClass::create(['show_section_id' => 2, 'prize_level_id' => 1, 'sort_order' => 30, 'name' => 'Longest cucumber',                                   'description' => 'Longest cucumber', 'max_entries_per_exhibitor' => 3]);
+
+        // Section 3 — Flowers
+        ShowClass::create(['show_section_id' => 3, 'prize_level_id' => 1, 'sort_order' => 31, 'name' => 'Vase of mixed annuals',                              'description' => 'Vase of mixed annuals arranged to be viewed from the front. Antirrhinums may be classed as annuals.', 'max_entries_per_exhibitor' => 3]);
+        ShowClass::create(['show_section_id' => 3, 'prize_level_id' => 1, 'sort_order' => 32, 'name' => 'Vase of mixed flowers',                              'description' => 'Vase of mixed flowers, annuals and perennials, arranged to be viewed from the front', 'max_entries_per_exhibitor' => 3]);
+        ShowClass::create(['show_section_id' => 3, 'prize_level_id' => 1, 'sort_order' => 33, 'name' => 'Vase of perennials',                                 'description' => 'Vase of perennials. All round view', 'max_entries_per_exhibitor' => 3]);
+        ShowClass::create(['show_section_id' => 3, 'prize_level_id' => 1, 'sort_order' => 34, 'name' => "Three's company",                                   'description' => "Three's company. One of each of three different flowers", 'max_entries_per_exhibitor' => 3]);
+        ShowClass::create(['show_section_id' => 3, 'prize_level_id' => 1, 'sort_order' => 35, 'name' => 'Vase of pollinator-friendly flowers',                'description' => 'Vase of pollinator-friendly flowers eg cosmos, cornflower, rose. Borage, yarrow, lavender, rudbeckia. View from front.', 'max_entries_per_exhibitor' => 3]);
+        ShowClass::create(['show_section_id' => 3, 'prize_level_id' => 1, 'sort_order' => 36, 'name' => 'Vase of herbs',                                      'description' => 'Vase of herbs, all-round view, flowers and seedheads allowed', 'max_entries_per_exhibitor' => 3]);
+        ShowClass::create(['show_section_id' => 3, 'prize_level_id' => 1, 'sort_order' => 37, 'name' => 'Vase of three dahlias',                              'description' => 'Vase of three dahlias. Named.', 'max_entries_per_exhibitor' => 3]);
+        ShowClass::create(['show_section_id' => 3, 'prize_level_id' => 1, 'sort_order' => 38, 'name' => 'Vase of mixed dahlias',                              'description' => 'Vase of mixed dahlias. Five minimum', 'max_entries_per_exhibitor' => 3]);
+        ShowClass::create(['show_section_id' => 3, 'prize_level_id' => 1, 'sort_order' => 39, 'name' => 'Vase of six asters',                                 'description' => 'Vase of six asters. Singles or doubles.', 'max_entries_per_exhibitor' => 3]);
+        ShowClass::create(['show_section_id' => 3, 'prize_level_id' => 1, 'sort_order' => 40, 'name' => 'Vase of three spikes of perennial phlox',            'description' => 'Vase of three spikes of perennial phlox', 'max_entries_per_exhibitor' => 3]);
+        ShowClass::create(['show_section_id' => 3, 'prize_level_id' => 1, 'sort_order' => 41, 'name' => 'One sunflower',                                      'description' => 'One sunflower. Any variety', 'max_entries_per_exhibitor' => 3]);
+        ShowClass::create(['show_section_id' => 3, 'prize_level_id' => 1, 'sort_order' => 42, 'name' => 'One stem of floribunda rose',                        'description' => 'One stem of floribunda rose', 'max_entries_per_exhibitor' => 3]);
+        ShowClass::create(['show_section_id' => 3, 'prize_level_id' => 1, 'sort_order' => 43, 'name' => 'One single stem rose',                               'description' => 'One single stem rose', 'max_entries_per_exhibitor' => 3]);
+        ShowClass::create(['show_section_id' => 3, 'prize_level_id' => 1, 'sort_order' => 44, 'name' => 'Vase of two gladioli',                               'description' => 'Vase of two gladioli', 'max_entries_per_exhibitor' => 3]);
+        ShowClass::create(['show_section_id' => 3, 'prize_level_id' => 1, 'sort_order' => 45, 'name' => 'Vase of six spikes of sweet peas',                   'description' => 'Vase of six spikes of sweet peas', 'max_entries_per_exhibitor' => 3]);
+        ShowClass::create(['show_section_id' => 3, 'prize_level_id' => 1, 'sort_order' => 46, 'name' => 'Pot plant in bloom',                                 'description' => 'Pot plant in bloom', 'max_entries_per_exhibitor' => 3]);
+        ShowClass::create(['show_section_id' => 3, 'prize_level_id' => 1, 'sort_order' => 47, 'name' => 'Pot plant in foliage',                               'description' => 'Pot plant in foliage', 'max_entries_per_exhibitor' => 3]);
+        ShowClass::create(['show_section_id' => 3, 'prize_level_id' => 1, 'sort_order' => 48, 'name' => 'One cactus or succulent',                            'description' => 'One cactus or succulent', 'max_entries_per_exhibitor' => 3]);
+        ShowClass::create(['show_section_id' => 3, 'prize_level_id' => 1, 'sort_order' => 49, 'name' => 'Any garden flower floating in a wine glass',         'description' => "Any garden flower – 6cm-10cm diameter cut to display floating in a wine glass. Exhibitor's own glass", 'max_entries_per_exhibitor' => 3]);
+
+        // Section 4 — Baking
+        ShowClass::create(['show_section_id' => 4, 'prize_level_id' => 1, 'sort_order' => 50, 'name' => 'Four pastry tarts',                                  'description' => 'Four pastry tarts. Sweet or savoury', 'max_entries_per_exhibitor' => 3]);
+        ShowClass::create(['show_section_id' => 4, 'prize_level_id' => 1, 'sort_order' => 51, 'name' => 'Four scones',                                        'description' => 'Four scones. Sweet or savoury', 'max_entries_per_exhibitor' => 3]);
+        ShowClass::create(['show_section_id' => 4, 'prize_level_id' => 1, 'sort_order' => 52, 'name' => 'One cake, fruit or vegetable ingredient',            'description' => 'One cake containing a stated fruit or vegetable ingredient eg carrot, lemon, beetroot. Un-decorated.', 'max_entries_per_exhibitor' => 3]);
+        ShowClass::create(['show_section_id' => 4, 'prize_level_id' => 1, 'sort_order' => 53, 'name' => 'Three bread rolls',                                  'description' => 'Three bread rolls, any recipe. Specify variety, any recipe. Not machine made', 'max_entries_per_exhibitor' => 3]);
+        ShowClass::create(['show_section_id' => 4, 'prize_level_id' => 1, 'sort_order' => 54, 'name' => 'Loaf of bread',                                      'description' => 'Loaf of bread, any recipe. Specify variety. Not machine made.', 'max_entries_per_exhibitor' => 3]);
+        ShowClass::create(['show_section_id' => 4, 'prize_level_id' => 1, 'sort_order' => 55, 'name' => 'Four flapjacks',                                     'description' => 'Four flapjacks', 'max_entries_per_exhibitor' => 3]);
+        ShowClass::create(['show_section_id' => 4, 'prize_level_id' => 1, 'sort_order' => 56, 'name' => 'Four biscuits',                                      'description' => 'Four biscuits, any recipe - undecorated', 'max_entries_per_exhibitor' => 3]);
+        ShowClass::create(['show_section_id' => 4, 'prize_level_id' => 1, 'sort_order' => 57, 'name' => 'One Victoria sandwich cake',                         'description' => 'One Victoria sandwich cake with a jam and buttercream filling', 'max_entries_per_exhibitor' => 3]);
+        ShowClass::create(['show_section_id' => 4, 'prize_level_id' => 1, 'sort_order' => 58, 'name' => 'One chocolate cake',                                 'description' => 'One chocolate cake, any recipe. Can be decorated', 'max_entries_per_exhibitor' => 3]);
+        ShowClass::create(['show_section_id' => 4, 'prize_level_id' => 1, 'sort_order' => 59, 'name' => 'Four shortbread fingers or biscuits',                'description' => 'Four shortbread fingers or biscuits in a shape of your choice', 'max_entries_per_exhibitor' => 3]);
+        ShowClass::create(['show_section_id' => 4, 'prize_level_id' => 1, 'sort_order' => 60, 'name' => 'Four buns/cupcakes/muffins',                         'description' => 'Four buns/cupcakes/muffins decorated in a theme of your choice. Name your theme.', 'max_entries_per_exhibitor' => 3]);
+        ShowClass::create(['show_section_id' => 4, 'prize_level_id' => 1, 'sort_order' => 61, 'name' => 'Four brownies',                                      'description' => 'Four brownies, any recipe or flavour', 'max_entries_per_exhibitor' => 3]);
+
+        // Section 5 — Preserves
+        ShowClass::create(['show_section_id' => 5, 'prize_level_id' => 1, 'sort_order' => 62, 'name' => 'One jar of pickles, piccalilli or chutney',          'description' => 'One jar of pickles, piccalilli or chutney', 'max_entries_per_exhibitor' => 3]);
+        ShowClass::create(['show_section_id' => 5, 'prize_level_id' => 1, 'sort_order' => 63, 'name' => 'One jar of jam',                                     'description' => 'One jar of jam. Named', 'max_entries_per_exhibitor' => 3]);
+
+        // Section 6 — Handicrafts
+        ShowClass::create(['show_section_id' => 6, 'prize_level_id' => 1, 'sort_order' => 64, 'name' => 'A knitted or crocheted, woven or felted garment or accessory', 'description' => 'A knitted or crocheted, woven or felted garment or accessory', 'max_entries_per_exhibitor' => 3]);
+        ShowClass::create(['show_section_id' => 6, 'prize_level_id' => 1, 'sort_order' => 65, 'name' => 'Imperfection. Creative visible repair',              'description' => 'Imperfection. Creative visible repair of an item of textiles (darn, patch, stitch), ceramics (eg Japanese Kintsugi) or a wood or metal functional or metal functional or decorative item', 'max_entries_per_exhibitor' => 3]);
+        ShowClass::create(['show_section_id' => 6, 'prize_level_id' => 1, 'sort_order' => 66, 'name' => 'A cushion cover or piece of textile art',            'description' => 'A cushion cover or piece of textile art with a design inspired by the interior or exterior of Calverley Old Hall or the community garden.', 'max_entries_per_exhibitor' => 3]);
+        ShowClass::create(['show_section_id' => 6, 'prize_level_id' => 1, 'sort_order' => 67, 'name' => 'Adornment. A piece of handcrafted jewellery',        'description' => 'Adornment. A piece of handcrafted jewellery e.g. brooch, necklace, bracelet made from any material using technique of choice', 'max_entries_per_exhibitor' => 3]);
+        ShowClass::create(['show_section_id' => 6, 'prize_level_id' => 1, 'sort_order' => 68, 'name' => 'A sewn garment',                                     'description' => 'A sewn garment of choice made by hand or machine', 'max_entries_per_exhibitor' => 3]);
+
+        // Section 7 — Art
+        ShowClass::create(['show_section_id' => 7, 'prize_level_id' => 1, 'sort_order' => 69, 'name' => 'A watercolour painting',                             'description' => 'A watercolour painting', 'max_entries_per_exhibitor' => 3]);
+        ShowClass::create(['show_section_id' => 7, 'prize_level_id' => 1, 'sort_order' => 70, 'name' => 'A pen, pencil, pastel or charcoal drawing',          'description' => 'A pen, pencil, pastel or charcoal drawing', 'max_entries_per_exhibitor' => 3]);
+        ShowClass::create(['show_section_id' => 7, 'prize_level_id' => 1, 'sort_order' => 71, 'name' => 'An oil or acrylic painting',                         'description' => 'An oil or acrylic painting', 'max_entries_per_exhibitor' => 3]);
+        ShowClass::create(['show_section_id' => 7, 'prize_level_id' => 1, 'sort_order' => 72, 'name' => 'A piece of abstract art created using mixed media',  'description' => 'A piece of abstract art created using mixed media', 'max_entries_per_exhibitor' => 3]);
+
+        // Section 8 — Photography
+        ShowClass::create(['show_section_id' => 8, 'prize_level_id' => 1, 'sort_order' => 73, 'name' => 'One image on the theme of Calverley Old Hall',       'description' => 'One image on the theme of Calverley Old Hall', 'max_entries_per_exhibitor' => 3]);
+        ShowClass::create(['show_section_id' => 8, 'prize_level_id' => 1, 'sort_order' => 74, 'name' => 'One image on the theme of In Bloom',                 'description' => 'One image on the theme of In Bloom', 'max_entries_per_exhibitor' => 3]);
+
+        // Section 9 — Juniors
+        ShowClass::create(['show_section_id' => 9, 'prize_level_id' => 1, 'sort_order' => 75, 'name' => 'A vegetable you have grown yourself',                'description' => 'A vegetable you have grown yourself', 'max_entries_per_exhibitor' => 3]);
+        ShowClass::create(['show_section_id' => 9, 'prize_level_id' => 1, 'sort_order' => 76, 'name' => 'A flower you have grown yourself',                   'description' => 'A flower you have grown yourself', 'max_entries_per_exhibitor' => 3]);
+        ShowClass::create(['show_section_id' => 9, 'prize_level_id' => 1, 'sort_order' => 77, 'name' => 'Four no-bake biscuits',                              'description' => 'Four no-bake biscuits eg rocky road', 'max_entries_per_exhibitor' => 3]);
+        ShowClass::create(['show_section_id' => 9, 'prize_level_id' => 1, 'sort_order' => 78, 'name' => 'Four cookies or biscuits',                           'description' => 'Four cookies or biscuits, any flavour', 'max_entries_per_exhibitor' => 3]);
+        ShowClass::create(['show_section_id' => 9, 'prize_level_id' => 1, 'sort_order' => 79, 'name' => 'A daisy chain',                                      'description' => 'A daisy chain you have made yourself', 'max_entries_per_exhibitor' => 3]);
+        ShowClass::create(['show_section_id' => 9, 'prize_level_id' => 1, 'sort_order' => 80, 'name' => 'A collage made from leaves and grasses',             'description' => 'A collage made from leaves and grasses', 'max_entries_per_exhibitor' => 3]);
+        ShowClass::create(['show_section_id' => 9, 'prize_level_id' => 1, 'sort_order' => 81, 'name' => 'A painting or drawing (up to 9yrs)',                 'description' => 'A painting or drawing - up to 9yrs, age to be shown on exhibit', 'max_entries_per_exhibitor' => 3]);
+        ShowClass::create(['show_section_id' => 9, 'prize_level_id' => 1, 'sort_order' => 82, 'name' => 'A 3D object (up to 9yrs)',                           'description' => 'A 3D object - up to 9yrs, age to be shown on exhibit', 'max_entries_per_exhibitor' => 3]);
+        ShowClass::create(['show_section_id' => 9, 'prize_level_id' => 1, 'sort_order' => 83, 'name' => 'A painting or drawing (10 - 15yrs)',                 'description' => 'A painting or drawing - 10 - 15yrs, age to be shown on exhibit', 'max_entries_per_exhibitor' => 3]);
+        ShowClass::create(['show_section_id' => 9, 'prize_level_id' => 1, 'sort_order' => 84, 'name' => 'A 3D object (10 - 15yrs)',                           'description' => 'A 3D object - 10 - 15yrs, age to be shown on exhibit', 'max_entries_per_exhibitor' => 3]);
+        ShowClass::create(['show_section_id' => 9, 'prize_level_id' => 1, 'sort_order' => 85, 'name' => 'A photograph on the theme of My Best Friend',        'description' => 'A photograph on the theme of My Best Friend', 'max_entries_per_exhibitor' => 3]);
+        ShowClass::create(['show_section_id' => 9, 'prize_level_id' => 1, 'sort_order' => 86, 'name' => 'A photograph on the theme of My Favourite Thing',    'description' => 'A photograph on the theme of My Favourite Thing', 'max_entries_per_exhibitor' => 3]);
     }
 }
