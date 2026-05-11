@@ -13,6 +13,7 @@ class DatabaseSeeder extends Seeder
             ShowSectionSeeder::class,
             PrizeLevelSeeder::class,
             ShowClassSeeder::class,
+            TrophySeeder::class,
             ExhibitorSeeder::class,
         ]);
     }
