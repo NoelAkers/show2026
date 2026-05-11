@@ -26,6 +26,7 @@ class StoreShowClassRequest extends FormRequest
                 Rule::unique('show_classes')->where('show_section_id', $sectionId),
             ],
             'description' => ['nullable', 'string', 'max:255'],
+            'prize_level_id' => ['required', 'exists:prize_levels,id'],
             'max_entries_per_exhibitor' => ['required', 'integer', 'min:1'],
             'sort_order' => ['required', 'integer', 'min:0'],
         ];

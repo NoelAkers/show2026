@@ -24,6 +24,18 @@
             </flux:field>
 
             <flux:field>
+                <flux:label>Prize Level</flux:label>
+                <flux:select name="prize_level_id">
+                    @foreach ($prizeLevels as $prizeLevel)
+                        <flux:select.option value="{{ $prizeLevel->id }}" :selected="old('prize_level_id', $showClass->prize_level_id) == $prizeLevel->id">
+                            {{ $prizeLevel->name }} (1st £{{ number_format($prizeLevel->first_place_pence / 100, 2) }}, 2nd £{{ number_format($prizeLevel->second_place_pence / 100, 2) }}, 3rd £{{ number_format($prizeLevel->third_place_pence / 100, 2) }})
+                        </flux:select.option>
+                    @endforeach
+                </flux:select>
+                @error('prize_level_id') <flux:error>{{ $message }}</flux:error> @enderror
+            </flux:field>
+
+            <flux:field>
                 <flux:label>Max Entries per Exhibitor</flux:label>
                 <flux:input type="number" name="max_entries_per_exhibitor" value="{{ old('max_entries_per_exhibitor', $showClass->max_entries_per_exhibitor) }}" min="1" required />
                 @error('max_entries_per_exhibitor') <flux:error>{{ $message }}</flux:error> @enderror

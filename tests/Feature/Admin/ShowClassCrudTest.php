@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Entry;
+use App\Models\PrizeLevel;
 use App\Models\ShowClass;
 use App\Models\ShowSection;
 use App\Models\User;
@@ -30,10 +31,12 @@ it('admin can view class list for a section', function () {
 
 it('admin can create a class with valid data', function () {
     $section = ShowSection::factory()->create();
+    $prizeLevel = PrizeLevel::factory()->create();
 
     $this->actingAs(classAdmin())
         ->post(route('admin.show-sections.show-classes.store', $section), [
             'name' => 'Dahlias',
+            'prize_level_id' => $prizeLevel->id,
             'max_entries_per_exhibitor' => 3,
             'sort_order' => 1,
         ])
@@ -42,16 +45,19 @@ it('admin can create a class with valid data', function () {
     $this->assertDatabaseHas('show_classes', [
         'show_section_id' => $section->id,
         'name' => 'Dahlias',
+        'prize_level_id' => $prizeLevel->id,
     ]);
 });
 
 it('duplicate class name within the same section fails validation', function () {
     $section = ShowSection::factory()->create();
+    $prizeLevel = PrizeLevel::factory()->create();
     ShowClass::factory()->create(['show_section_id' => $section->id, 'name' => 'Roses']);
 
     $this->actingAs(classAdmin())
         ->post(route('admin.show-sections.show-classes.store', $section), [
             'name' => 'Roses',
+            'prize_level_id' => $prizeLevel->id,
             'max_entries_per_exhibitor' => 1,
             'sort_order' => 0,
         ])
@@ -61,11 +67,13 @@ it('duplicate class name within the same section fails validation', function () 
 it('same class name in two different sections is allowed', function () {
     $section1 = ShowSection::factory()->create();
     $section2 = ShowSection::factory()->create();
+    $prizeLevel = PrizeLevel::factory()->create();
     ShowClass::factory()->create(['show_section_id' => $section1->id, 'name' => 'Roses']);
 
     $this->actingAs(classAdmin())
         ->post(route('admin.show-sections.show-classes.store', $section2), [
             'name' => 'Roses',
+            'prize_level_id' => $prizeLevel->id,
             'max_entries_per_exhibitor' => 1,
             'sort_order' => 0,
         ])
@@ -79,6 +87,7 @@ it('admin can update a class', function () {
     $this->actingAs(classAdmin())
         ->put(route('admin.show-sections.show-classes.update', [$section, $class]), [
             'name' => 'New Name',
+            'prize_level_id' => $class->prize_level_id,
             'max_entries_per_exhibitor' => 2,
             'sort_order' => 0,
         ])

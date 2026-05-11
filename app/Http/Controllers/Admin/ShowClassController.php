@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\StoreShowClassRequest;
 use App\Http\Requests\Admin\UpdateShowClassRequest;
 use App\Models\Exhibitor;
+use App\Models\PrizeLevel;
 use App\Models\ShowClass;
 use App\Models\ShowSection;
 use Illuminate\Http\RedirectResponse;
@@ -22,7 +23,9 @@ class ShowClassController extends Controller
 
     public function create(ShowSection $showSection): View
     {
-        return view('admin.show-classes.create', compact('showSection'));
+        $prizeLevels = PrizeLevel::all();
+
+        return view('admin.show-classes.create', compact('showSection', 'prizeLevels'));
     }
 
     public function store(StoreShowClassRequest $request, ShowSection $showSection): RedirectResponse
@@ -43,7 +46,9 @@ class ShowClassController extends Controller
 
     public function edit(ShowSection $showSection, ShowClass $showClass): View
     {
-        return view('admin.show-classes.edit', compact('showSection', 'showClass'));
+        $prizeLevels = PrizeLevel::all();
+
+        return view('admin.show-classes.edit', compact('showSection', 'showClass', 'prizeLevels'));
     }
 
     public function update(UpdateShowClassRequest $request, ShowSection $showSection, ShowClass $showClass): RedirectResponse

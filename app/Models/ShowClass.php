@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-#[Fillable(['show_section_id', 'name', 'description', 'max_entries_per_exhibitor', 'sort_order'])]
+#[Fillable(['show_section_id', 'name', 'description', 'max_entries_per_exhibitor', 'sort_order', 'prize_level_id'])]
 class ShowClass extends Model
 {
     /** @use HasFactory<ShowClassFactory> */
@@ -20,6 +20,11 @@ class ShowClass extends Model
     public function showSection(): BelongsTo
     {
         return $this->belongsTo(ShowSection::class);
+    }
+
+    public function prizeLevel(): BelongsTo
+    {
+        return $this->belongsTo(PrizeLevel::class);
     }
 
     public function entries(): HasMany
