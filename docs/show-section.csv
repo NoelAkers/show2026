@@ -1,11 +1,10 @@
-'SectionNo','SectionName','Judge','DisplayOrder'
-1,'Fruit & Vegetables',2,1
-2,'Battle of the Giant Veg!',2,2
-3,'Flowers',2,3
-4,'Calverley in Bloom Silver Jubilee',3,4
-5,'Baking',4,5
-6,'Preserves',4,6
-7,'Handicrafts',5,7
-8,'Art',6,8
-9,'Photography',7,9
-10,'Children''s Classes',1,10
+'sort_order','name','description'
+1,'Fruit & Veg','Fruit & Vegetables'
+2,'Giant Veg','Battle of the Giant Veg!'
+3,'Flowers','Flowers'
+4,'Baking','Baking'
+5,'Preserves','Preserves'
+6,'Handicrafts','Handicrafts'
+7,'Art','Art'
+8,'Photography','Photography'
+9,'Juniors','Classes for juniors: under 11 and 11-15'

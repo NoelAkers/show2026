@@ -38,8 +38,8 @@ it('same class name in two different sections is allowed', function () {
     expect($class2->exists)->toBeTrue();
 });
 
-it('max_entries_per_exhibitor defaults to 5', function () {
+it('max_entries_per_exhibitor defaults to 3', function () {
     $class = ShowClass::factory()->create();
 
-    expect($class->max_entries_per_exhibitor)->toBe(5);
+    expect($class->max_entries_per_exhibitor)->toBe(3);
 });

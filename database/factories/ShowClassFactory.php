@@ -22,7 +22,7 @@ class ShowClassFactory extends Factory
             'prize_level_id' => PrizeLevel::factory(),
             'name' => fake()->unique()->words(3, true),
             'description' => fake()->optional()->sentence(),
-            'max_entries_per_exhibitor' => 5,
+            'max_entries_per_exhibitor' => 3,
             'sort_order' => 0,
         ];
     }

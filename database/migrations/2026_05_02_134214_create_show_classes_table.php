@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('show_section_id')->constrained()->cascadeOnDelete();
             $table->string('name');
             $table->string('description')->nullable();
-            $table->tinyInteger('max_entries_per_exhibitor')->default(5);
+            $table->tinyInteger('max_entries_per_exhibitor')->default(3);
             $table->integer('sort_order')->default(0);
             $table->foreignId('prize_level_id')->nullable()->constrained();
             $table->timestamps();
