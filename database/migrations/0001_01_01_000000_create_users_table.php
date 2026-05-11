@@ -17,7 +17,13 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->text('two_factor_secret')->nullable();
+            $table->text('two_factor_recovery_codes')->nullable();
+            $table->timestamp('two_factor_confirmed_at')->nullable();
             $table->rememberToken();
+            $table->string('role', 20)->default('admin')->comment('admin|judge');
+            $table->boolean('is_judge')->default(false);
+            $table->string('phone')->nullable();
             $table->timestamps();
         });
 

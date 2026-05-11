@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('description')->nullable();
             $table->tinyInteger('max_entries_per_exhibitor')->default(5);
             $table->integer('sort_order')->default(0);
+            $table->foreignId('prize_level_id')->nullable()->constrained();
             $table->timestamps();
 
             $table->unique(['show_section_id', 'name']);

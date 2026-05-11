@@ -15,6 +15,9 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('description')->nullable();
+            $table->boolean('is_points_based')->default(true);
+            $table->foreignId('judge_id')->nullable()->constrained('users')->nullOnDelete();
+            $table->foreignId('winning_entry_id')->nullable()->constrained('entries')->nullOnDelete();
             $table->timestamps();
         });
     }

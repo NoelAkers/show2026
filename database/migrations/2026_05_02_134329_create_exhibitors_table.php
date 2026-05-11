@@ -17,12 +17,11 @@ return new class extends Migration
             $table->string('last_name');
             $table->string('full_name');
             $table->string('sort_name');
-            $table->string('email')->nullable();
-            $table->string('phone')->nullable();
-            $table->string('address')->nullable();
             $table->string('type')->comment('adult|junior');
             $table->boolean('is_resident')->default(true);
             $table->boolean('has_paid')->default(false);
+            $table->integer('amount_paid_pence')->default(0);
+            $table->boolean('is_novice')->default(true);
             $table->timestamps();
         });
     }
