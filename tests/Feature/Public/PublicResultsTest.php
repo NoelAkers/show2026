@@ -5,6 +5,9 @@ use App\Models\Exhibitor;
 use App\Models\Result;
 use App\Models\ShowClass;
 use App\Models\ShowSection;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+
+uses(RefreshDatabase::class);
 
 test('public results page is accessible without login', function () {
     $this->get(route('public.results'))->assertSuccessful();

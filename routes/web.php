@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\ResultController as AdminResultController;
 use App\Http\Controllers\Admin\ShowClassController;
 use App\Http\Controllers\Admin\ShowSectionController;
 use App\Http\Controllers\Admin\TrophyController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Judge\ResultController as JudgeResultController;
 use App\Http\Controllers\Judge\SectionController;
 use App\Http\Controllers\Public\ResultController as PublicResultController;
@@ -18,7 +19,7 @@ use Illuminate\Support\Facades\Route;
 Route::view('/', 'welcome')->name('home');
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::view('dashboard', 'dashboard')->name('dashboard');
+    Route::get('dashboard', DashboardController::class)->name('dashboard');
 });
 
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(function () {

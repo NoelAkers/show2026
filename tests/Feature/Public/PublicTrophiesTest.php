@@ -6,6 +6,9 @@ use App\Models\Result;
 use App\Models\ShowClass;
 use App\Models\ShowSection;
 use App\Models\Trophy;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+
+uses(RefreshDatabase::class);
 
 test('public trophies page is accessible without login', function () {
     $this->get(route('public.trophies'))->assertSuccessful();

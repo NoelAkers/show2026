@@ -2,6 +2,9 @@
 
 use App\Models\ShowClass;
 use App\Models\ShowSection;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+
+uses(RefreshDatabase::class);
 
 test('public schedule is accessible without login', function () {
     $this->get(route('public.schedule'))->assertSuccessful();

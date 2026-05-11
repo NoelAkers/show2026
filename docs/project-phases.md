@@ -686,93 +686,93 @@ _(Logic in `Trophy::winners()` — Phase 1.8.)_
 
 ---
 
-## Phase 9 — Public Display
+## Phase 9 — Public Display ✅
 
 Goal: Public-facing pages (no login required) showing the show schedule, results, and trophy winners.
 
 ---
 
-### Phase 9.1 — Public Show Schedule 🔲
+### Phase 9.1 — Public Show Schedule ✅
 
-**Files to create:**
+**Files created:**
 - `app/Http/Controllers/Public/ScheduleController.php`
 - `resources/views/public/schedule/index.blade.php`
-- `resources/views/layouts/public.blade.php` — new public layout (no auth nav)
+- `resources/views/layouts/public.blade.php` — public layout with nav (Schedule / Results / Trophies)
 
-**Route:** `GET /` or `GET /schedule` (no auth middleware)
+**Route:** `GET /public/schedule` (no auth middleware)
 
 **Data shown:** Sections in sort_order → classes in sort_order. No exhibitor contact details, no fees, no payment status.
 
 **Tests:** `tests/Feature/Public/ScheduleTest.php`
-- [ ] Public schedule is accessible without login
-- [ ] Sections are listed in `sort_order` ASC
-- [ ] Classes are listed within their section in `sort_order` ASC
-- [ ] No exhibitor contact details are exposed in the response
-- [ ] No payment status information is exposed
+- [x] Public schedule is accessible without login
+- [x] Sections are listed in `sort_order` ASC
+- [x] Classes are listed within their section in `sort_order` ASC
+- [x] No exhibitor contact details are exposed in the response
+- [x] No payment status information is exposed
 
 ---
 
-### Phase 9.2 — Public Results 🔲
+### Phase 9.2 — Public Results ✅
 
-**Files to create:**
+**Files created:**
 - `app/Http/Controllers/Public/ResultController.php`
 - `resources/views/public/results/index.blade.php`
 
-**Data shown:** Exhibitor name + placement only. Points hidden. Classes with no results show "Results pending."
+**Data shown:** Exhibitor name + placement only. Points hidden. Classes with no placed results show "Results pending."
 
 **Tests:** `tests/Feature/Public/PublicResultsTest.php`
-- [ ] Public results page accessible without login
-- [ ] Placement labels (1st / 2nd / 3rd / Highly Commended) shown per result
-- [ ] Points totals are NOT present anywhere in the response
-- [ ] Class with no results shows "Results pending"
-- [ ] Exhibitor email, phone, and address are NOT present in the response
+- [x] Public results page accessible without login
+- [x] Placement labels (1st / 2nd / 3rd / Highly Commended) shown per result
+- [x] Points totals are NOT present anywhere in the response
+- [x] Class with no results shows "Results pending."
+- [x] Exhibitor email, phone, and address are NOT present in the response
 
 ---
 
-### Phase 9.3 — Public Trophy Winners 🔲
+### Phase 9.3 — Public Trophy Winners ✅
 
-**Files to create:**
+**Files created:**
 - `app/Http/Controllers/Public/TrophyController.php`
 - `resources/views/public/trophies/index.blade.php`
 
-**Data shown:** Trophy name + winner name (or "To be announced").
+**Data shown:** Trophy name + winner name (or "To be announced.").
 
 **Tests:** `tests/Feature/Public/PublicTrophiesTest.php`
-- [ ] Public trophies page accessible without login
-- [ ] Trophy name and winner's name shown
-- [ ] "To be announced" shown when no results have been entered
-- [ ] All tied winners listed when there is a tie
+- [x] Public trophies page accessible without login
+- [x] Trophy name and winner's name shown
+- [x] "To be announced." shown when no results have been entered
+- [x] All tied winners listed when there is a tie
 
 ---
 
-## Phase 10 — Admin Dashboard
+## Phase 10 — Admin Dashboard ✅
 
 Goal: Replace placeholder dashboard with live show stats.
 
 ---
 
-### Phase 10.1 — Dashboard Stats 🔲
+### Phase 10.1 — Dashboard Stats ✅
 
-**Files to create/modify:**
-- `app/Http/Controllers/DashboardController.php` (create; point `GET /dashboard` route here)
-- `resources/views/dashboard.blade.php` — replace placeholder with stats grid
+**Files created/modified:**
+- `app/Http/Controllers/DashboardController.php` — invokable; redirects judges; passes stats to view
+- `resources/views/dashboard.blade.php` — stats grid (sections, classes, exhibitors, entries, results, payments)
 
 **Stats displayed:**
-- Total sections / total classes
-- Total exhibitors (adult / junior breakdown)
+- Total sections + class count sub-label
+- Total exhibitors with adult / junior breakdown
 - Total entries
-- Results entered vs. outstanding (total entries minus entries with a result)
-- Exhibitors paid / unpaid (adult exhibitors only)
+- Results entered (placed) vs. outstanding
+- Adult exhibitors paid / unpaid
 
-**Tests:** `tests/Feature/DashboardTest.php` _(extend existing)_
-- [ ] Dashboard accessible to admin at `GET /dashboard`
-- [ ] Correct section count displayed
-- [ ] Correct class count displayed
-- [ ] Correct exhibitor count displayed (adult/junior split)
-- [ ] Correct entry count displayed
-- [ ] Correct results entered vs. outstanding counts displayed
-- [ ] Correct paid/unpaid exhibitor count displayed
-- [ ] Judge accessing `GET /dashboard` is redirected to `/judge/sections`
+**Tests:** `tests/Feature/DashboardTest.php` _(extended)_
+- [x] Dashboard accessible to admin at `GET /dashboard`
+- [x] Correct section count displayed
+- [x] Correct class count displayed
+- [x] Correct exhibitor count displayed (adult/junior split)
+- [x] Correct entry count displayed
+- [x] Correct results entered vs. outstanding counts displayed
+- [x] Correct paid/unpaid exhibitor count displayed
+- [x] Judge accessing `GET /dashboard` is redirected to `/judge/sections`
 
 ---
 
@@ -825,7 +825,7 @@ Goal: Replace placeholder dashboard with live show stats.
 | Phase 8.1 | Trophy CRUD | ✅ Complete |
 | Phase 8.2 | Trophy winner calculation | ✅ Complete |
 | Phase 8.3 | Trophy list with winners | ✅ Complete |
-| Phase 9.1 | Public show schedule | 🔲 Pending |
-| Phase 9.2 | Public results | 🔲 Pending |
-| Phase 9.3 | Public trophy winners | 🔲 Pending |
-| Phase 10.1 | Admin dashboard stats | 🔲 Pending |
+| Phase 9.1 | Public show schedule | ✅ Complete |
+| Phase 9.2 | Public results | ✅ Complete |
+| Phase 9.3 | Public trophy winners | ✅ Complete |
+| Phase 10.1 | Admin dashboard stats | ✅ Complete |
