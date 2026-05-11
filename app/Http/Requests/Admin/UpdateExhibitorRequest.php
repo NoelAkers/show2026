@@ -15,6 +15,14 @@ class UpdateExhibitorRequest extends FormRequest
     /**
      * @return array<string, ValidationRule|array<mixed>|string>
      */
+    protected function prepareForValidation(): void
+    {
+        $this->merge([
+            'is_resident' => $this->boolean('is_resident'),
+            'is_novice' => $this->boolean('is_novice'),
+        ]);
+    }
+
     public function rules(): array
     {
         return [

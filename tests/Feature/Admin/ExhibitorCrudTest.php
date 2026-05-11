@@ -221,6 +221,29 @@ it('admin can set an exhibitor as not a novice', function () {
     expect($exhibitor->fresh()->is_novice)->toBeFalse();
 });
 
+it('unchecking is_resident and is_novice on update saves false', function () {
+    $exhibitor = Exhibitor::factory()->create([
+        'first_name' => 'Jane',
+        'last_name' => 'Doe',
+        'full_name' => 'Jane Doe',
+        'sort_name' => 'Doe, Jane',
+        'is_resident' => true,
+        'is_novice' => true,
+    ]);
+
+    $this->actingAs(exhibitorAdmin())
+        ->put(route('admin.exhibitors.update', $exhibitor), [
+            'first_name' => 'Jane',
+            'last_name' => 'Doe',
+            'type' => 'adult',
+            // is_resident and is_novice omitted — simulates unchecked checkboxes
+        ])
+        ->assertRedirect();
+
+    expect($exhibitor->fresh()->is_resident)->toBeFalse()
+        ->and($exhibitor->fresh()->is_novice)->toBeFalse();
+});
+
 it('guest is redirected from exhibitor index', function () {
     $this->get(route('admin.exhibitors.index'))
         ->assertRedirect(route('login'));
