@@ -9,7 +9,6 @@ use App\Http\Controllers\Admin\ShowClassController;
 use App\Http\Controllers\Admin\ShowSectionController;
 use App\Http\Controllers\Admin\TrophyController;
 use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\Judge\ResultController as JudgeResultController;
 use App\Http\Controllers\Judge\SectionController;
 use App\Http\Controllers\Public\ResultController as PublicResultController;
 use App\Http\Controllers\Public\ScheduleController;
@@ -45,7 +44,6 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
 Route::prefix('judge')->name('judge.')->middleware(['auth', 'judge'])->group(function () {
     Route::get('sections', [SectionController::class, 'index'])->name('sections.index');
     Route::get('sections/{show_section}/classes', [SectionController::class, 'show'])->name('sections.show');
-    Route::get('sections/{show_section}/classes/{show_class}/results', [JudgeResultController::class, 'index'])->name('results.index');
 });
 
 Route::prefix('public')->name('public.')->group(function () {
