@@ -46,8 +46,6 @@ Route::prefix('judge')->name('judge.')->middleware(['auth', 'judge'])->group(fun
     Route::get('sections', [SectionController::class, 'index'])->name('sections.index');
     Route::get('sections/{show_section}/classes', [SectionController::class, 'show'])->name('sections.show');
     Route::get('sections/{show_section}/classes/{show_class}/results', [JudgeResultController::class, 'index'])->name('results.index');
-    Route::post('sections/{show_section}/classes/{show_class}/results', [JudgeResultController::class, 'store'])->name('results.store');
-    Route::patch('sections/{show_section}/classes/{show_class}/results/{result}', [JudgeResultController::class, 'update'])->name('results.update');
 });
 
 Route::prefix('public')->name('public.')->group(function () {
