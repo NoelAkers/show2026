@@ -9,7 +9,6 @@ use App\Http\Requests\Admin\UpdateExhibitorPaymentRequest;
 use App\Http\Requests\Admin\UpdateExhibitorRequest;
 use App\Models\Entry;
 use App\Models\Exhibitor;
-use App\Models\ShowSection;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -84,10 +83,7 @@ class ExhibitorController extends Controller
 
     public function addEntry(Exhibitor $exhibitor): View
     {
-        $exhibitor->load(['entries.showClass.showSection', 'entries.result']);
-        $sections = ShowSection::with(['showClasses' => fn ($q) => $q->ordered()])->ordered()->get();
-
-        return view('admin.exhibitors.add-entry', compact('exhibitor', 'sections'));
+        return view('admin.exhibitors.add-entry', compact('exhibitor'));
     }
 
     public function storeEntry(StoreExhibitorEntryRequest $request, Exhibitor $exhibitor): RedirectResponse
