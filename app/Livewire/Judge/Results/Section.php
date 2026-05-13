@@ -17,6 +17,9 @@ class Section extends Component
     /** @var array<int, string> */
     public array $notes = [];
 
+    /** @var array<int, string> */
+    public array $classErrors = [];
+
     public function mount(ShowSection $showSection): void
     {
         abort_unless(
@@ -42,6 +45,8 @@ class Section extends Component
 
     public function saveClass(int $showClassId): void
     {
+        unset($this->classErrors[$showClassId]);
+
         $class = $this->showSection->showClasses->firstWhere('id', $showClassId);
 
         if (! $class) {
@@ -64,7 +69,7 @@ class Section extends Component
                     '2nd' => '2nd place',
                     '3rd' => '3rd place',
                 };
-                $this->addError('placements', "More than one entry has been awarded {$label} in {$class->name}.");
+                $this->classErrors[$showClassId] = "More than one entry has been awarded {$label} in {$class->name}.";
 
                 return;
             }
@@ -90,6 +95,12 @@ class Section extends Component
 
     public function render(): View
     {
+        $this->showSection->load([
+            'showClasses' => fn ($q) => $q->ordered(),
+            'showClasses.entries' => fn ($q) => $q->orderBy('entry_number'),
+            'showClasses.entries.result',
+        ]);
+
         return view('livewire.judge.results.section');
     }
 }

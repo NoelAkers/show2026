@@ -67,11 +67,12 @@ it('judge cannot assign a second 1st place in the same class', function () {
 
     $this->actingAs($judge);
 
-    Livewire::test(Section::class, ['showSection' => $section])
+    $component = Livewire::test(Section::class, ['showSection' => $section])
         ->set("placements.{$entry1->id}", '1st')
         ->set("placements.{$entry2->id}", '1st')
-        ->call('saveClass', $class->id)
-        ->assertHasErrors('placements');
+        ->call('saveClass', $class->id);
+
+    expect($component->get('classErrors'))->toHaveKey($class->id);
 });
 
 it('judge cannot assign a second 2nd place in the same class', function () {
@@ -82,11 +83,12 @@ it('judge cannot assign a second 2nd place in the same class', function () {
 
     $this->actingAs($judge);
 
-    Livewire::test(Section::class, ['showSection' => $section])
+    $component = Livewire::test(Section::class, ['showSection' => $section])
         ->set("placements.{$entry1->id}", '2nd')
         ->set("placements.{$entry2->id}", '2nd')
-        ->call('saveClass', $class->id)
-        ->assertHasErrors('placements');
+        ->call('saveClass', $class->id);
+
+    expect($component->get('classErrors'))->toHaveKey($class->id);
 });
 
 it('judge cannot assign a second 3rd place in the same class', function () {
@@ -97,11 +99,12 @@ it('judge cannot assign a second 3rd place in the same class', function () {
 
     $this->actingAs($judge);
 
-    Livewire::test(Section::class, ['showSection' => $section])
+    $component = Livewire::test(Section::class, ['showSection' => $section])
         ->set("placements.{$entry1->id}", '3rd')
         ->set("placements.{$entry2->id}", '3rd')
-        ->call('saveClass', $class->id)
-        ->assertHasErrors('placements');
+        ->call('saveClass', $class->id);
+
+    expect($component->get('classErrors'))->toHaveKey($class->id);
 });
 
 it('multiple highly commended in one class is allowed', function () {
@@ -163,10 +166,11 @@ it('uniqueness rule is enforced when updating existing results', function () {
 
     $this->actingAs($judge);
 
-    Livewire::test(Section::class, ['showSection' => $section])
+    $component = Livewire::test(Section::class, ['showSection' => $section])
         ->set("placements.{$entry2->id}", '1st')
-        ->call('saveClass', $class->id)
-        ->assertHasErrors('placements');
+        ->call('saveClass', $class->id);
+
+    expect($component->get('classErrors'))->toHaveKey($class->id);
 });
 
 it('exhibitor points total changes after updating a result', function () {
