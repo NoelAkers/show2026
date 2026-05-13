@@ -882,6 +882,57 @@ See `docs/flutter-laravel-API-contract.md` for the full contract and `docs/flutt
 
 ---
 
+## Phase 12 — Operations & Infrastructure 🔲
+
+Goal: Production-readiness tasks that run independently of the show domain — automated backups, monitoring, and deployment hardening.
+
+---
+
+### Phase 12.1 — Automated Database Backups 🔲
+
+**Package:** `spatie/laravel-backup`
+
+**Behaviour:**
+- Daily scheduled backup of the database (SQLite or MySQL depending on deployment) compressed to a `.zip` archive
+- Backups stored to a configurable destination (local `storage/app/backups` by default; S3-compatible bucket recommended for production)
+- Old backups cleaned up automatically (configurable retention — suggested: daily backups kept for 7 days, weekly kept for 4 weeks)
+- Backup health monitored: alert if no successful backup within the last 24 hours
+
+**Files to create/modify:**
+- `composer.json` — add `spatie/laravel-backup`
+- `config/backup.php` — published config; set `name`, `source.databases`, `destination.disks`, and `cleanup.strategy` (keep daily for 7 days, weekly for 4 weeks)
+- `config/filesystems.php` — add `backups` disk pointing to `storage/app/backups` for local; add `s3` disk config for production
+- `routes/console.php` (or `app/Console/Kernel.php`) — schedule `backup:run --only-db` daily; schedule `backup:clean` daily; schedule `backup:monitor` daily
+- `.env.example` — document `AWS_*` variables for S3 backup destination
+
+**Artisan commands (provided by package):**
+- `php artisan backup:run` — triggers an immediate backup
+- `php artisan backup:clean` — removes backups outside retention window
+- `php artisan backup:list` — lists all stored backups with size and age
+- `php artisan backup:monitor` — checks backup health; exits non-zero if unhealthy
+
+**Schedule (suggested):**
+```php
+Schedule::command('backup:clean')->daily()->at('01:00');
+Schedule::command('backup:run --only-db')->daily()->at('01:30');
+Schedule::command('backup:monitor')->daily()->at('02:00');
+```
+
+**Cron entry required on server:**
+```
+* * * * * cd /path-to-project && php artisan schedule:run >> /dev/null 2>&1
+```
+_(Laravel Cloud / Forge handle this automatically.)_
+
+**Tests:** Manual verification only — package ships with its own test suite.
+- [ ] `php artisan backup:run --only-db` completes without error
+- [ ] Backup file appears in configured destination
+- [ ] `php artisan backup:list` shows the new backup with correct size
+- [ ] `php artisan backup:monitor` exits 0 after a successful backup
+- [ ] `php artisan backup:clean` removes backups outside the retention window
+
+---
+
 ## Verification (End-to-End)
 
 1. `php artisan migrate:fresh --seed` — all migrations run cleanly with demo data
@@ -940,3 +991,4 @@ See `docs/flutter-laravel-API-contract.md` for the full contract and `docs/flutt
 | Phase 11.2 | Show class lookup | ✅ Complete |
 | Phase 11.3 | Entry lookup | ✅ Complete |
 | Phase 11.4 | Result submission | ✅ Complete |
+| Phase 12.1 | Automated database backups | 🔲 Pending |
