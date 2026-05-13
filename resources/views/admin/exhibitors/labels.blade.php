@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Entry Labels — {{ $exhibitor->full_name }}</title>
     @vite(['resources/css/app.css'])
-    <script src="{{ asset('vendor/jsbarcode.min.js') }}"></script>
     <style>
         @page { size: 2in 1in; margin: 1.5mm; }
 
@@ -29,7 +28,7 @@
         }
 
         .label-class {
-            font-size: 8px;
+            font-size: 11px;
             font-weight: 700;
             line-height: 1.2;
         }
@@ -45,21 +44,14 @@
         }
 
         .label-entry {
-            font-size: 18px;
+            font-size: 36px;
             font-weight: 900;
             letter-spacing: -0.02em;
             line-height: 1;
             font-variant-numeric: tabular-nums;
         }
 
-        .label-barcode svg {
-            display: block;
-            width: 100%;
-            max-width: 46mm;
-            height: auto;
-        }
-
-        @media screen {
+@media screen {
             body { background: #f3f4f6; margin: 0; }
 
             .screen-header {
@@ -152,28 +144,14 @@
             @foreach ($entries as $entry)
                 <div class="label">
                     {{-- <div class="label-section">{{ $entry->showClass->showSection->name }}</div> --}}
-                    <div class="label-class">Class {{ $entry->showClass->id }}: {{ $entry->showClass->name }}</div>
+                    <div class="label-class">{{ $entry->showClass->id }}. {{ Str::limit($entry->showClass->name, 30) }}</div>
                     <hr class="label-divider">
                     <div class="label-exhibitor">Exhibitor: {{ $exhibitor->id }}</div>
-                    <div class="label-barcode" data-value="{{ $entry->entry_number }}"></div>
                     <div class="label-entry">{{ Str::padLeft($entry->entry_number, 4, '0') }}</div>
                 </div>
             @endforeach
         </div>
     @endif
 
-    <script>
-        document.querySelectorAll('.label-barcode').forEach(function (el) {
-            var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-            el.appendChild(svg);
-            JsBarcode(svg, el.dataset.value, {
-                format: 'CODE128',
-                width: 1.5,
-                height: 18,
-                displayValue: false,
-                margin: 0,
-            });
-        });
-    </script>
 </body>
 </html>
