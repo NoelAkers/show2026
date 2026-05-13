@@ -93,6 +93,8 @@ class EntryManager extends Component
             $this->statusMessage = implode(', ', $parts).'.';
             $this->statusIsSuccess = true;
         }
+
+        $this->dispatch('entries-saved');
     }
 
     public function render(): View

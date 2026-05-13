@@ -37,7 +37,36 @@
                 <span wire:loading wire:target="save">Saving…</span>
             </flux:button>
 
-            <div class="flex flex-col gap-2" x-data="{ openSection: null }">
+            <div
+                class="flex flex-col gap-2"
+                x-data="{
+                    openSection: null,
+                    dirty: false,
+                    _navigating: false,
+                    init() {
+                        this._savedHandler = () => { this.dirty = false; };
+                        this._navigateHandler = (event) => {
+                            if (!this.dirty || this._navigating) return;
+                            if (!confirm('You have unsaved changes. Leave without saving?')) {
+                                event.preventDefault();
+                                return;
+                            }
+                            this._navigating = true;
+                        };
+                        this._beforeUnloadHandler = (event) => {
+                            if (this.dirty) event.preventDefault();
+                        };
+                        window.addEventListener('entries-saved', this._savedHandler);
+                        document.addEventListener('livewire:navigate', this._navigateHandler);
+                        window.addEventListener('beforeunload', this._beforeUnloadHandler);
+                    },
+                    destroy() {
+                        window.removeEventListener('entries-saved', this._savedHandler);
+                        document.removeEventListener('livewire:navigate', this._navigateHandler);
+                        window.removeEventListener('beforeunload', this._beforeUnloadHandler);
+                    }
+                }"
+            >
                 @foreach ($sections as $section)
                     <div
                         class="overflow-hidden rounded-lg border border-zinc-200 dark:border-zinc-700"
@@ -66,6 +95,7 @@
                                             size="sm"
                                             icon="minus"
                                             wire:click="decrement({{ $class->id }})"
+                                            @click="dirty = true"
                                             wire:loading.attr="disabled"
                                             :disabled="($quantities[$class->id] ?? 0) <= ($lockedCounts[$class->id] ?? 0)"
                                         />
@@ -76,6 +106,7 @@
                                             size="sm"
                                             icon="plus"
                                             wire:click="increment({{ $class->id }})"
+                                            @click="dirty = true"
                                             wire:loading.attr="disabled"
                                             :disabled="($quantities[$class->id] ?? 0) >= ($maxCounts[$class->id] ?? 1)"
                                         />

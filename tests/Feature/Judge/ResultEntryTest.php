@@ -23,7 +23,8 @@ function judgeWithSection(): array
 
 it('judge sees only classes in their assigned sections', function () {
     [$judge, $section] = judgeWithSection();
-    ShowClass::factory()->create(['show_section_id' => $section->id, 'name' => 'Roses']);
+    $class = ShowClass::factory()->create(['show_section_id' => $section->id, 'name' => 'Roses']);
+    Entry::factory()->create(['show_class_id' => $class->id]);
 
     $this->actingAs($judge)
         ->get(route('judge.sections.show', $section))

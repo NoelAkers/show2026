@@ -28,6 +28,8 @@
     @else
         <div class="flex flex-col gap-2">
             @foreach ($showSection->showClasses as $class)
+                @php $resultCount = $class->entries->filter(fn ($e) => $e->result)->count(); @endphp
+                @if ($class->entries->isNotEmpty())
                 <div
                     class="overflow-hidden rounded-lg border transition-colors"
                     :class="$wire.classErrors[{{ $class->id }}] ? 'border-red-400 dark:border-red-500' : 'border-zinc-200 dark:border-zinc-700'"
@@ -50,6 +52,9 @@
                         <div class="flex items-center gap-3">
                             <flux:heading size="base"><span class="tabular-nums text-zinc-600 dark:text-zinc-400 font-normal">{{ $class->id }}.</span> {{ $class->name }}</flux:heading>
                             <flux:badge size="sm" color="zinc">{{ $class->entries->count() }} {{ Str::plural('entry', $class->entries->count()) }}</flux:badge>
+                            @if ($resultCount > 0)
+                                <flux:badge size="sm" color="sky">{{ $resultCount }} {{ Str::plural('result', $resultCount) }}</flux:badge>
+                            @endif
                             <template x-if="$wire.classErrors[{{ $class->id }}]">
                                 <flux:badge size="sm" color="red">Fix errors to continue</flux:badge>
                             </template>
@@ -123,6 +128,7 @@
                         </div>
                     </div>
                 </div>
+                @endif
             @endforeach
         </div>
     @endif
