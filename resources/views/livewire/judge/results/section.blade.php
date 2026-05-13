@@ -1,4 +1,28 @@
-<div class="flex flex-col gap-4" x-data="{ openClass: null }">
+<div
+    class="flex flex-col gap-4"
+    x-data="{
+        openClass: null,
+        _navigating: false,
+        init() {
+            this._navigateHandler = async (event) => {
+                if (this.openClass === null || this._navigating) return;
+                event.preventDefault();
+                this._navigating = true;
+                await this.$wire.saveClass(this.openClass);
+                Livewire.navigate(event.detail.url.href);
+            };
+            this._beforeUnloadHandler = (event) => {
+                if (this.openClass !== null) event.preventDefault();
+            };
+            document.addEventListener('livewire:navigate', this._navigateHandler);
+            window.addEventListener('beforeunload', this._beforeUnloadHandler);
+        },
+        destroy() {
+            document.removeEventListener('livewire:navigate', this._navigateHandler);
+            window.removeEventListener('beforeunload', this._beforeUnloadHandler);
+        }
+    }"
+>
     @if ($showSection->showClasses->isEmpty())
         <p class="text-sm text-zinc-500">No classes in this section yet.</p>
     @else
@@ -86,6 +110,17 @@
                                 </flux:table.rows>
                             </flux:table>
                         @endif
+
+                        <div class="flex justify-end border-t border-zinc-100 px-4 py-3 dark:border-zinc-700">
+                            <flux:button
+                                type="button"
+                                variant="ghost"
+                                size="sm"
+                                wire:click="discardClass({{ $class->id }})"
+                            >
+                                Discard changes
+                            </flux:button>
+                        </div>
                     </div>
                 </div>
             @endforeach

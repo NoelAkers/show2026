@@ -263,3 +263,54 @@ it('saving one class does not affect results for entries in another class', func
     expect(Result::where('entry_id', $entry1->id)->exists())->toBeTrue()
         ->and(Result::where('entry_id', $entry2->id)->exists())->toBeFalse();
 });
+
+it('discarding a class resets placements and notes to last saved values', function () {
+    [$judge, $section] = judgeWithSection();
+    $class = ShowClass::factory()->create(['show_section_id' => $section->id]);
+    $entry = Entry::factory()->create(['show_class_id' => $class->id]);
+    Result::factory()->create(['entry_id' => $entry->id, 'placement' => '2nd', 'notes' => 'Original note']);
+
+    $this->actingAs($judge);
+
+    $component = Livewire::test(Section::class, ['showSection' => $section])
+        ->set("placements.{$entry->id}", '1st')
+        ->set("notes.{$entry->id}", 'Changed note')
+        ->call('discardClass', $class->id);
+
+    expect($component->get("placements.{$entry->id}"))->toBe('2nd')
+        ->and($component->get("notes.{$entry->id}"))->toBe('Original note');
+});
+
+it('discarding a class clears any class errors', function () {
+    [$judge, $section] = judgeWithSection();
+    $class = ShowClass::factory()->create(['show_section_id' => $section->id]);
+    $entry1 = Entry::factory()->create(['show_class_id' => $class->id]);
+    $entry2 = Entry::factory()->create(['show_class_id' => $class->id]);
+
+    $this->actingAs($judge);
+
+    $component = Livewire::test(Section::class, ['showSection' => $section])
+        ->set("placements.{$entry1->id}", '1st')
+        ->set("placements.{$entry2->id}", '1st')
+        ->call('saveClass', $class->id)
+        ->call('discardClass', $class->id);
+
+    expect($component->get('classErrors'))->not->toHaveKey($class->id);
+});
+
+it('discarding a class does not affect other entries', function () {
+    [$judge, $section] = judgeWithSection();
+    $class1 = ShowClass::factory()->create(['show_section_id' => $section->id]);
+    $class2 = ShowClass::factory()->create(['show_section_id' => $section->id]);
+    $entry1 = Entry::factory()->create(['show_class_id' => $class1->id]);
+    $entry2 = Entry::factory()->create(['show_class_id' => $class2->id]);
+
+    $this->actingAs($judge);
+
+    $component = Livewire::test(Section::class, ['showSection' => $section])
+        ->set("placements.{$entry1->id}", '1st')
+        ->set("placements.{$entry2->id}", '2nd')
+        ->call('discardClass', $class1->id);
+
+    expect($component->get("placements.{$entry2->id}"))->toBe('2nd');
+});

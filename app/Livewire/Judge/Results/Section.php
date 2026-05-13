@@ -43,6 +43,24 @@ class Section extends Component
         }
     }
 
+    public function discardClass(int $showClassId): void
+    {
+        $class = $this->showSection->showClasses->firstWhere('id', $showClassId);
+
+        if (! $class) {
+            return;
+        }
+
+        $class->load(['entries' => fn ($q) => $q->orderBy('entry_number'), 'entries.result']);
+
+        foreach ($class->entries as $entry) {
+            $this->placements[$entry->id] = $entry->result?->placement ?? '';
+            $this->notes[$entry->id] = $entry->result?->notes ?? '';
+        }
+
+        unset($this->classErrors[$showClassId]);
+    }
+
     public function saveClass(int $showClassId): void
     {
         unset($this->classErrors[$showClassId]);
