@@ -14,9 +14,6 @@
                         class="flex w-full items-center justify-between bg-zinc-50 px-4 py-3 text-left transition-colors hover:bg-zinc-100 dark:bg-zinc-800 dark:hover:bg-zinc-700/75"
                         @click="async () => {
                             let wasOpen = openClass === {{ $class->id }};
-                            if (openClass !== null && $wire.classErrors[openClass]) {
-                                return;
-                            }
                             if (openClass !== null) {
                                 await $wire.saveClass(openClass);
                                 if ($wire.classErrors[openClass]) {
@@ -27,7 +24,7 @@
                         }"
                     >
                         <div class="flex items-center gap-3">
-                            <flux:heading size="base">{{ $class->name }}</flux:heading>
+                            <flux:heading size="base"><span class="tabular-nums text-zinc-600 dark:text-zinc-400 font-normal">{{ $class->id }}.</span> {{ $class->name }}</flux:heading>
                             <flux:badge size="sm" color="zinc">{{ $class->entries->count() }} {{ Str::plural('entry', $class->entries->count()) }}</flux:badge>
                             <template x-if="$wire.classErrors[{{ $class->id }}]">
                                 <flux:badge size="sm" color="red">Fix errors to continue</flux:badge>

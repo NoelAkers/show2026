@@ -31,62 +31,68 @@
     @if ($sections->isEmpty())
         <p class="text-sm text-zinc-500">No sections or classes available.</p>
     @else
-        <div class="flex flex-col gap-2">
-            @foreach ($sections as $section)
-                <div
-                    x-data="{ open: true }"
-                    class="overflow-hidden rounded-lg border border-zinc-200 dark:border-zinc-700"
-                    wire:key="section-{{ $section->id }}"
-                >
-                    <button
-                        type="button"
-                        @click="open = !open"
-                        class="flex w-full items-center justify-between bg-zinc-50 px-4 py-3 text-left transition-colors hover:bg-zinc-100 dark:bg-zinc-800 dark:hover:bg-zinc-700/75"
-                    >
-                        <flux:heading size="base">{{ $section->name }}</flux:heading>
-                        <flux:icon.chevron-down class="size-4 text-zinc-400 transition-transform duration-200" x-bind:class="open ? 'rotate-180' : ''" />
-                    </button>
-
-                    <div x-show="open" x-transition:enter="transition duration-150" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" class="divide-y divide-zinc-100 dark:divide-zinc-700">
-                        @foreach ($section->showClasses as $class)
-                            <div
-                                class="flex items-center justify-between gap-4 px-4 py-3"
-                                wire:key="class-{{ $class->id }}"
-                            >
-                                <span class="text-sm">{{ $class->name }}</span>
-                                <div class="flex items-center gap-1">
-                                    <flux:button
-                                        type="button"
-                                        variant="ghost"
-                                        size="sm"
-                                        icon="minus"
-                                        wire:click="decrement({{ $class->id }})"
-                                        wire:loading.attr="disabled"
-                                        :disabled="($quantities[$class->id] ?? 0) <= ($lockedCounts[$class->id] ?? 0)"
-                                    />
-                                    <span class="w-8 text-center text-sm tabular-nums font-medium">{{ $quantities[$class->id] ?? 0 }}</span>
-                                    <flux:button
-                                        type="button"
-                                        variant="ghost"
-                                        size="sm"
-                                        icon="plus"
-                                        wire:click="increment({{ $class->id }})"
-                                        wire:loading.attr="disabled"
-                                        :disabled="($quantities[$class->id] ?? 0) >= ($maxCounts[$class->id] ?? 1)"
-                                    />
-                                </div>
-                            </div>
-                        @endforeach
-                    </div>
-                </div>
-            @endforeach
-        </div>
-
         <div>
-            <flux:button wire:click="save" variant="primary" wire:loading.attr="disabled" wire:target="save">
+            <flux:button wire:click="save" variant="primary" wire:loading.attr="disabled" wire:target="save" class="mb-4">
                 <span wire:loading.remove wire:target="save">Save Entries</span>
                 <span wire:loading wire:target="save">Saving…</span>
             </flux:button>
+
+            <div class="flex flex-col gap-2" x-data="{ openSection: null }">
+                @foreach ($sections as $section)
+                    <div
+                        class="overflow-hidden rounded-lg border border-zinc-200 dark:border-zinc-700"
+                        wire:key="section-{{ $section->id }}"
+                    >
+                        <button
+                            type="button"
+                            @click="openSection = openSection === {{ $section->id }} ? null : {{ $section->id }}"
+                            class="flex w-full items-center justify-between bg-zinc-50 px-4 py-3 text-left transition-colors hover:bg-zinc-100 dark:bg-zinc-800 dark:hover:bg-zinc-700/75"
+                        >
+                            <flux:heading size="lg">{{ $section->name }}</flux:heading>
+                            <flux:icon.chevron-down class="size-4 text-zinc-400 transition-transform duration-200" x-bind:class="openSection === {{ $section->id }} ? 'rotate-180' : ''" />
+                        </button>
+
+                        <div x-show="openSection === {{ $section->id }}" x-transition:enter="transition duration-150" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" class="divide-y divide-zinc-100 dark:divide-zinc-700">
+                            @foreach ($section->showClasses as $class)
+                                <div
+                                    class="flex items-center justify-between gap-4 px-4 py-3"
+                                    wire:key="class-{{ $class->id }}"
+                                >
+                                    <span class="text-sm"><span class="tabular-nums text-zinc-600 dark:text-zinc-400">{{ $class->id }}.</span> {{ $class->name }}</span>
+                                    <div class="flex items-center gap-1">
+                                        <flux:button
+                                            type="button"
+                                            variant="ghost"
+                                            size="sm"
+                                            icon="minus"
+                                            wire:click="decrement({{ $class->id }})"
+                                            wire:loading.attr="disabled"
+                                            :disabled="($quantities[$class->id] ?? 0) <= ($lockedCounts[$class->id] ?? 0)"
+                                        />
+                                        <span class="w-8 text-center text-sm tabular-nums font-medium">{{ $quantities[$class->id] ?? 0 }}</span>
+                                        <flux:button
+                                            type="button"
+                                            variant="ghost"
+                                            size="sm"
+                                            icon="plus"
+                                            wire:click="increment({{ $class->id }})"
+                                            wire:loading.attr="disabled"
+                                            :disabled="($quantities[$class->id] ?? 0) >= ($maxCounts[$class->id] ?? 1)"
+                                        />
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+
+            <div class="mt-4">
+                <flux:button wire:click="save" variant="primary" wire:loading.attr="disabled" wire:target="save">
+                    <span wire:loading.remove wire:target="save">Save Entries</span>
+                    <span wire:loading wire:target="save">Saving…</span>
+                </flux:button>
+            </div>
         </div>
     @endif
 
@@ -111,7 +117,7 @@
                             <flux:table.cell>{{ $entry->showClass->showSection->name }}</flux:table.cell>
                             <flux:table.cell variant="strong">
                                 <a href="{{ route('admin.show-sections.show-classes.show', [$entry->showClass->showSection, $entry->showClass]) }}" class="hover:underline" wire:navigate>
-                                    {{ $entry->showClass->name }}
+                                    <span class="tabular-nums text-zinc-600 dark:text-zinc-400 font-normal">{{ $entry->showClass->id }}.</span> {{ $entry->showClass->name }}
                                 </a>
                             </flux:table.cell>
                             <flux:table.cell>
