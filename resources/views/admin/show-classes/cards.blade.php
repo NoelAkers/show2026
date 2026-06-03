@@ -19,7 +19,7 @@
             align-items: center;
             text-align: center;
             font-family: ui-sans-serif, system-ui, sans-serif;
-            padding: 10mm;
+            padding: 6mm 0;
             gap: 4mm;
         }
 
@@ -33,22 +33,17 @@
         }
 
         .card-name {
-            font-size: 18px;
+            font-size: 32px;
             font-weight: 700;
             color: #111827;
-            line-height: 1.2;
+            line-height: 1.3;
+            max-width: 120mm;
         }
 
         .card-divider {
-            width: 40mm;
+            width: 100%;
             border-top: 2px solid #d1d5db;
-        }
-
-        .card-description {
-            font-size: 13px;
-            color: #4b5563;
-            line-height: 1.4;
-            max-width: 110mm;
+            margin: 0;
         }
 
         @media screen {
@@ -140,12 +135,9 @@
         <div class="cards-list">
             @foreach ($classes as $class)
                 <div class="card">
-                    <div class="card-id">{{ $class->id }}</div>
+                    <div class="card-id">Class {{ $class->id }}</div>
                     <hr class="card-divider">
                     <div class="card-name">{{ $class->name }}</div>
-                    @if ($class->description)
-                        <div class="card-description">{{ $class->description }}</div>
-                    @endif
                 </div>
             @endforeach
         </div>
