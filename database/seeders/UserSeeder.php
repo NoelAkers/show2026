@@ -15,6 +15,11 @@ class UserSeeder extends Seeder
         ]);
 
         User::factory()->judge()->create([
+            'name' => 'TBC',
+            'email' => 'tbc@oleana.co.uk',
+        ]);
+
+        User::factory()->judge()->create([
             'name' => 'Anne Akers',
             'email' => 'anne.akers@oleana.co.uk',
         ]);
