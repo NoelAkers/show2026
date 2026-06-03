@@ -26,12 +26,7 @@ class Result extends Model
 
     public function points(): int
     {
-        return match ($this->placement) {
-            '1st' => 3,
-            '2nd' => 2,
-            '3rd' => 1,
-            default => 0,
-        };
+        return config('show.placement_points')[$this->placement] ?? 0;
     }
 
     public function placementLabel(): string

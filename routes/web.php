@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\ClassCardsController;
 use App\Http\Controllers\Admin\EntryController;
 use App\Http\Controllers\Admin\ExhibitorController;
 use App\Http\Controllers\Admin\JudgeController;
@@ -37,6 +38,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     Route::post('show-sections/{show_section}/show-classes/{show_class}/results', [AdminResultController::class, 'store'])->name('show-sections.show-classes.results.store');
     Route::patch('show-sections/{show_section}/show-classes/{show_class}/results/{result}', [AdminResultController::class, 'update'])->name('show-sections.show-classes.results.update');
     Route::delete('show-sections/{show_section}/show-classes/{show_class}/results/{result}', [AdminResultController::class, 'destroy'])->name('show-sections.show-classes.results.destroy');
+    Route::get('class-cards', ClassCardsController::class)->name('class-cards');
     Route::get('leaderboard', [LeaderboardController::class, 'index'])->name('leaderboard');
     Route::resource('trophies', TrophyController::class)->except(['show']);
 });

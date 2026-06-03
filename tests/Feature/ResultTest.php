@@ -14,9 +14,9 @@ it('factory creates a valid Result', function () {
     expect($result->entry_id)->not->toBeNull();
 });
 
-it('points returns 3 for 1st', function () {
+it('points returns 4 for 1st', function () {
     $result = Result::factory()->make(['placement' => '1st']);
-    expect($result->points())->toBe(3);
+    expect($result->points())->toBe(4);
 });
 
 it('points returns 2 for 2nd', function () {

@@ -2,9 +2,14 @@
     <div class="flex h-full w-full flex-1 flex-col gap-4 p-4">
         <div class="flex items-center justify-between">
             <flux:heading size="xl">Show Sections</flux:heading>
-            <flux:button :href="route('admin.show-sections.create')" variant="primary" icon="plus" wire:navigate>
-                Add Section
-            </flux:button>
+            <div class="flex items-center gap-2">
+                <flux:button :href="route('admin.class-cards')" variant="ghost" icon="printer">
+                    Class Cards
+                </flux:button>
+                <flux:button :href="route('admin.show-sections.create')" variant="primary" icon="plus" wire:navigate>
+                    Add Section
+                </flux:button>
+            </div>
         </div>
 
         @if (session('success'))
