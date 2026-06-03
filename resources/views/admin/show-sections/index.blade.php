@@ -6,6 +6,9 @@
                 <flux:button :href="route('admin.class-cards')" variant="ghost" icon="printer">
                     Class Cards
                 </flux:button>
+                <flux:button :href="route('admin.result-cards')" variant="ghost" icon="printer">
+                    Result Cards
+                </flux:button>
                 <flux:button :href="route('admin.show-sections.create')" variant="primary" icon="plus" wire:navigate>
                     Add Section
                 </flux:button>

@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\EntryController;
 use App\Http\Controllers\Admin\ExhibitorController;
 use App\Http\Controllers\Admin\JudgeController;
 use App\Http\Controllers\Admin\LeaderboardController;
+use App\Http\Controllers\Admin\ResultCardsController;
 use App\Http\Controllers\Admin\ResultController as AdminResultController;
 use App\Http\Controllers\Admin\ShowClassController;
 use App\Http\Controllers\Admin\ShowSectionController;
@@ -39,6 +40,8 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     Route::patch('show-sections/{show_section}/show-classes/{show_class}/results/{result}', [AdminResultController::class, 'update'])->name('show-sections.show-classes.results.update');
     Route::delete('show-sections/{show_section}/show-classes/{show_class}/results/{result}', [AdminResultController::class, 'destroy'])->name('show-sections.show-classes.results.destroy');
     Route::get('class-cards', ClassCardsController::class)->name('class-cards');
+    Route::get('result-cards', [ResultCardsController::class, 'index'])->name('result-cards');
+    Route::post('result-cards/mark-printed', [ResultCardsController::class, 'markPrinted'])->name('result-cards.mark-printed');
     Route::get('leaderboard', [LeaderboardController::class, 'index'])->name('leaderboard');
     Route::resource('trophies', TrophyController::class)->except(['show']);
 });
