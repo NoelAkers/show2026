@@ -234,7 +234,7 @@
                     <div class="card-result" style="color: {{ $result->prizeColour() }}">{{ $result->prizeLabel() }}</div>
                     <div class="card-winner">{{ $result->entry->exhibitor->full_name }}</div>
                     <div class="card-show-title">{{ $title }}</div>
-                    <div class="card-entry-info">Entry {{ $result->entry->entry_number }} | Exhibitor {{ $result->entry->exhibitor->id }}</div>
+                    <div class="card-entry-info">Entry {{ $result->entry->formatted_entry_number }} | Exhibitor {{ $result->entry->exhibitor->id }}</div>
                 </div>
             @endforeach
         </div>

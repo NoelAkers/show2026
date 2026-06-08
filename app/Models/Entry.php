@@ -41,4 +41,9 @@ class Entry extends Model
     {
         return $this->result()->exists();
     }
+
+    public function getFormattedEntryNumberAttribute(): string
+    {
+        return str_pad((string) $this->entry_number, 3, '0', STR_PAD_LEFT);
+    }
 }

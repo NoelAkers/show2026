@@ -84,14 +84,14 @@
                         @else
                             <flux:table>
                                 <flux:table.columns>
-                                    <flux:table.column>#</flux:table.column>
+                                    <flux:table.column>Entry no.</flux:table.column>
                                     <flux:table.column>Placement</flux:table.column>
                                     <flux:table.column>Notes</flux:table.column>
                                 </flux:table.columns>
                                 <flux:table.rows>
                                     @foreach ($class->entries as $entry)
                                         <flux:table.row :key="$entry->id">
-                                            <flux:table.cell class="tabular-nums">{{ $entry->entry_number }}</flux:table.cell>
+                                            <flux:table.cell class="tabular-nums">{{ $entry->formatted_entry_number }}</flux:table.cell>
                                             <flux:table.cell>
                                                 <div class="flex items-center gap-4">
                                                     @foreach (['1st' => '1st', '2nd' => '2nd', '3rd' => '3rd', 'highly_commended' => 'HC', '' => 'None'] as $value => $label)

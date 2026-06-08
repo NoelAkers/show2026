@@ -86,7 +86,7 @@
                             <flux:select.option value="">No winner selected</flux:select.option>
                             @foreach ($entries as $entry)
                                 <flux:select.option value="{{ $entry->id }}" :selected="old('winning_entry_id', $trophy->winning_entry_id) == $entry->id">
-                                    #{{ $entry->entry_number }} — {{ $entry->exhibitor->full_name }}
+                                    {{ $entry->formatted_entry_number }} — {{ $entry->exhibitor->full_name }}
                                 </flux:select.option>
                             @endforeach
                         </flux:select>

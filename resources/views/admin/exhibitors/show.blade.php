@@ -136,7 +136,7 @@
                 @else
                     <flux:table>
                         <flux:table.columns>
-                            <flux:table.column>#</flux:table.column>
+                            <flux:table.column>Entry no.</flux:table.column>
                             <flux:table.column>Section</flux:table.column>
                             <flux:table.column>Class</flux:table.column>
                             <flux:table.column>Placement</flux:table.column>
@@ -144,7 +144,7 @@
                         <flux:table.rows>
                             @foreach ($exhibitor->entries as $entry)
                                 <flux:table.row :key="$entry->id">
-                                    <flux:table.cell class="tabular-nums">{{ $entry->entry_number }}</flux:table.cell>
+                                    <flux:table.cell class="tabular-nums">{{ $entry->formatted_entry_number }}</flux:table.cell>
                                     <flux:table.cell>{{ $entry->showClass->showSection->name }}</flux:table.cell>
                                     <flux:table.cell variant="strong">
                                         <a href="{{ route('admin.show-sections.show-classes.show', [$entry->showClass->showSection, $entry->showClass]) }}" class="hover:underline" wire:navigate>

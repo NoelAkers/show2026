@@ -62,3 +62,21 @@ it('feeOwedPence caps at 10 chargeable entries for adults with 11 or more entrie
     expect($exhibitor->chargeableEntries())->toBe(10);
     expect($exhibitor->feeOwedPence())->toBe(10 * config('show.entry_fee_pence'));
 });
+
+it('formatted_entry_number pads single-digit numbers to three digits', function () {
+    $entry = Entry::factory()->make(['entry_number' => 9]);
+
+    expect($entry->formatted_entry_number)->toBe('009');
+});
+
+it('formatted_entry_number pads two-digit numbers to three digits', function () {
+    $entry = Entry::factory()->make(['entry_number' => 42]);
+
+    expect($entry->formatted_entry_number)->toBe('042');
+});
+
+it('formatted_entry_number does not pad three-digit numbers', function () {
+    $entry = Entry::factory()->make(['entry_number' => 100]);
+
+    expect($entry->formatted_entry_number)->toBe('100');
+});

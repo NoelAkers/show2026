@@ -147,7 +147,7 @@
                     <div class="label-class">{{ $entry->showClass->id }}. {{ Str::limit($entry->showClass->name, 30) }}</div>
                     <hr class="label-divider">
                     <div class="label-exhibitor">Exhibitor: {{ $exhibitor->id }}</div>
-                    <div class="label-entry">{{ Str::padLeft($entry->entry_number, 3, '0') }}</div>
+                    <div class="label-entry">{{ $entry->formatted_entry_number }}</div>
                 </div>
             @endforeach
         </div>
