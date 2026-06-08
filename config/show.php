@@ -13,9 +13,9 @@ return [
     ],
 
     'result_card_colours' => [
-        '1st' => '#B8860B',
-        '2nd' => '#708090',
-        '3rd' => '#8B4513',
-        'highly_commended' => '#2E7D32',
+        '1st' => '#dc2626',
+        '2nd' => '#2563eb',
+        '3rd' => '#16a34a',
+        'highly_commended' => '#9ca3af',
     ],
 ];

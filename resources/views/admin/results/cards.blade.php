@@ -15,53 +15,50 @@
             height: 100%;
             display: flex;
             flex-direction: column;
-            justify-content: center;
+            justify-content: space-between;
             align-items: center;
             text-align: center;
             font-family: ui-sans-serif, system-ui, sans-serif;
-            padding: 6mm 0;
-            gap: 3mm;
+            padding: 5mm 4mm;
         }
 
-        .card-class {
-            font-size: 16px;
+        .card-show-title {
+            font-size: 18px;
             font-weight: 700;
             color: #111827;
-            line-height: 1.3;
-            max-width: 126mm;
-        }
-
-        .card-divider {
-            width: 100%;
-            border-top: 2px solid #d1d5db;
-            margin: 0;
+            line-height: 1.2;
         }
 
         .card-result {
-            font-size: 36px;
+            font-size: 38px;
             font-weight: 900;
             line-height: 1;
             letter-spacing: -0.02em;
         }
 
+        .card-class {
+            font-size: 20px;
+            font-weight: 600;
+            font-style: italic;
+            color: #111827;
+            line-height: 1.3;
+            max-width: 126mm;
+        }
+
         .card-winner {
-            font-size: 22px;
+            font-size: 32px;
             font-weight: 700;
             color: #111827;
             line-height: 1.2;
             max-width: 126mm;
         }
 
-        .card-show-title {
-            font-size: 13px;
-            font-weight: 500;
-            color: #374151;
-        }
-
         .card-entry-info {
             font-size: 10px;
             color: #9ca3af;
             letter-spacing: 0.02em;
+            text-align: right;
+            width: 100%;
         }
 
         @media screen {
@@ -176,6 +173,7 @@
                 background: none;
                 break-after: page;
                 page-break-after: always;
+                height: 84mm; /* page 100mm - top margin 8mm - bottom margin 8mm */
             }
         }
     </style>
@@ -229,11 +227,10 @@
                     @if ($result->needsReprint())
                         <div class="reprint-badge">Modified since last print</div>
                     @endif
-                    <div class="card-class">Class {{ $result->entry->showClass->id }} &ndash; {{ $result->entry->showClass->name }}</div>
-                    <hr class="card-divider">
-                    <div class="card-result" style="color: {{ $result->prizeColour() }}">{{ $result->prizeLabel() }}</div>
-                    <div class="card-winner">{{ $result->entry->exhibitor->full_name }}</div>
                     <div class="card-show-title">{{ $title }}</div>
+                    <div class="card-result" style="color: {{ $result->prizeColour() }}">{{ $result->prizeLabel() }}</div>
+                    <div class="card-class">Class {{ $result->entry->showClass->id }} &ndash; {{ $result->entry->showClass->name }}</div>
+                    <div class="card-winner">{{ $result->entry->exhibitor->full_name }}</div>
                     <div class="card-entry-info">Entry {{ $result->entry->formatted_entry_number }} | Exhibitor {{ $result->entry->exhibitor->id }}</div>
                 </div>
             @endforeach
