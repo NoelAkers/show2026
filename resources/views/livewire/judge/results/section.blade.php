@@ -82,6 +82,7 @@
                         @if ($class->entries->isEmpty())
                             <p class="px-4 py-3 text-sm text-zinc-500">No entries in this class.</p>
                         @else
+                            <div class="overflow-x-auto">
                             <flux:table>
                                 <flux:table.columns>
                                     <flux:table.column>Entry no.</flux:table.column>
@@ -93,7 +94,7 @@
                                         <flux:table.row :key="$entry->id">
                                             <flux:table.cell class="tabular-nums">{{ $entry->formatted_entry_number }}</flux:table.cell>
                                             <flux:table.cell>
-                                                <div class="flex items-center gap-4">
+                                                <div class="flex flex-wrap gap-x-3 gap-y-1">
                                                     @foreach (['1st' => '1st', '2nd' => '2nd', '3rd' => '3rd', 'highly_commended' => 'HC', '' => 'None'] as $value => $label)
                                                         <label class="flex cursor-pointer items-center gap-1.5">
                                                             <input
@@ -108,12 +109,13 @@
                                                 </div>
                                             </flux:table.cell>
                                             <flux:table.cell>
-                                                <flux:input wire:model="notes.{{ $entry->id }}" placeholder="Notes…" size="sm" class="w-48" />
+                                                <flux:input wire:model="notes.{{ $entry->id }}" placeholder="Notes…" size="sm" class="w-full min-w-32" />
                                             </flux:table.cell>
                                         </flux:table.row>
                                     @endforeach
                                 </flux:table.rows>
                             </flux:table>
+                            </div>
                         @endif
 
                         <div class="flex justify-end border-t border-zinc-100 px-4 py-3 dark:border-zinc-700">

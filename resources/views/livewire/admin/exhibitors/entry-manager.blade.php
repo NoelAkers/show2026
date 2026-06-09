@@ -134,6 +134,7 @@
         @if ($exhibitor->entries->isEmpty())
             <p class="text-sm text-zinc-500">No entries yet.</p>
         @else
+            <div class="overflow-x-auto">
             <flux:table>
                 <flux:table.columns>
                     <flux:table.column>Entry no.</flux:table.column>
@@ -162,6 +163,7 @@
                     @endforeach
                 </flux:table.rows>
             </flux:table>
+            </div>
         @endif
     </div>
 </div>

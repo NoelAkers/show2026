@@ -16,21 +16,21 @@
         @endif
 
         <form method="GET" action="{{ route('admin.exhibitors.index') }}" class="flex flex-wrap gap-3">
-            <flux:input name="search" value="{{ request('search') }}" placeholder="Search by name…" class="w-64" />
+            <flux:input name="search" value="{{ request('search') }}" placeholder="Search by name…" class="w-full sm:w-64" />
 
-            <flux:select name="type" class="w-36">
+            <flux:select name="type" class="w-full sm:w-36">
                 <flux:select.option value="">All types</flux:select.option>
                 <flux:select.option value="adult" :selected="request('type') === 'adult'">Adult</flux:select.option>
                 <flux:select.option value="junior" :selected="request('type') === 'junior'">Junior</flux:select.option>
             </flux:select>
 
-            <flux:select name="is_resident" class="w-40">
+            <flux:select name="is_resident" class="w-full sm:w-40">
                 <flux:select.option value="">All residency</flux:select.option>
                 <flux:select.option value="1" :selected="request('is_resident') === '1'">Resident</flux:select.option>
                 <flux:select.option value="0" :selected="request('is_resident') === '0'">Non-resident</flux:select.option>
             </flux:select>
 
-            <flux:select name="has_paid" class="w-36">
+            <flux:select name="has_paid" class="w-full sm:w-36">
                 <flux:select.option value="">All payment</flux:select.option>
                 <flux:select.option value="1" :selected="request('has_paid') === '1'">Paid</flux:select.option>
                 <flux:select.option value="0" :selected="request('has_paid') === '0'">Unpaid</flux:select.option>
