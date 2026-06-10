@@ -23,5 +23,10 @@ class UserSeeder extends Seeder
             'name' => 'Anne Akers',
             'email' => 'anne.akers@oleana.co.uk',
         ]);
+
+        User::factory()->helper()->create([
+            'name' => 'Generic Helper',
+            'email' => 'helper@oleana.co.uk',
+        ]);
     }
 }
