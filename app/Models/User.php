@@ -47,6 +47,11 @@ class User extends Authenticatable
         return (bool) $this->is_judge;
     }
 
+    public function isHelper(): bool
+    {
+        return $this->role === 'helper';
+    }
+
     public function assignedSections()
     {
         return $this->belongsToMany(ShowSection::class);

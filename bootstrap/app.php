@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Middleware\RequireAdmin;
+use App\Http\Middleware\RequireHelper;
 use App\Http\Middleware\RequireJudge;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -17,6 +18,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'admin' => RequireAdmin::class,
             'judge' => RequireJudge::class,
+            'helper' => RequireHelper::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

@@ -11,6 +11,7 @@ use App\Http\Controllers\Admin\ShowClassController;
 use App\Http\Controllers\Admin\ShowSectionController;
 use App\Http\Controllers\Admin\TrophyController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\Helper\ExhibitorController as HelperExhibitorController;
 use App\Http\Controllers\Judge\SectionController;
 use App\Http\Controllers\Public\ResultController as PublicResultController;
 use App\Http\Controllers\Public\ScheduleController;
@@ -49,6 +50,11 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
 Route::prefix('judge')->name('judge.')->middleware(['auth', 'judge'])->group(function () {
     Route::get('sections', [SectionController::class, 'index'])->name('sections.index');
     Route::get('sections/{show_section}/classes', [SectionController::class, 'show'])->name('sections.show');
+});
+
+Route::prefix('helper')->name('helper.')->middleware(['auth', 'helper'])->group(function () {
+    Route::get('exhibitors', [HelperExhibitorController::class, 'index'])->name('exhibitors.index');
+    Route::get('exhibitors/{exhibitor}/add-entry', [HelperExhibitorController::class, 'addEntry'])->name('exhibitors.add-entry');
 });
 
 Route::prefix('public')->name('public.')->group(function () {

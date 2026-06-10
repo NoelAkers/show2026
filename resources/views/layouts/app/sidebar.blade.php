@@ -35,6 +35,12 @@
                             {{ __('Trophies') }}
                         </flux:sidebar.item>
                     </flux:sidebar.group>
+                @elseif (auth()->user()?->isHelper())
+                    <flux:sidebar.group :heading="__('Exhibitors')" class="grid">
+                        <flux:sidebar.item icon="users" :href="route('helper.exhibitors.index')" :current="request()->routeIs('helper.exhibitors.*')" wire:navigate>
+                            {{ __('Exhibitors') }}
+                        </flux:sidebar.item>
+                    </flux:sidebar.group>
                 @endif
             </flux:sidebar.nav>
 

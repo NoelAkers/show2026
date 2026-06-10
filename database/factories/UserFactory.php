@@ -63,4 +63,11 @@ class UserFactory extends Factory
             'is_judge' => true,
         ]);
     }
+
+    public function helper(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'role' => 'helper',
+        ]);
+    }
 }
