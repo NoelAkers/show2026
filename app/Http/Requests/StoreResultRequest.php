@@ -23,7 +23,6 @@ class StoreResultRequest extends FormRequest
         return [
             'entry_id' => ['required', 'integer', 'exists:entries,id'],
             'placement' => ['nullable', Rule::in(['1st', '2nd', '3rd', 'highly_commended'])],
-            'notes' => ['nullable', 'string', 'max:1000'],
         ];
     }
 

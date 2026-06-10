@@ -20,7 +20,6 @@ class ResultFactory extends Factory
             'entry_id' => Entry::factory(),
             'entered_by_user_id' => null,
             'placement' => fake()->randomElement(['1st', '2nd', '3rd', 'highly_commended', null]),
-            'notes' => fake()->optional()->sentence(),
         ];
     }
 }

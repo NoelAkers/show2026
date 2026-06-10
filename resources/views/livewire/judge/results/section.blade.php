@@ -87,7 +87,6 @@
                                 <flux:table.columns>
                                     <flux:table.column>Entry no.</flux:table.column>
                                     <flux:table.column>Placement</flux:table.column>
-                                    <flux:table.column>Notes</flux:table.column>
                                 </flux:table.columns>
                                 <flux:table.rows>
                                     @foreach ($class->entries as $entry)
@@ -107,9 +106,6 @@
                                                         </label>
                                                     @endforeach
                                                 </div>
-                                            </flux:table.cell>
-                                            <flux:table.cell>
-                                                <flux:input wire:model="notes.{{ $entry->id }}" placeholder="Notes…" size="sm" class="w-full min-w-32" />
                                             </flux:table.cell>
                                         </flux:table.row>
                                     @endforeach

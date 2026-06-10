@@ -39,7 +39,7 @@ it('needsReprint returns true when updated after printing', function () {
         'placement' => '1st',
         'card_printed_at' => Carbon::now()->subMinute(),
     ]);
-    $result->update(['notes' => 'changed after print']);
+    $result->update(['placement' => '2nd']);
 
     expect($result->fresh()->needsReprint())->toBeTrue();
 });
@@ -89,7 +89,7 @@ it('default filter shows only unprinted and needs-reprint results', function () 
         'placement' => '3rd',
         'card_printed_at' => Carbon::now()->subMinute(),
     ]);
-    $needsReprint->update(['notes' => 'changed']);
+    $needsReprint->update(['placement' => '2nd']);
 
     $response = $this->actingAs($admin)
         ->get(route('admin.result-cards'))

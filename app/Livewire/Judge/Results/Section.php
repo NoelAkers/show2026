@@ -15,9 +15,6 @@ class Section extends Component
     public array $placements = [];
 
     /** @var array<int, string> */
-    public array $notes = [];
-
-    /** @var array<int, string> */
     public array $classErrors = [];
 
     public function mount(ShowSection $showSection): void
@@ -38,7 +35,6 @@ class Section extends Component
         foreach ($showSection->showClasses as $class) {
             foreach ($class->entries as $entry) {
                 $this->placements[$entry->id] = $entry->result?->placement ?? '';
-                $this->notes[$entry->id] = $entry->result?->notes ?? '';
             }
         }
     }
@@ -55,7 +51,6 @@ class Section extends Component
 
         foreach ($class->entries as $entry) {
             $this->placements[$entry->id] = $entry->result?->placement ?? '';
-            $this->notes[$entry->id] = $entry->result?->notes ?? '';
         }
 
         unset($this->classErrors[$showClassId]);
@@ -104,7 +99,6 @@ class Section extends Component
                 $entry->result()->updateOrCreate([], [
                     'entered_by_user_id' => auth()->id(),
                     'placement' => $this->placements[$entry->id] ?: null,
-                    'notes' => $this->notes[$entry->id] ?: null,
                 ]);
             });
 

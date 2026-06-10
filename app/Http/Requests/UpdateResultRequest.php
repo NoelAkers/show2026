@@ -22,7 +22,6 @@ class UpdateResultRequest extends FormRequest
     {
         return [
             'placement' => ['nullable', Rule::in(['1st', '2nd', '3rd', 'highly_commended'])],
-            'notes' => ['nullable', 'string', 'max:1000'],
         ];
     }
 

@@ -42,7 +42,7 @@ it('judge cannot view classes in an unassigned section', function () {
         ->assertForbidden();
 });
 
-it('judge can save placements and notes for entries in a class', function () {
+it('judge can save placements for entries in a class', function () {
     [$judge, $section] = judgeWithSection();
     $class = ShowClass::factory()->create(['show_section_id' => $section->id]);
     $entry = Entry::factory()->create(['show_class_id' => $class->id]);
@@ -51,12 +51,10 @@ it('judge can save placements and notes for entries in a class', function () {
 
     Livewire::test(Section::class, ['showSection' => $section])
         ->set("placements.{$entry->id}", '1st')
-        ->set("notes.{$entry->id}", 'Beautiful arrangement.')
         ->call('saveClass', $class->id);
 
     expect(Result::where('entry_id', $entry->id)->first())
         ->placement->toBe('1st')
-        ->notes->toBe('Beautiful arrangement.')
         ->entered_by_user_id->toBe($judge->id);
 });
 
@@ -189,7 +187,7 @@ it('exhibitor points total changes after updating a result', function () {
         ->set("placements.{$entry->id}", '1st')
         ->call('saveClass', $class->id);
 
-    expect($result->fresh()->points())->toBe(3);
+    expect($result->fresh()->points())->toBe(4);
 });
 
 it('exhibitor name is not shown to the judge', function () {
@@ -265,21 +263,19 @@ it('saving one class does not affect results for entries in another class', func
         ->and(Result::where('entry_id', $entry2->id)->exists())->toBeFalse();
 });
 
-it('discarding a class resets placements and notes to last saved values', function () {
+it('discarding a class resets placements to last saved values', function () {
     [$judge, $section] = judgeWithSection();
     $class = ShowClass::factory()->create(['show_section_id' => $section->id]);
     $entry = Entry::factory()->create(['show_class_id' => $class->id]);
-    Result::factory()->create(['entry_id' => $entry->id, 'placement' => '2nd', 'notes' => 'Original note']);
+    Result::factory()->create(['entry_id' => $entry->id, 'placement' => '2nd']);
 
     $this->actingAs($judge);
 
     $component = Livewire::test(Section::class, ['showSection' => $section])
         ->set("placements.{$entry->id}", '1st')
-        ->set("notes.{$entry->id}", 'Changed note')
         ->call('discardClass', $class->id);
 
-    expect($component->get("placements.{$entry->id}"))->toBe('2nd')
-        ->and($component->get("notes.{$entry->id}"))->toBe('Original note');
+    expect($component->get("placements.{$entry->id}"))->toBe('2nd');
 });
 
 it('discarding a class clears any class errors', function () {

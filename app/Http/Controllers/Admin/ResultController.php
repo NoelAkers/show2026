@@ -22,7 +22,6 @@ class ResultController extends Controller
         $entry->result()->create([
             'entered_by_user_id' => $request->user()->id,
             'placement' => $request->input('placement') ?: null,
-            'notes' => $request->input('notes'),
         ]);
 
         return back()->with('success', 'Result saved.');
@@ -33,7 +32,6 @@ class ResultController extends Controller
         $result->update([
             'entered_by_user_id' => $request->user()->id,
             'placement' => $request->input('placement') ?: null,
-            'notes' => $request->input('notes'),
         ]);
 
         return back()->with('success', 'Result updated.');
