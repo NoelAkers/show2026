@@ -27,7 +27,9 @@ class FortifyServiceProvider extends ServiceProvider
                 $user = $request->user();
 
                 if ($user->isExhibitor()) {
-                    $redirect = route('exhibitor.pending');
+                    $redirect = config('show.self_entry_open')
+                        ? route('exhibitor.dashboard')
+                        : route('exhibitor.closed');
                 } elseif ($user->isHelper()) {
                     $redirect = route('helper.exhibitors.index');
                 } elseif (! $user->isAdmin() && $user->isJudge()) {
@@ -47,7 +49,9 @@ class FortifyServiceProvider extends ServiceProvider
                 $user = $request->user();
 
                 if ($user->isExhibitor()) {
-                    return redirect()->route('exhibitor.pending');
+                    return redirect()->route(
+                        config('show.self_entry_open') ? 'exhibitor.dashboard' : 'exhibitor.closed'
+                    );
                 }
 
                 return redirect(config('fortify.home'));

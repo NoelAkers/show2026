@@ -3,6 +3,8 @@
 return [
     'entry_fee_pence' => 50,
 
+    'self_entry_open' => env('SELF_ENTRY_OPEN', false),
+
     'title' => 'Calverley Show 2026',
 
     'placement_points' => [

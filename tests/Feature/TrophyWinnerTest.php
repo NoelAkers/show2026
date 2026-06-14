@@ -22,15 +22,15 @@ it('winner is the exhibitor with the most points across assigned classes', funct
     $entry2 = Entry::factory()->create(['show_class_id' => $class2->id, 'exhibitor_id' => $leader->id]);
     $entry3 = Entry::factory()->create(['show_class_id' => $class1->id, 'exhibitor_id' => $other->id]);
 
-    Result::factory()->create(['entry_id' => $entry1->id, 'placement' => '1st']); // 3 pts
+    Result::factory()->create(['entry_id' => $entry1->id, 'placement' => '1st']); // 4 pts
     Result::factory()->create(['entry_id' => $entry2->id, 'placement' => '2nd']); // 2 pts
-    Result::factory()->create(['entry_id' => $entry3->id, 'placement' => '1st']); // 3 pts
+    Result::factory()->create(['entry_id' => $entry3->id, 'placement' => '1st']); // 4 pts
 
     $winners = $trophy->winners();
 
     expect($winners)->toHaveCount(1);
     expect($winners->first()['exhibitor']->id)->toBe($leader->id);
-    expect($winners->first()['points'])->toBe(5);
+    expect($winners->first()['points'])->toBe(6);
 });
 
 it('all tied exhibitors are returned when points are equal', function () {

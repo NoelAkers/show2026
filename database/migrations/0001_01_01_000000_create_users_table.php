@@ -21,8 +21,7 @@ return new class extends Migration
             $table->text('two_factor_recovery_codes')->nullable();
             $table->timestamp('two_factor_confirmed_at')->nullable();
             $table->rememberToken();
-            $table->string('role', 20)->default('admin')->comment('admin|judge');
-            $table->boolean('is_judge')->default(false);
+            $table->string('role', 20)->default('exhibitor')->comment('admin|judge|steward|helper|exhibitor ');
             $table->string('phone')->nullable();
             $table->timestamps();
         });

@@ -23,6 +23,8 @@ class CreateNewUser implements CreatesNewUsers
         Validator::make($input, [
             ...$this->profileRules(),
             'password' => $this->passwordRules(),
+        ], [
+            'email.unique' => 'This email address is already registered. Each exhibitor must register with their own individual email address.',
         ])->validate();
 
         return User::create([

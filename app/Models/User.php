@@ -8,6 +8,7 @@ use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
@@ -62,6 +63,11 @@ class User extends Authenticatable
     public function isSteward(): bool
     {
         return $this->role === UserRole::Steward;
+    }
+
+    public function exhibitor(): HasOne
+    {
+        return $this->hasOne(Exhibitor::class);
     }
 
     public function assignedSections()

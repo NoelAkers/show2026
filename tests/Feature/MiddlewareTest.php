@@ -58,10 +58,10 @@ it('exhibitor receives 403 on judge routes', function () {
         ->assertForbidden();
 });
 
-it('exhibitor can access the pending page', function () {
+it('exhibitor can access the closed page', function () {
     $exhibitor = User::factory()->exhibitor()->create();
 
     $this->actingAs($exhibitor)
-        ->get(route('exhibitor.pending'))
+        ->get(route('exhibitor.closed'))
         ->assertOk();
 });

@@ -6,10 +6,11 @@ use Database\Factories\ExhibitorFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 #[Fillable([
-    'first_name', 'last_name', 'full_name', 'sort_name',
+    'user_id', 'first_name', 'last_name', 'full_name', 'sort_name',
     'type', 'is_resident', 'has_paid', 'is_novice', 'amount_paid_pence',
 ])]
 class Exhibitor extends Model
@@ -24,6 +25,11 @@ class Exhibitor extends Model
             'has_paid' => 'boolean',
             'is_novice' => 'boolean',
         ];
+    }
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
     }
 
     public function entries(): HasMany

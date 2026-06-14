@@ -11,6 +11,7 @@ use App\Http\Controllers\Admin\ShowClassController;
 use App\Http\Controllers\Admin\ShowSectionController;
 use App\Http\Controllers\Admin\TrophyController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\Exhibitor\ExhibitorController as ExhibitorSelfController;
 use App\Http\Controllers\Helper\ExhibitorController as HelperExhibitorController;
 use App\Http\Controllers\Judge\SectionController;
 use App\Http\Controllers\Public\ResultController as PublicResultController;
@@ -24,9 +25,15 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard', DashboardController::class)->name('dashboard');
 });
 
-Route::view('exhibitor/pending', 'exhibitor.pending')
+Route::view('exhibitor/closed', 'exhibitor.closed')
     ->middleware(['auth'])
-    ->name('exhibitor.pending');
+    ->name('exhibitor.closed');
+
+Route::prefix('exhibitor')->name('exhibitor.')->middleware(['auth', 'exhibitor'])->group(function () {
+    Route::get('dashboard', [ExhibitorSelfController::class, 'dashboard'])->name('dashboard');
+    Route::get('profile/edit', [ExhibitorSelfController::class, 'edit'])->name('profile.edit');
+    Route::put('profile', [ExhibitorSelfController::class, 'update'])->name('profile.update');
+});
 
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(function () {
     Route::resource('show-sections', ShowSectionController::class)->except(['show']);

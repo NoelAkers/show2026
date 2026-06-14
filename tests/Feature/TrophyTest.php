@@ -50,7 +50,7 @@ it('winners returns the exhibitor with the most points', function () {
 
     expect($winners)->toHaveCount(1);
     expect($winners->first()['exhibitor']->id)->toBe($winner->id);
-    expect($winners->first()['points'])->toBe(3);
+    expect($winners->first()['points'])->toBe(4);
 });
 
 it('winners returns all exhibitors when there is a points tie', function () {

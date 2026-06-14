@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Middleware\RequireAdmin;
+use App\Http\Middleware\RequireExhibitor;
 use App\Http\Middleware\RequireHelper;
 use App\Http\Middleware\RequireJudge;
 use Illuminate\Foundation\Application;
@@ -17,6 +18,7 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->alias([
             'admin' => RequireAdmin::class,
+            'exhibitor' => RequireExhibitor::class,
             'judge' => RequireJudge::class,
             'helper' => RequireHelper::class,
         ]);

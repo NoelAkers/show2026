@@ -26,9 +26,24 @@ test('new users can register', function () {
     ]);
 
     $response->assertSessionHasNoErrors()
-        ->assertRedirect(route('exhibitor.pending', absolute: false));
+        ->assertRedirect(route('exhibitor.closed', absolute: false));
 
     $this->assertAuthenticated();
+});
+
+test('duplicate email registration shows helpful family member message', function () {
+    User::factory()->create(['email' => 'shared@example.com']);
+
+    $response = $this->post(route('register.store'), [
+        'name' => 'Another Person',
+        'email' => 'shared@example.com',
+        'password' => 'password',
+        'password_confirmation' => 'password',
+    ]);
+
+    $response->assertSessionHasErrors(['email']);
+    expect(session('errors')->get('email')[0])
+        ->toContain('Each exhibitor must register with their own individual email address');
 });
 
 test('newly registered user has exhibitor role', function () {

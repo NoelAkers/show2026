@@ -27,13 +27,26 @@ test('users can authenticate using the login screen', function () {
     $this->assertAuthenticated();
 });
 
-test('exhibitor is redirected to pending page after login', function () {
+test('exhibitor is redirected to closed page after login when self-entry is closed', function () {
+    config(['show.self_entry_open' => false]);
+
     $user = User::factory()->exhibitor()->create();
 
     $this->post(route('login.store'), [
         'email' => $user->email,
         'password' => 'password',
-    ])->assertRedirect(route('exhibitor.pending', absolute: false));
+    ])->assertRedirect(route('exhibitor.closed', absolute: false));
+});
+
+test('exhibitor is redirected to dashboard after login when self-entry is open', function () {
+    config(['show.self_entry_open' => true]);
+
+    $user = User::factory()->exhibitor()->create();
+
+    $this->post(route('login.store'), [
+        'email' => $user->email,
+        'password' => 'password',
+    ])->assertRedirect(route('exhibitor.dashboard', absolute: false));
 });
 
 test('users can not authenticate with invalid password', function () {

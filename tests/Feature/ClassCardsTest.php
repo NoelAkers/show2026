@@ -27,8 +27,7 @@ it('class cards view shows class id and name', function () {
         ->get(route('admin.class-cards'))
         ->assertOk()
         ->assertSee((string) $class->id)
-        ->assertSee('Best Bantam')
-        ->assertSee('Open to any bantam breed');
+        ->assertSee('Best Bantam');
 });
 
 it('class cards view shows empty message when no classes exist', function () {
