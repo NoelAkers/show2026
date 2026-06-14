@@ -14,7 +14,6 @@ class DatabaseSeeder extends Seeder
             PrizeLevelSeeder::class,
             ShowClassSeeder::class,
             TrophySeeder::class,
-            ExhibitorSeeder::class,
         ]);
     }
 }
