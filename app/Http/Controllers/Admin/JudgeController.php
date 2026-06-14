@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Enums\UserRole;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\StoreJudgeRequest;
 use App\Http\Requests\Admin\UpdateJudgeRequest;
@@ -15,7 +16,7 @@ class JudgeController extends Controller
 {
     public function index(): View
     {
-        $judges = User::where('is_judge', true)
+        $judges = User::where('role', UserRole::Judge)
             ->withCount(['assignedSections'])
             ->orderBy('name')
             ->get();
@@ -37,13 +38,11 @@ class JudgeController extends Controller
             [
                 'name' => $request->validated('name'),
                 'phone' => $request->validated('phone'),
-                'role' => 'judge',
-                'is_judge' => true,
+                'role' => UserRole::Judge,
                 'password' => Str::password(16),
             ]
         );
 
-        $judge->update(['is_judge' => true]);
         $judge->assignedSections()->sync($request->validated('section_ids', []));
 
         return redirect()->route('admin.judges.index')
@@ -70,9 +69,7 @@ class JudgeController extends Controller
     {
         $judge->assignedSections()->detach();
 
-        if ($judge->isAdmin()) {
-            $judge->update(['is_judge' => false]);
-        } else {
+        if (! $judge->isAdmin()) {
             $judge->delete();
         }
 

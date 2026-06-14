@@ -41,3 +41,27 @@ it('admin can also access judge routes', function () {
         ->get(route('judge.sections.index'))
         ->assertOk();
 });
+
+it('exhibitor receives 403 on admin routes', function () {
+    $exhibitor = User::factory()->exhibitor()->create();
+
+    $this->actingAs($exhibitor)
+        ->get(route('admin.show-sections.index'))
+        ->assertForbidden();
+});
+
+it('exhibitor receives 403 on judge routes', function () {
+    $exhibitor = User::factory()->exhibitor()->create();
+
+    $this->actingAs($exhibitor)
+        ->get(route('judge.sections.index'))
+        ->assertForbidden();
+});
+
+it('exhibitor can access the pending page', function () {
+    $exhibitor = User::factory()->exhibitor()->create();
+
+    $this->actingAs($exhibitor)
+        ->get(route('exhibitor.pending'))
+        ->assertOk();
+});

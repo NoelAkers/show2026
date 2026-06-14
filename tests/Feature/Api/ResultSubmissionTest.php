@@ -11,7 +11,7 @@ uses(RefreshDatabase::class);
 
 function judgeWithToken(): array
 {
-    $user = User::factory()->create(['is_judge' => true]);
+    $user = User::factory()->judge()->create();
 
     return [$user, $user->createToken('test')->plainTextToken];
 }

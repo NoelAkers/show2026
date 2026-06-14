@@ -15,7 +15,7 @@ test('returns entry with belongs_to_class true when entry is in the class', func
     $exhibitor = Exhibitor::factory()->create(['full_name' => 'Alice Brown']);
     $entry = Entry::factory()->for($class, 'showClass')->for($exhibitor)->create();
 
-    $token = User::factory()->create(['is_judge' => true])->createToken('test')->plainTextToken;
+    $token = User::factory()->judge()->create()->createToken('test')->plainTextToken;
 
     $this->withToken($token)
         ->getJson("/api/entries/{$entry->entry_number}?show_class_id={$class->id}")
@@ -34,7 +34,7 @@ test('returns belongs_to_class false when entry belongs to a different class', f
     $classB = ShowClass::factory()->for($section)->create();
     $entry = Entry::factory()->for($classA, 'showClass')->create();
 
-    $token = User::factory()->create(['is_judge' => true])->createToken('test')->plainTextToken;
+    $token = User::factory()->judge()->create()->createToken('test')->plainTextToken;
 
     $this->withToken($token)
         ->getJson("/api/entries/{$entry->entry_number}?show_class_id={$classB->id}")
@@ -43,7 +43,7 @@ test('returns belongs_to_class false when entry belongs to a different class', f
 });
 
 test('returns 404 when entry number does not exist', function () {
-    $token = User::factory()->create(['is_judge' => true])->createToken('test')->plainTextToken;
+    $token = User::factory()->judge()->create()->createToken('test')->plainTextToken;
 
     $this->withToken($token)
         ->getJson('/api/entries/9999')

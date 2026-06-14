@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Enums\UserRole;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\StoreTrophyRequest;
 use App\Http\Requests\Admin\UpdateTrophyRequest;
@@ -24,7 +25,7 @@ class TrophyController extends Controller
     public function create(): View
     {
         $sections = ShowSection::with('showClasses')->ordered()->get();
-        $judges = User::where('is_judge', true)->orderBy('name')->get();
+        $judges = User::where('role', UserRole::Judge)->orderBy('name')->get();
         $entries = collect();
 
         return view('admin.trophies.create', compact('sections', 'judges', 'entries'));
@@ -53,7 +54,7 @@ class TrophyController extends Controller
     public function edit(Trophy $trophy): View
     {
         $sections = ShowSection::with('showClasses')->ordered()->get();
-        $judges = User::where('is_judge', true)->orderBy('name')->get();
+        $judges = User::where('role', UserRole::Judge)->orderBy('name')->get();
         $entries = Entry::with('exhibitor')->orderBy('entry_number')->get();
 
         return view('admin.trophies.edit', compact('trophy', 'sections', 'judges', 'entries'));

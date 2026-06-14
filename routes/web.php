@@ -24,6 +24,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard', DashboardController::class)->name('dashboard');
 });
 
+Route::view('exhibitor/pending', 'exhibitor.pending')
+    ->middleware(['auth'])
+    ->name('exhibitor.pending');
+
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(function () {
     Route::resource('show-sections', ShowSectionController::class)->except(['show']);
     Route::resource('show-sections.show-classes', ShowClassController::class);

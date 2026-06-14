@@ -15,7 +15,7 @@ class RequireAdmin
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if ($request->user()?->role !== 'admin') {
+        if (! $request->user()?->isAdmin()) {
             abort(403);
         }
 

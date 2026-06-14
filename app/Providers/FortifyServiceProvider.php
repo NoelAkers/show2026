@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
 use Laravel\Fortify\Contracts\LoginResponse;
+use Laravel\Fortify\Contracts\RegisterResponse;
 use Laravel\Fortify\Fortify;
 
 class FortifyServiceProvider extends ServiceProvider
@@ -25,7 +26,9 @@ class FortifyServiceProvider extends ServiceProvider
             {
                 $user = $request->user();
 
-                if ($user->isHelper()) {
+                if ($user->isExhibitor()) {
+                    $redirect = route('exhibitor.pending');
+                } elseif ($user->isHelper()) {
                     $redirect = route('helper.exhibitors.index');
                 } elseif (! $user->isAdmin() && $user->isJudge()) {
                     $redirect = route('judge.sections.index');
@@ -34,6 +37,20 @@ class FortifyServiceProvider extends ServiceProvider
                 }
 
                 return redirect()->intended($redirect);
+            }
+        });
+
+        $this->app->instance(RegisterResponse::class, new class implements RegisterResponse
+        {
+            public function toResponse($request)
+            {
+                $user = $request->user();
+
+                if ($user->isExhibitor()) {
+                    return redirect()->route('exhibitor.pending');
+                }
+
+                return redirect(config('fortify.home'));
             }
         });
     }

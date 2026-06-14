@@ -1,8 +1,11 @@
 <?php
 
+use App\Enums\UserRole;
+use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Fortify\Features;
 
-uses(\Illuminate\Foundation\Testing\RefreshDatabase::class);
+uses(RefreshDatabase::class);
 
 beforeEach(function () {
     $this->skipUnlessFortifyHas(Features::registration());
@@ -23,7 +26,20 @@ test('new users can register', function () {
     ]);
 
     $response->assertSessionHasNoErrors()
-        ->assertRedirect(route('dashboard', absolute: false));
+        ->assertRedirect(route('exhibitor.pending', absolute: false));
 
     $this->assertAuthenticated();
+});
+
+test('newly registered user has exhibitor role', function () {
+    $this->post(route('register.store'), [
+        'name' => 'Jane Doe',
+        'email' => 'jane@example.com',
+        'password' => 'password',
+        'password_confirmation' => 'password',
+    ]);
+
+    $user = User::where('email', 'jane@example.com')->sole();
+
+    expect($user->role)->toBe(UserRole::Exhibitor);
 });

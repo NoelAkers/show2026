@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Enums\UserRole;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\LoginRequest;
 use App\Models\User;
@@ -15,7 +16,7 @@ class AuthController extends Controller
     public function login(LoginRequest $request): JsonResponse
     {
         $user = User::where('email', $request->email)
-            ->where('is_judge', true)
+            ->where('role', UserRole::Judge)
             ->first();
 
         if (! $user || ! Hash::check($request->password, $user->password)) {

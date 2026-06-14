@@ -6,7 +6,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 uses(RefreshDatabase::class);
 
 test('judge can login and receives token', function () {
-    $user = User::factory()->create(['is_judge' => true, 'password' => bcrypt('secret')]);
+    $user = User::factory()->judge()->create(['password' => bcrypt('secret')]);
 
     $this->postJson('/api/login', ['email' => $user->email, 'password' => 'secret'])
         ->assertOk()
@@ -14,14 +14,14 @@ test('judge can login and receives token', function () {
 });
 
 test('non-judge cannot login', function () {
-    $user = User::factory()->create(['is_judge' => false, 'password' => bcrypt('secret')]);
+    $user = User::factory()->exhibitor()->create(['password' => bcrypt('secret')]);
 
     $this->postJson('/api/login', ['email' => $user->email, 'password' => 'secret'])
         ->assertUnauthorized();
 });
 
 test('wrong password returns 401', function () {
-    $user = User::factory()->create(['is_judge' => true, 'password' => bcrypt('secret')]);
+    $user = User::factory()->judge()->create(['password' => bcrypt('secret')]);
 
     $this->postJson('/api/login', ['email' => $user->email, 'password' => 'wrong'])
         ->assertUnauthorized();
@@ -41,7 +41,7 @@ test('protected endpoints require a token', function () {
 });
 
 test('judge can logout and token is deleted', function () {
-    $user = User::factory()->create(['is_judge' => true]);
+    $user = User::factory()->judge()->create();
     $token = $user->createToken('test')->plainTextToken;
 
     expect($user->tokens()->count())->toBe(1);

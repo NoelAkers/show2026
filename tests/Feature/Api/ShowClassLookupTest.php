@@ -9,7 +9,7 @@ uses(RefreshDatabase::class);
 
 function judgeToken(): string
 {
-    return User::factory()->create(['is_judge' => true])->createToken('test')->plainTextToken;
+    return User::factory()->judge()->create()->createToken('test')->plainTextToken;
 }
 
 test('returns show class by id', function () {
