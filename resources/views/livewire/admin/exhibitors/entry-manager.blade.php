@@ -2,22 +2,22 @@
     {{-- Header --}}
     <div class="flex items-center justify-between">
         <div class="flex items-center gap-2">
-            @if(auth()->user()->isHelper())
-                <flux:button :href="route('helper.exhibitors.index')" variant="ghost" icon="arrow-left" size="sm" wire:navigate>
-                    Exhibitors
-                </flux:button>
-            @else
+            @if(auth()->user()->isAdmin())
                 <flux:button :href="route('admin.exhibitors.show', $exhibitor)" variant="ghost" icon="arrow-left" size="sm" wire:navigate>
                     {{ $exhibitor->full_name }}
+                </flux:button>
+            @elseif(auth()->user()->isHelper())
+                <flux:button :href="route('helper.exhibitors.index')" variant="ghost" icon="arrow-left" size="sm" wire:navigate>
+                    Exhibitors
                 </flux:button>
             @endif
             <flux:heading size="xl">Add Entry for {{ $exhibitor->full_name }}</flux:heading>
         </div>
-        @unless(auth()->user()->isHelper())
+        @if(auth()->user()->isAdmin())
             @if ($exhibitor->entries->isNotEmpty())
                 <flux:button :href="route('admin.exhibitors.labels', $exhibitor)" target="_blank" icon="printer" size="sm">Print All Labels</flux:button>
             @endif
-        @endunless
+        @endif
     </div>
 
     {{-- Status messages --}}
@@ -156,12 +156,12 @@
                             <flux:table.cell class="tabular-nums">{{ $entry->formatted_entry_number }}</flux:table.cell>
                             <flux:table.cell>{{ $entry->showClass->showSection->name }}</flux:table.cell>
                             <flux:table.cell variant="strong">
-                                @if(auth()->user()->isHelper())
-                                    <span class="tabular-nums text-zinc-600 dark:text-zinc-400 font-normal">{{ $entry->showClass->id }}.</span> {{ $entry->showClass->name }}
-                                @else
+                                @if(auth()->user()->isAdmin())
                                     <a href="{{ route('admin.show-sections.show-classes.show', [$entry->showClass->showSection, $entry->showClass]) }}" class="hover:underline" wire:navigate>
                                         <span class="tabular-nums text-zinc-600 dark:text-zinc-400 font-normal">{{ $entry->showClass->id }}.</span> {{ $entry->showClass->name }}
                                     </a>
+                                @else
+                                    <span class="tabular-nums text-zinc-600 dark:text-zinc-400 font-normal">{{ $entry->showClass->id }}.</span> {{ $entry->showClass->name }}
                                 @endif
                             </flux:table.cell>
                             <flux:table.cell>

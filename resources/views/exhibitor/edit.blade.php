@@ -33,13 +33,6 @@
             </flux:field>
 
             <flux:field>
-                <flux:label>Sort Name</flux:label>
-                <flux:input name="sort_name" value="{{ old('sort_name', $exhibitor->sort_name) }}" required placeholder="e.g. Smith, Jane" />
-                <flux:description>Last name first, used for alphabetical ordering (e.g. Smith, Jane).</flux:description>
-                @error('sort_name') <flux:error>{{ $message }}</flux:error> @enderror
-            </flux:field>
-
-            <flux:field>
                 <flux:label>Type</flux:label>
                 <flux:select name="type">
                     <flux:select.option value="adult" :selected="old('type', $exhibitor->type) === 'adult'">Adult</flux:select.option>

@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\ResultController as AdminResultController;
 use App\Http\Controllers\Admin\ShowClassController;
 use App\Http\Controllers\Admin\ShowSectionController;
 use App\Http\Controllers\Admin\TrophyController;
+use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Exhibitor\ExhibitorController as ExhibitorSelfController;
 use App\Http\Controllers\Helper\ExhibitorController as HelperExhibitorController;
@@ -47,6 +48,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     Route::post('exhibitors/{exhibitor}/add-entry', [ExhibitorController::class, 'storeEntry'])->name('exhibitors.store-entry');
     Route::get('exhibitors/{exhibitor}/labels', [ExhibitorController::class, 'labels'])->name('exhibitors.labels');
     Route::patch('exhibitors/{exhibitor}/update-payment', [ExhibitorController::class, 'updatePayment'])->name('exhibitors.update-payment');
+    Route::resource('users', UserController::class)->except(['show']);
     Route::resource('judges', JudgeController::class)->except(['show']);
     Route::post('show-sections/{show_section}/show-classes/{show_class}/results', [AdminResultController::class, 'store'])->name('show-sections.show-classes.results.store');
     Route::patch('show-sections/{show_section}/show-classes/{show_class}/results/{result}', [AdminResultController::class, 'update'])->name('show-sections.show-classes.results.update');

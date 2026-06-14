@@ -17,9 +17,16 @@ class ExhibitorController extends Controller
         $exhibitor = $user->exhibitor;
 
         if (! $exhibitor) {
+            $parts = explode(' ', trim($user->name));
+            $lastName = array_pop($parts);
+            $firstName = implode(' ', $parts);
+
             Exhibitor::create([
                 'user_id' => $user->id,
                 'full_name' => $user->name,
+                'first_name' => $firstName,
+                'last_name' => $lastName,
+                'sort_name' => $firstName !== '' ? "{$lastName}, {$firstName}" : $lastName,
                 'type' => 'adult',
             ]);
 
@@ -51,11 +58,14 @@ class ExhibitorController extends Controller
             'first_name' => ['required', 'string', 'max:255'],
             'last_name' => ['required', 'string', 'max:255'],
             'full_name' => ['required', 'string', 'max:255'],
-            'sort_name' => ['required', 'string', 'max:255'],
             'type' => ['required', Rule::in(['adult', 'junior'])],
             'is_resident' => ['boolean'],
             'is_novice' => ['boolean'],
         ]);
+
+        $validated['sort_name'] = $validated['first_name'] !== ''
+            ? "{$validated['last_name']}, {$validated['first_name']}"
+            : $validated['last_name'];
 
         $exhibitor->update($validated);
 

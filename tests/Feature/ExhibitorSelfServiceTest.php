@@ -10,6 +10,10 @@ beforeEach(function (): void {
     config(['show.self_entry_open' => true]);
 });
 
+afterEach(function (): void {
+    config(['show.self_entry_open' => false]);
+});
+
 // --- Access control ---
 
 it('guest cannot access exhibitor dashboard', function () {
@@ -48,8 +52,33 @@ it('auto-creates an exhibitor record on first dashboard visit and redirects to p
 
     $exhibitor = $user->fresh()->exhibitor;
     expect($exhibitor)->not->toBeNull();
-    expect($exhibitor->full_name)->toBe('Jane Smith');
     expect($exhibitor->user_id)->toBe($user->id);
+    expect($exhibitor->full_name)->toBe('Jane Smith');
+    expect($exhibitor->first_name)->toBe('Jane');
+    expect($exhibitor->last_name)->toBe('Smith');
+    expect($exhibitor->sort_name)->toBe('Smith, Jane');
+});
+
+it('splits multi-part first names correctly on auto-creation', function () {
+    $user = User::factory()->exhibitor()->create(['name' => 'John Robert Smith']);
+
+    $this->actingAs($user)->get(route('exhibitor.dashboard'));
+
+    $exhibitor = $user->fresh()->exhibitor;
+    expect($exhibitor->first_name)->toBe('John Robert');
+    expect($exhibitor->last_name)->toBe('Smith');
+    expect($exhibitor->sort_name)->toBe('Smith, John Robert');
+});
+
+it('handles single-word name on auto-creation', function () {
+    $user = User::factory()->exhibitor()->create(['name' => 'Madonna']);
+
+    $this->actingAs($user)->get(route('exhibitor.dashboard'));
+
+    $exhibitor = $user->fresh()->exhibitor;
+    expect($exhibitor->first_name)->toBe('');
+    expect($exhibitor->last_name)->toBe('Madonna');
+    expect($exhibitor->sort_name)->toBe('Madonna');
 });
 
 it('does not create a duplicate exhibitor record on subsequent dashboard visits', function () {
@@ -88,7 +117,6 @@ it('exhibitor can update their editable profile fields', function () {
         'first_name' => 'Jane',
         'last_name' => 'Smith',
         'full_name' => 'Jane Smith',
-        'sort_name' => 'Smith, Jane',
         'type' => 'junior',
         'is_resident' => true,
         'is_novice' => false,
@@ -97,6 +125,7 @@ it('exhibitor can update their editable profile fields', function () {
     $exhibitor = $user->fresh()->exhibitor;
     expect($exhibitor->first_name)->toBe('Jane');
     expect($exhibitor->last_name)->toBe('Smith');
+    expect($exhibitor->sort_name)->toBe('Smith, Jane');
     expect($exhibitor->type)->toBe('junior');
     expect($exhibitor->is_resident)->toBeTrue();
     expect($exhibitor->is_novice)->toBeFalse();
@@ -127,5 +156,5 @@ it('profile update requires all required fields', function () {
 
     $this->actingAs($user)
         ->put(route('exhibitor.profile.update'), [])
-        ->assertSessionHasErrors(['first_name', 'last_name', 'full_name', 'sort_name', 'type']);
+        ->assertSessionHasErrors(['first_name', 'last_name', 'full_name', 'type']);
 });

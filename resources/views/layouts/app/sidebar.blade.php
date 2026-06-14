@@ -25,6 +25,9 @@
                         <flux:sidebar.item icon="users" :href="route('admin.exhibitors.index')" :current="request()->routeIs('admin.exhibitors.*')" wire:navigate>
                             {{ __('Exhibitors') }}
                         </flux:sidebar.item>
+                        <flux:sidebar.item icon="identification" :href="route('admin.users.index')" :current="request()->routeIs('admin.users.*')" wire:navigate>
+                            {{ __('Users') }}
+                        </flux:sidebar.item>
                         <flux:sidebar.item icon="academic-cap" :href="route('admin.judges.index')" :current="request()->routeIs('admin.judges.*')" wire:navigate>
                             {{ __('Judges') }}
                         </flux:sidebar.item>
@@ -39,6 +42,12 @@
                     <flux:sidebar.group :heading="__('Exhibitors')" class="grid">
                         <flux:sidebar.item icon="users" :href="route('helper.exhibitors.index')" :current="request()->routeIs('helper.exhibitors.*')" wire:navigate>
                             {{ __('Exhibitors') }}
+                        </flux:sidebar.item>
+                    </flux:sidebar.group>
+                @elseif (auth()->user()?->isExhibitor())
+                    <flux:sidebar.group :heading="__('My Show')" class="grid">
+                        <flux:sidebar.item icon="clipboard-document-list" :href="route('exhibitor.dashboard')" :current="request()->routeIs('exhibitor.*')" wire:navigate>
+                            {{ __('My Entries') }}
                         </flux:sidebar.item>
                     </flux:sidebar.group>
                 @endif
