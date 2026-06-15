@@ -40,7 +40,7 @@
                 @error('role') <flux:error>{{ $message }}</flux:error> @enderror
             </flux:field>
 
-            <p class="text-sm text-zinc-500">A temporary password will be generated automatically. The user will need to reset it on first login.</p>
+            <p class="text-sm text-zinc-500">A password reset link will be emailed to the user so they can set their own password.</p>
 
             <div class="flex gap-2">
                 <flux:button type="submit" variant="primary">Add User</flux:button>

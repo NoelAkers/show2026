@@ -8,6 +8,7 @@ use App\Http\Requests\Admin\UpdateUserRequest;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
 
@@ -32,8 +33,10 @@ class UserController extends Controller
             'password' => Str::password(16),
         ]);
 
+        Password::broker()->sendResetLink(['email' => $user->email]);
+
         return redirect()->route('admin.users.index')
-            ->with('success', "{$user->name} added.");
+            ->with('success', "{$user->name} added and a password reset link has been sent to their email.");
     }
 
     public function edit(User $user, Request $request): View

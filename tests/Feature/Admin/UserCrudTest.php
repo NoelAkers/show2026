@@ -2,7 +2,9 @@
 
 use App\Enums\UserRole;
 use App\Models\User;
+use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Notification;
 
 uses(RefreshDatabase::class);
 
@@ -90,6 +92,34 @@ it('role is required on create', function () {
             'email' => 'norole@example.com',
         ])
         ->assertSessionHasErrors(['role']);
+});
+
+it('creating a user sends a password reset notification', function () {
+    Notification::fake();
+
+    $this->actingAs(userAdmin())
+        ->post(route('admin.users.store'), [
+            'name' => 'New User',
+            'email' => 'new@example.com',
+            'role' => 'exhibitor',
+        ]);
+
+    $user = User::where('email', 'new@example.com')->first();
+
+    Notification::assertSentTo($user, ResetPassword::class);
+});
+
+it('creating a user stores a password reset token', function () {
+    $this->actingAs(userAdmin())
+        ->post(route('admin.users.store'), [
+            'name' => 'Token User',
+            'email' => 'token@example.com',
+            'role' => 'exhibitor',
+        ]);
+
+    $this->assertDatabaseHas('password_reset_tokens', [
+        'email' => 'token@example.com',
+    ]);
 });
 
 // --- Edit / Update ---
