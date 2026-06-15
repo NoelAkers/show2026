@@ -10,7 +10,7 @@ class TrophySeeder extends Seeder
 {
     public function run(): void
     {
-        $judge = User::where('email', 'anne.akers@oleana.co.uk')->sole();
+        $judge = User::where('email', 'tbc@villageshow.org')->sole();
 
         Trophy::create([
             'name' => 'The Edward and Sheila Garnett Trophy',
