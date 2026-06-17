@@ -4,6 +4,7 @@ use App\Http\Middleware\RequireAdmin;
 use App\Http\Middleware\RequireExhibitor;
 use App\Http\Middleware\RequireHelper;
 use App\Http\Middleware\RequireJudge;
+use App\Http\Middleware\RequireSteward;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -21,6 +22,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'exhibitor' => RequireExhibitor::class,
             'judge' => RequireJudge::class,
             'helper' => RequireHelper::class,
+            'steward' => RequireSteward::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

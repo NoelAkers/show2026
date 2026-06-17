@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\UserRole;
 use Database\Factories\ShowSectionFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Builder;
@@ -24,6 +25,11 @@ class ShowSection extends Model
     public function judges(): BelongsToMany
     {
         return $this->belongsToMany(User::class);
+    }
+
+    public function stewards(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class)->where('role', UserRole::Steward);
     }
 
     public function scopeOrdered(Builder $query): Builder

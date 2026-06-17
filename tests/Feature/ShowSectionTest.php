@@ -47,3 +47,14 @@ it('seeder attaches Judge TBC to every show section', function () {
         expect($section->judges->contains($judge))->toBeTrue();
     });
 });
+
+it('seeder attaches Head Steward to every show section', function () {
+    $this->seed(UserSeeder::class);
+    $this->seed(ShowSectionSeeder::class);
+
+    $steward = User::where('name', 'Head Steward')->sole();
+
+    ShowSection::all()->each(function (ShowSection $section) use ($steward) {
+        expect($section->stewards->contains($steward))->toBeTrue();
+    });
+});

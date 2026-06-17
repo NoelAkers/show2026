@@ -27,5 +27,11 @@ class UserSeeder extends Seeder
             'email' => 'helper@villageshow.org',
             'password' => Hash::make(env('SEEDER_HELPER_PASSWORD')),
         ]);
+
+        User::factory()->steward()->create([
+            'name' => 'Head Steward',
+            'email' => 'chief.steward@villageshow.org',
+            'password' => Hash::make(env('SEEDER_STEWARD_PASSWORD')),
+        ]);
     }
 }

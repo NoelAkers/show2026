@@ -33,6 +33,7 @@
                     <flux:table.column>Sort Order</flux:table.column>
                     <flux:table.column>Classes</flux:table.column>
                     <flux:table.column>Judge</flux:table.column>
+                    <flux:table.column>Steward</flux:table.column>
                     <flux:table.column></flux:table.column>
                 </flux:table.columns>
                 <flux:table.rows>
@@ -49,6 +50,11 @@
                             <flux:table.cell>
                                 <a href="{{ route('admin.judges.index') }}" class="hover:underline" wire:navigate>
                                     {{ $section->judges->isNotEmpty() ? $section->judges->pluck('name')->join(', ') : 'TBC' }}
+                                </a>
+                            </flux:table.cell>
+                            <flux:table.cell>
+                                <a href="{{ route('admin.stewards.index') }}" class="hover:underline" wire:navigate>
+                                    {{ $section->stewards->isNotEmpty() ? $section->stewards->pluck('name')->join(', ') : 'TBC' }}
                                 </a>
                             </flux:table.cell>
                             <flux:table.cell>

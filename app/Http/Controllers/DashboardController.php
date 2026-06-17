@@ -21,6 +21,10 @@ class DashboardController extends Controller
             return redirect()->route('judge.sections.index');
         }
 
+        if (! $user->isAdmin() && $user->isSteward()) {
+            return redirect()->route('steward.sections.index');
+        }
+
         $sectionCount = ShowSection::count();
         $classCount = ShowClass::count();
         $adultCount = Exhibitor::where('type', 'adult')->count();

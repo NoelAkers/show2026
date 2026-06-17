@@ -23,5 +23,8 @@ class ShowSectionSeeder extends Seeder
 
         $judge = User::where('name', 'Judge TBC')->sole();
         ShowSection::all()->each(fn (ShowSection $section) => $section->judges()->attach($judge));
+
+        $steward = User::where('name', 'Head Steward')->sole();
+        ShowSection::all()->each(fn (ShowSection $section) => $section->stewards()->attach($steward));
     }
 }

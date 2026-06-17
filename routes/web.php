@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\ResultCardsController;
 use App\Http\Controllers\Admin\ResultController as AdminResultController;
 use App\Http\Controllers\Admin\ShowClassController;
 use App\Http\Controllers\Admin\ShowSectionController;
+use App\Http\Controllers\Admin\StewardController;
 use App\Http\Controllers\Admin\TrophyController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\DashboardController;
@@ -18,6 +19,7 @@ use App\Http\Controllers\Judge\SectionController;
 use App\Http\Controllers\Public\ResultController as PublicResultController;
 use App\Http\Controllers\Public\ScheduleController;
 use App\Http\Controllers\Public\TrophyController as PublicTrophyController;
+use App\Http\Controllers\Steward\SectionController as StewardSectionController;
 use Illuminate\Support\Facades\Route;
 
 Route::view('/', 'welcome')->name('home');
@@ -50,6 +52,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     Route::patch('exhibitors/{exhibitor}/update-payment', [ExhibitorController::class, 'updatePayment'])->name('exhibitors.update-payment');
     Route::resource('users', UserController::class)->except(['show']);
     Route::resource('judges', JudgeController::class)->except(['show']);
+    Route::resource('stewards', StewardController::class)->except(['show']);
     Route::post('show-sections/{show_section}/show-classes/{show_class}/results', [AdminResultController::class, 'store'])->name('show-sections.show-classes.results.store');
     Route::patch('show-sections/{show_section}/show-classes/{show_class}/results/{result}', [AdminResultController::class, 'update'])->name('show-sections.show-classes.results.update');
     Route::delete('show-sections/{show_section}/show-classes/{show_class}/results/{result}', [AdminResultController::class, 'destroy'])->name('show-sections.show-classes.results.destroy');
@@ -63,6 +66,11 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
 Route::prefix('judge')->name('judge.')->middleware(['auth', 'judge'])->group(function () {
     Route::get('sections', [SectionController::class, 'index'])->name('sections.index');
     Route::get('sections/{show_section}/classes', [SectionController::class, 'show'])->name('sections.show');
+});
+
+Route::prefix('steward')->name('steward.')->middleware(['auth', 'steward'])->group(function () {
+    Route::get('sections', [StewardSectionController::class, 'index'])->name('sections.index');
+    Route::get('sections/{show_section}/classes', [StewardSectionController::class, 'show'])->name('sections.show');
 });
 
 Route::prefix('helper')->name('helper.')->middleware(['auth', 'helper'])->group(function () {
