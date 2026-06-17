@@ -24,7 +24,7 @@ class ShowSection extends Model
 
     public function judges(): BelongsToMany
     {
-        return $this->belongsToMany(User::class);
+        return $this->belongsToMany(User::class)->where('role', UserRole::Judge);
     }
 
     public function stewards(): BelongsToMany
