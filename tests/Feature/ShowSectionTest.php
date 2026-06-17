@@ -1,6 +1,9 @@
 <?php
 
 use App\Models\ShowSection;
+use App\Models\User;
+use Database\Seeders\ShowSectionSeeder;
+use Database\Seeders\UserSeeder;
 use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -32,4 +35,15 @@ it('ordered scope returns sections in sort_order ASC', function () {
     $sections = ShowSection::ordered()->get();
 
     expect($sections->pluck('sort_order')->all())->toBe([1, 2, 3]);
+});
+
+it('seeder attaches Judge TBC to every show section', function () {
+    $this->seed(UserSeeder::class);
+    $this->seed(ShowSectionSeeder::class);
+
+    $judge = User::where('name', 'Judge TBC')->sole();
+
+    ShowSection::all()->each(function (ShowSection $section) use ($judge) {
+        expect($section->judges->contains($judge))->toBeTrue();
+    });
 });

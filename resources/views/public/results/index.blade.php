@@ -24,7 +24,7 @@
                                             <flux:table.cell variant="strong">{{ $entry->exhibitor->full_name }}</flux:table.cell>
                                             <flux:table.cell>
                                                 @if ($entry->result?->placement)
-                                                    <flux:badge color="{{ match($entry->result->placement) { '1st' => 'yellow', '2nd' => 'zinc', '3rd' => 'amber', default => 'blue' } }}">
+                                                    <flux:badge color="{{ match($entry->result->placement) { '1st' => 'red', '2nd' => 'blue', '3rd' => 'green', default => 'grey' } }}">
                                                         {{ $entry->result->placementLabel() }}
                                                     </flux:badge>
                                                 @endif

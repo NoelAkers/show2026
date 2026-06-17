@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\ShowSection;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 
 class ShowSectionSeeder extends Seeder
@@ -19,5 +20,8 @@ class ShowSectionSeeder extends Seeder
         ShowSection::create(['sort_order' => 8, 'name' => 'Art', 'description' => 'Art']);
         ShowSection::create(['sort_order' => 9, 'name' => 'Photography', 'description' => 'Photography']);
         ShowSection::create(['sort_order' => 10, 'name' => 'Juniors', 'description' => 'Classes for juniors: under 11 and 11-15']);
+
+        $judge = User::where('name', 'Judge TBC')->sole();
+        ShowSection::all()->each(fn (ShowSection $section) => $section->judges()->attach($judge));
     }
 }

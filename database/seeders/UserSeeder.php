@@ -17,8 +17,8 @@ class UserSeeder extends Seeder
         ]);
 
         User::factory()->judge()->create([
-            'name' => 'TBC',
-            'email' => 'tbc@villageshow.org',
+            'name' => 'Judge TBC',
+            'email' => 'judge@villageshow.org',
             'password' => Hash::make(env('SEEDER_JUDGE_PASSWORD')),
         ]);
 
