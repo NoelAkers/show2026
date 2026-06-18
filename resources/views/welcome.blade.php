@@ -6,23 +6,16 @@
     <body class="min-h-screen antialiased">
         <div class="relative min-h-screen flex flex-col">
             <div class="absolute inset-0 bg-cover bg-center" style="background-image: url('/images/VEG_BACKGROUND.jpg')"></div>
-            <div class="absolute inset-0 bg-black/55"></div>
-
             <div class="relative z-10 flex min-h-screen flex-col">
                 <header class="flex items-center justify-end gap-3 p-6">
                     @auth
-                        <a href="{{ route('dashboard') }}" class="rounded-md border border-white/40 bg-white/10 px-4 py-1.5 text-sm text-white backdrop-blur-sm transition-colors hover:bg-white/20">
+                        <a href="{{ route('dashboard') }}" class="rounded-md border border-zinc-300 bg-white/60 px-4 py-1.5 text-sm text-zinc-800 backdrop-blur-sm transition-colors hover:bg-white/80">
                             Dashboard
                         </a>
                     @else
                         @if (Route::has('login'))
-                            <a href="{{ route('login') }}" class="rounded-md px-4 py-1.5 text-sm text-white/80 transition-colors hover:text-white">
+                            <a href="{{ route('login') }}" class="rounded-md px-4 py-1.5 text-sm text-zinc-700 transition-colors hover:text-zinc-900">
                                 Log in
-                            </a>
-                        @endif
-                        @if (Route::has('register'))
-                            <a href="{{ route('register') }}" class="rounded-md border border-white/40 bg-white/10 px-4 py-1.5 text-sm text-white backdrop-blur-sm transition-colors hover:bg-white/20">
-                                Register
                             </a>
                         @endif
                     @endauth
@@ -30,23 +23,20 @@
 
                 <main class="flex flex-1 flex-col items-center justify-center gap-10 px-6 py-12">
                     <div class="text-center">
-                        <h1 class="text-5xl font-semibold tracking-tight text-white drop-shadow-lg">2026 Calverley Show</h1>
+                        <h1 class="text-5xl font-semibold tracking-tight text-zinc-900">2026 Calverley Show</h1>
                     </div>
 
-                    <nav class="flex flex-wrap justify-center gap-4">
-                        <a href="{{ route('public.schedule') }}" class="flex min-w-40 flex-col items-center gap-1 rounded-xl border border-white/25 bg-white/15 px-8 py-5 text-white backdrop-blur-sm transition-colors hover:bg-white/25">
-                            <span class="text-lg font-semibold">Schedule</span>
-                            <span class="text-sm text-white/70">Classes &amp; timings</span>
-                        </a>
-                        <a href="{{ route('public.results') }}" class="flex min-w-40 flex-col items-center gap-1 rounded-xl border border-white/25 bg-white/15 px-8 py-5 text-white backdrop-blur-sm transition-colors hover:bg-white/25">
-                            <span class="text-lg font-semibold">Results</span>
-                            <span class="text-sm text-white/70">Placements &amp; awards</span>
-                        </a>
-                        <a href="{{ route('public.trophies') }}" class="flex min-w-40 flex-col items-center gap-1 rounded-xl border border-white/25 bg-white/15 px-8 py-5 text-white backdrop-blur-sm transition-colors hover:bg-white/25">
-                            <span class="text-lg font-semibold">Trophies</span>
-                            <span class="text-sm text-white/70">Trophy winners</span>
-                        </a>
-                    </nav>
+                    <div class="max-w-2xl rounded-2xl bg-white/90 px-8 py-7 text-center shadow-lg backdrop-blur-sm">
+                        <p class="leading-relaxed text-zinc-700">
+                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.
+                        </p>
+                        <p class="mt-4 leading-relaxed text-zinc-700">
+                            Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est qui dolorem ipsum quia dolor sit amet consectetur adipisci velit. For more information about classes, trophies, and timings, visit the <a href="{{ route('public.show-details') }}" class="text-zinc-900 underline underline-offset-2 transition-colors hover:text-zinc-600">Show Details</a> page.
+                        </p>
+                        <p class="mt-4 text-sm text-zinc-500">
+                            If you would like to enter classes in advance of the show, you can <a href="{{ route('register') }}" class="text-zinc-700 underline underline-offset-2 transition-colors hover:text-zinc-900">register here</a> to create an account and submit your entries online.
+                        </p>
+                    </div>
                 </main>
             </div>
         </div>
