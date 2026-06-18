@@ -19,7 +19,7 @@
                 @endauth
             </header>
 
-            <img src="/images/veggies.png" alt="" class="w-full">
+            <img src="/images/header.png" alt="" class="w-full">
 
             <main class="flex flex-1 flex-col items-center justify-center gap-10 px-6 py-12">
                 <div class="text-center">
