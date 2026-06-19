@@ -6,24 +6,19 @@
     <body class="min-h-screen bg-white dark:bg-zinc-800">
         <flux:sidebar sticky collapsible="mobile" class="border-e border-zinc-200 bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900">
             <flux:sidebar.header>
-                <x-app-logo :sidebar="true" href="{{ route('dashboard') }}" wire:navigate />
+                <flux:heading class="px-2 py-1 text-lg font-semibold">{{ __('Menu') }}</flux:heading>
                 <flux:sidebar.collapse class="lg:hidden" />
             </flux:sidebar.header>
 
             <flux:sidebar.nav>
-                <flux:sidebar.group :heading="__('Platform')" class="grid">
-                    <flux:sidebar.item icon="home" :href="route('dashboard')" :current="request()->routeIs('dashboard')" wire:navigate>
-                        {{ __('Dashboard') }}
-                    </flux:sidebar.item>
-                </flux:sidebar.group>
+                <flux:sidebar.item icon="home" :href="route('dashboard')" :current="request()->routeIs('dashboard')" wire:navigate>
+                    {{ __('Dashboard') }}
+                </flux:sidebar.item>
 
                 @if (auth()->user()?->isAdmin())
-                    <flux:sidebar.group :heading="__('Show Management')" class="grid">
+                    <flux:sidebar.group :heading="__('Pre-show')" class="grid">
                         <flux:sidebar.item icon="rectangle-stack" :href="route('admin.show-sections.index')" :current="request()->routeIs('admin.show-sections.*')" wire:navigate>
                             {{ __('Sections') }}
-                        </flux:sidebar.item>
-                        <flux:sidebar.item icon="users" :href="route('admin.exhibitors.index')" :current="request()->routeIs('admin.exhibitors.*')" wire:navigate>
-                            {{ __('Exhibitors') }}
                         </flux:sidebar.item>
                         <flux:sidebar.item icon="identification" :href="route('admin.users.index')" :current="request()->routeIs('admin.users.*')" wire:navigate>
                             {{ __('Users') }}
@@ -31,11 +26,35 @@
                         <flux:sidebar.item icon="academic-cap" :href="route('admin.judges.index')" :current="request()->routeIs('admin.judges.*')" wire:navigate>
                             {{ __('Judges') }}
                         </flux:sidebar.item>
-                        <flux:sidebar.item icon="trophy" :href="route('admin.leaderboard')" :current="request()->routeIs('admin.leaderboard')" wire:navigate>
-                            {{ __('Leaderboard') }}
+                        <flux:sidebar.item icon="shield-check" :href="route('admin.stewards.index')" :current="request()->routeIs('admin.stewards.*')" wire:navigate>
+                            {{ __('Stewards') }}
                         </flux:sidebar.item>
                         <flux:sidebar.item icon="gift" :href="route('admin.trophies.index')" :current="request()->routeIs('admin.trophies.*')" wire:navigate>
                             {{ __('Trophies') }}
+                        </flux:sidebar.item>
+                    </flux:sidebar.group>
+
+                    <flux:sidebar.group :heading="__('Entries')" class="grid">
+                        <flux:sidebar.item icon="users" :href="route('admin.exhibitors.index')" :current="request()->routeIs('admin.exhibitors.*')" wire:navigate>
+                            {{ __('Exhibitors') }}
+                        </flux:sidebar.item>
+                    </flux:sidebar.group>
+
+                    <flux:sidebar.group :heading="__('Results')" class="grid">
+                        <flux:sidebar.item icon="trophy" :href="route('admin.leaderboard')" :current="request()->routeIs('admin.leaderboard')" wire:navigate>
+                            {{ __('Leaderboard') }}
+                        </flux:sidebar.item>
+                    </flux:sidebar.group>
+                @elseif (auth()->user()?->isJudge())
+                    <flux:sidebar.group :heading="__('My Sections')" class="grid">
+                        <flux:sidebar.item icon="rectangle-stack" :href="route('judge.sections.index')" :current="request()->routeIs('judge.*')" wire:navigate>
+                            {{ __('Sections') }}
+                        </flux:sidebar.item>
+                    </flux:sidebar.group>
+                @elseif (auth()->user()?->isSteward())
+                    <flux:sidebar.group :heading="__('My Sections')" class="grid">
+                        <flux:sidebar.item icon="rectangle-stack" :href="route('steward.sections.index')" :current="request()->routeIs('steward.*')" wire:navigate>
+                            {{ __('Sections') }}
                         </flux:sidebar.item>
                     </flux:sidebar.group>
                 @elseif (auth()->user()?->isHelper())
