@@ -60,6 +60,30 @@ return [
             'report' => false,
         ],
 
+        /*
+         * Local disk used by spatie/laravel-backup as the primary backup destination.
+         * Stored separately from the application's own local disk to avoid accidental inclusion
+         * in future file-based backups.
+         */
+        'backups' => [
+            'driver' => 'local',
+            'root' => storage_path('app/backups'),
+        ],
+
+        /*
+         * SFTP disk pointing to the LAN backup server.
+         * Only active when BACKUP_SERVER_HOST is set in .env (show-day live server).
+         * Requires SSH key authentication — set BACKUP_SERVER_PRIVATE_KEY_PATH to the
+         * path of the private key on the live server.
+         */
+        'backup-server' => [
+            'driver' => 'sftp',
+            'host' => env('BACKUP_SERVER_HOST', ''),
+            'username' => env('BACKUP_SERVER_USER', ''),
+            'privateKey' => env('BACKUP_SERVER_PRIVATE_KEY_PATH', ''),
+            'root' => env('BACKUP_SERVER_PATH', '/backups/show'),
+        ],
+
     ],
 
     /*
