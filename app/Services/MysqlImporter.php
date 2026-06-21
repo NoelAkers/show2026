@@ -14,7 +14,10 @@ class MysqlImporter
      *
      * @param  array<string, mixed>  $connection  A database.connections.mysql config array
      */
-    public function import(string $sqlFile, array $connection): bool
+    /**
+     * @return array{success: bool, error: string}
+     */
+    public function import(string $sqlFile, array $connection): array
     {
         $optFile = tempnam(sys_get_temp_dir(), 'mysql-opt-');
         file_put_contents($optFile, sprintf(
@@ -33,6 +36,9 @@ class MysqlImporter
 
         unlink($optFile);
 
-        return $process->isSuccessful();
+        return [
+            'success' => $process->isSuccessful(),
+            'error' => $process->getErrorOutput(),
+        ];
     }
 }

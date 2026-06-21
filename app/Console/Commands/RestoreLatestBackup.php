@@ -59,12 +59,15 @@ class RestoreLatestBackup extends Command
             return self::FAILURE;
         }
 
-        $success = $this->importer->import($sqlFile, config('database.connections.mysql'));
+        $result = $this->importer->import($sqlFile, config('database.connections.mysql'));
 
         $this->cleanUp($tmpDir);
 
-        if (! $success) {
+        if (! $result['success']) {
             $this->error('mysql import failed.');
+            if ($result['error'] !== '') {
+                $this->line($result['error']);
+            }
 
             return self::FAILURE;
         }
