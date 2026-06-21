@@ -44,6 +44,9 @@
                         <flux:sidebar.item icon="trophy" :href="route('admin.leaderboard')" :current="request()->routeIs('admin.leaderboard')" wire:navigate>
                             {{ __('Leaderboard') }}
                         </flux:sidebar.item>
+                        <flux:sidebar.item icon="printer" :href="route('admin.paper-backup')" :current="request()->routeIs('admin.paper-backup')" wire:navigate>
+                            {{ __('Paper Backup') }}
+                        </flux:sidebar.item>
                     </flux:sidebar.group>
                 @elseif (auth()->user()?->isJudge())
                     <flux:sidebar.group :heading="__('My Sections')" class="grid">

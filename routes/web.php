@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\EntryController;
 use App\Http\Controllers\Admin\ExhibitorController;
 use App\Http\Controllers\Admin\JudgeController;
 use App\Http\Controllers\Admin\LeaderboardController;
+use App\Http\Controllers\Admin\PaperBackupController;
 use App\Http\Controllers\Admin\ResultCardsController;
 use App\Http\Controllers\Admin\ResultController as AdminResultController;
 use App\Http\Controllers\Admin\ShowClassController;
@@ -59,6 +60,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     Route::get('class-cards', ClassCardsController::class)->name('class-cards');
     Route::get('result-cards', [ResultCardsController::class, 'index'])->name('result-cards');
     Route::post('result-cards/mark-printed', [ResultCardsController::class, 'markPrinted'])->name('result-cards.mark-printed');
+    Route::get('paper-backup', PaperBackupController::class)->name('paper-backup');
     Route::get('leaderboard', [LeaderboardController::class, 'index'])->name('leaderboard');
     Route::resource('trophies', TrophyController::class)->except(['show']);
 });
