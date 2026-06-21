@@ -8,7 +8,7 @@ use Spatie\Backup\Notifications\Notifications\CleanupWasSuccessfulNotification;
 use Spatie\Backup\Notifications\Notifications\HealthyBackupWasFoundNotification;
 use Spatie\Backup\Notifications\Notifications\UnhealthyBackupWasFoundNotification;
 use Spatie\Backup\Tasks\Cleanup\Strategies\DefaultStrategy;
-use Spatie\Backup\Tasks\Monitor\HealthChecks\MaximumAgeInDays;
+use App\Backup\MaximumAgeInMinutes;
 use Spatie\Backup\Tasks\Monitor\HealthChecks\MaximumStorageInMegabytes;
 
 return [
@@ -275,7 +275,7 @@ return [
      * If a backup does not meet the specified requirements the
      * UnHealthyBackupWasFound event will be fired.
      *
-     * BACKUP_MODE=show  → alert if most recent backup is more than ~15 minutes old (0.01 days)
+     * BACKUP_MODE=show  → alert if most recent backup is more than 15 minutes old
      * BACKUP_MODE=*     → alert if most recent backup is more than 1 day old (pre-show default)
      */
     'monitor_backups' => [
@@ -283,7 +283,7 @@ return [
             'name' => env('APP_NAME', 'laravel-backup'),
             'disks' => ['backups'],
             'health_checks' => [
-                MaximumAgeInDays::class => env('BACKUP_MODE') === 'show' ? 0.01 : 1,
+                MaximumAgeInMinutes::class => env('BACKUP_MODE') === 'show' ? 15 : 1440,
                 MaximumStorageInMegabytes::class => 5000,
             ],
         ],
