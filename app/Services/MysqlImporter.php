@@ -29,7 +29,7 @@ class MysqlImporter
         ));
         chmod($optFile, 0600);
 
-        $process = new Process(['mysql', '--defaults-extra-file='.$optFile, $connection['database']]);
+        $process = new Process(['mysql', '--defaults-file='.$optFile, $connection['database']]);
         $process->setInput(fopen($sqlFile, 'r'));
         $process->setTimeout(300);
         $process->run();
