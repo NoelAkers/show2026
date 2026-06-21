@@ -41,7 +41,8 @@ it('shows section and class names for selected user', function () {
     $judge = User::factory()->judge()->create();
     $section = ShowSection::factory()->create(['name' => 'Poultry']);
     $judge->assignedSections()->attach($section);
-    ShowClass::factory()->create(['show_section_id' => $section->id, 'name' => 'Best Hen']);
+    $class = ShowClass::factory()->create(['show_section_id' => $section->id, 'name' => 'Best Hen']);
+    Entry::factory()->create(['show_class_id' => $class->id]);
 
     $this->actingAs(User::factory()->admin()->create())
         ->get(route('admin.paper-backup', ['user_id' => $judge->id]))
@@ -50,7 +51,7 @@ it('shows section and class names for selected user', function () {
         ->assertSee('Best Hen');
 });
 
-it('shows exhibitor names in entry rows', function () {
+it('does not show exhibitor names', function () {
     $steward = User::factory()->steward()->create();
     $section = ShowSection::factory()->create();
     $steward->assignedSections()->attach($section);
@@ -60,7 +61,18 @@ it('shows exhibitor names in entry rows', function () {
 
     $this->actingAs(User::factory()->admin()->create())
         ->get(route('admin.paper-backup', ['user_id' => $steward->id]))
-        ->assertSee('Alice Example');
+        ->assertDontSee('Alice Example');
+});
+
+it('omits classes with no entries', function () {
+    $judge = User::factory()->judge()->create();
+    $section = ShowSection::factory()->create();
+    $judge->assignedSections()->attach($section);
+    ShowClass::factory()->create(['show_section_id' => $section->id, 'name' => 'Empty Class']);
+
+    $this->actingAs(User::factory()->admin()->create())
+        ->get(route('admin.paper-backup', ['user_id' => $judge->id]))
+        ->assertDontSee('Empty Class');
 });
 
 it('shows placement column headers', function () {

@@ -43,14 +43,14 @@
         .class-block {
             break-inside: avoid;
             page-break-inside: avoid;
-            margin-bottom: 4mm;
+            margin-bottom: 2.5mm;
         }
 
         .class-heading {
             font-size: 11px;
             font-weight: 700;
             background: #f3f4f6;
-            padding: 1.5mm 2mm;
+            padding: 1mm 2mm;
             border: 1px solid #d1d5db;
             border-bottom: none;
         }
@@ -64,28 +64,20 @@
         th {
             background: #f9fafb;
             border: 1px solid #d1d5db;
-            padding: 1mm 2mm;
+            padding: 0.5mm 2mm;
             text-align: left;
             font-weight: 600;
         }
 
         td {
             border: 1px solid #d1d5db;
-            padding: 1mm 2mm;
+            padding: 0.5mm 2mm;
             vertical-align: middle;
         }
 
         .col-entry  { width: 12mm; }
-        .col-check  { width: 12mm; text-align: center; }
-        .cb-cell    { text-align: center; font-size: 14px; line-height: 1; }
-
-        .no-entries {
-            font-style: italic;
-            color: #9ca3af;
-            padding: 1.5mm 2mm;
-            border: 1px solid #d1d5db;
-            border-top: none;
-        }
+        .col-check  { width: 14mm; text-align: center; }
+        .cb-cell    { text-align: center; font-size: 16px; line-height: 1.2; }
 
         @media screen {
             body { background: #f3f4f6; margin: 0; }
@@ -227,47 +219,41 @@
         @foreach ($sections as $section)
             <div class="section-block">
                 <div class="section-heading">{{ $section->name }}</div>
+                @php $classesWithEntries = $section->showClasses->filter(fn ($c) => $c->entries->isNotEmpty()); @endphp
                 <div class="section-meta">
-                    {{ $section->showClasses->count() }} {{ Str::plural('class', $section->showClasses->count()) }}
+                    {{ $classesWithEntries->count() }} {{ Str::plural('class', $classesWithEntries->count()) }}
                     &bull;
-                    {{ $section->showClasses->sum(fn ($c) => $c->entries->count()) }} {{ Str::plural('entry', $section->showClasses->sum(fn ($c) => $c->entries->count())) }}
+                    {{ $classesWithEntries->sum(fn ($c) => $c->entries->count()) }} {{ Str::plural('entry', $classesWithEntries->sum(fn ($c) => $c->entries->count())) }}
                 </div>
 
-                @foreach ($section->showClasses as $class)
+                @foreach ($section->showClasses->filter(fn ($c) => $c->entries->isNotEmpty()) as $class)
                     <div class="class-block">
                         <div class="class-heading">
                             {{ $class->name }}
                             <span style="font-weight:400;color:#6b7280">({{ $class->entries->count() }} {{ Str::plural('entry', $class->entries->count()) }})</span>
                         </div>
-
-                        @if ($class->entries->isEmpty())
-                            <div class="no-entries">No entries in this class.</div>
-                        @else
-                            <table>
-                                <thead>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th class="col-entry">Entry</th>
+                                    <th class="col-check">1st</th>
+                                    <th class="col-check">2nd</th>
+                                    <th class="col-check">3rd</th>
+                                    <th class="col-check">HC</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($class->entries as $entry)
                                     <tr>
-                                        <th class="col-entry">Entry</th>
-                                        <th>Exhibitor</th>
-                                        <th class="col-check">1st</th>
-                                        <th class="col-check">2nd</th>
-                                        <th class="col-check">3rd</th>
-                                        <th class="col-check">HC</th>
+                                        <td class="col-entry" style="font-variant-numeric:tabular-nums">{{ $entry->formatted_entry_number }}</td>
+                                        <td class="cb-cell">&#9744;</td>
+                                        <td class="cb-cell">&#9744;</td>
+                                        <td class="cb-cell">&#9744;</td>
+                                        <td class="cb-cell">&#9744;</td>
                                     </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach ($class->entries as $entry)
-                                        <tr>
-                                            <td class="col-entry" style="font-variant-numeric:tabular-nums">{{ $entry->formatted_entry_number }}</td>
-                                            <td>{{ $entry->exhibitor->full_name }}</td>
-                                            <td class="cb-cell">&#9744;</td>
-                                            <td class="cb-cell">&#9744;</td>
-                                            <td class="cb-cell">&#9744;</td>
-                                            <td class="cb-cell">&#9744;</td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        @endif
+                                @endforeach
+                            </tbody>
+                        </table>
                     </div>
                 @endforeach
             </div>

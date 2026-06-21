@@ -30,7 +30,6 @@ class PaperBackupController extends Controller
                 ->with([
                     'showClasses' => fn ($q) => $q->ordered(),
                     'showClasses.entries' => fn ($q) => $q->orderBy('entry_number'),
-                    'showClasses.entries.exhibitor',
                 ])
                 ->ordered()
                 ->get();
