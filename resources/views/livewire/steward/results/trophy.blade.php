@@ -8,8 +8,7 @@
     @else
         <flux:field>
             <flux:label>Winning Entry</flux:label>
-            <flux:select wire:model="winningEntryId">
-                <flux:select.option value="">No winner selected</flux:select.option>
+            <flux:select wire:model="winningEntryId" variant="listbox" searchable placeholder="Search by entry number or name…" clearable>
                 @foreach ($entries as $entry)
                     <flux:select.option value="{{ $entry->id }}">
                         {{ $entry->formatted_entry_number }} — {{ $entry->exhibitor->full_name }}
