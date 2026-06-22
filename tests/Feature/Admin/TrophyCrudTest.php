@@ -147,6 +147,23 @@ it('trophy index shows type badge for each trophy', function () {
         ->assertSee('Judge');
 });
 
+it('admin can create a judge-awarded trophy with a steward', function () {
+    $judge = User::factory()->judge()->create(['name' => 'Dr. Smith']);
+    $steward = User::factory()->steward()->create(['name' => 'Jane Steward']);
+
+    $this->actingAs(trophyAdmin())
+        ->post(route('admin.trophies.store'), [
+            'name' => 'Special Award',
+            'is_points_based' => '0',
+            'judge_id' => $judge->id,
+            'steward_id' => $steward->id,
+        ])
+        ->assertRedirect(route('admin.trophies.index'));
+
+    $trophy = Trophy::where('name', 'Special Award')->first();
+    expect($trophy->steward_id)->toBe($steward->id);
+});
+
 it('admin can create a judge-awarded trophy', function () {
     $judge = User::factory()->judge()->create(['name' => 'Dr. Smith']);
 

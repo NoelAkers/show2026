@@ -80,6 +80,23 @@
                 </flux:field>
 
                 <flux:field>
+                    <flux:label>Steward</flux:label>
+                    @if ($stewards->isNotEmpty())
+                        <flux:select name="steward_id">
+                            <flux:select.option value="">Select a steward…</flux:select.option>
+                            @foreach ($stewards as $steward)
+                                <flux:select.option value="{{ $steward->id }}" :selected="old('steward_id', $trophy->steward_id) == $steward->id">
+                                    {{ $steward->name }}
+                                </flux:select.option>
+                            @endforeach
+                        </flux:select>
+                    @else
+                        <p class="text-sm text-zinc-500">No stewards are set up yet.</p>
+                    @endif
+                    @error('steward_id') <flux:error>{{ $message }}</flux:error> @enderror
+                </flux:field>
+
+                <flux:field>
                     <flux:label>Winning Entry</flux:label>
                     @if ($entries->isNotEmpty())
                         <flux:select name="winning_entry_id">

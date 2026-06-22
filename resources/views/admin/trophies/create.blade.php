@@ -60,7 +60,7 @@
                 @endif
             </div>
 
-            <div x-show="awardType === '0'">
+            <div x-show="awardType === '0'" class="space-y-4">
                 <flux:field>
                     <flux:label>Judge</flux:label>
                     @if ($judges->isNotEmpty())
@@ -76,6 +76,23 @@
                         <p class="text-sm text-zinc-500">No judges are set up yet.</p>
                     @endif
                     @error('judge_id') <flux:error>{{ $message }}</flux:error> @enderror
+                </flux:field>
+
+                <flux:field>
+                    <flux:label>Steward</flux:label>
+                    @if ($stewards->isNotEmpty())
+                        <flux:select name="steward_id">
+                            <flux:select.option value="">Select a steward…</flux:select.option>
+                            @foreach ($stewards as $steward)
+                                <flux:select.option value="{{ $steward->id }}" :selected="old('steward_id') == $steward->id">
+                                    {{ $steward->name }}
+                                </flux:select.option>
+                            @endforeach
+                        </flux:select>
+                    @else
+                        <p class="text-sm text-zinc-500">No stewards are set up yet.</p>
+                    @endif
+                    @error('steward_id') <flux:error>{{ $message }}</flux:error> @enderror
                 </flux:field>
             </div>
 

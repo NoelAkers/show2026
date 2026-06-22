@@ -17,7 +17,7 @@ class TrophyController extends Controller
 {
     public function index(): View
     {
-        $trophies = Trophy::with(['showClasses', 'judge', 'winningEntry.exhibitor'])->orderBy('name')->get();
+        $trophies = Trophy::with(['showClasses', 'judge', 'steward', 'winningEntry.exhibitor'])->orderBy('name')->get();
 
         return view('admin.trophies.index', compact('trophies'));
     }
@@ -26,9 +26,10 @@ class TrophyController extends Controller
     {
         $sections = ShowSection::with('showClasses')->ordered()->get();
         $judges = User::where('role', UserRole::Judge)->orderBy('name')->get();
+        $stewards = User::where('role', UserRole::Steward)->orderBy('name')->get();
         $entries = collect();
 
-        return view('admin.trophies.create', compact('sections', 'judges', 'entries'));
+        return view('admin.trophies.create', compact('sections', 'judges', 'stewards', 'entries'));
     }
 
     public function store(StoreTrophyRequest $request): RedirectResponse
@@ -40,6 +41,7 @@ class TrophyController extends Controller
             'description' => $request->validated('description'),
             'is_points_based' => $isPointsBased,
             'judge_id' => $isPointsBased ? null : $request->validated('judge_id'),
+            'steward_id' => $isPointsBased ? null : $request->validated('steward_id'),
             'winning_entry_id' => $isPointsBased ? null : $request->validated('winning_entry_id'),
         ]);
 
@@ -55,9 +57,10 @@ class TrophyController extends Controller
     {
         $sections = ShowSection::with('showClasses')->ordered()->get();
         $judges = User::where('role', UserRole::Judge)->orderBy('name')->get();
+        $stewards = User::where('role', UserRole::Steward)->orderBy('name')->get();
         $entries = Entry::with('exhibitor')->orderBy('entry_number')->get();
 
-        return view('admin.trophies.edit', compact('trophy', 'sections', 'judges', 'entries'));
+        return view('admin.trophies.edit', compact('trophy', 'sections', 'judges', 'stewards', 'entries'));
     }
 
     public function update(UpdateTrophyRequest $request, Trophy $trophy): RedirectResponse
@@ -69,6 +72,7 @@ class TrophyController extends Controller
             'description' => $request->validated('description'),
             'is_points_based' => $isPointsBased,
             'judge_id' => $isPointsBased ? null : $request->validated('judge_id'),
+            'steward_id' => $isPointsBased ? null : $request->validated('steward_id'),
             'winning_entry_id' => $isPointsBased ? null : $request->validated('winning_entry_id'),
         ]);
 

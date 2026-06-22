@@ -17,10 +17,12 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Exhibitor\ExhibitorController as ExhibitorSelfController;
 use App\Http\Controllers\Helper\ExhibitorController as HelperExhibitorController;
 use App\Http\Controllers\Judge\SectionController;
+use App\Http\Controllers\Judge\TrophyController as JudgeTrophyController;
 use App\Http\Controllers\Public\ResultController as PublicResultController;
 use App\Http\Controllers\Public\ScheduleController;
 use App\Http\Controllers\Public\TrophyController as PublicTrophyController;
 use App\Http\Controllers\Steward\SectionController as StewardSectionController;
+use App\Http\Controllers\Steward\TrophyController as StewardTrophyController;
 use Illuminate\Support\Facades\Route;
 
 Route::view('/', 'welcome')->name('home');
@@ -68,11 +70,15 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
 Route::prefix('judge')->name('judge.')->middleware(['auth', 'judge'])->group(function () {
     Route::get('sections', [SectionController::class, 'index'])->name('sections.index');
     Route::get('sections/{show_section}/classes', [SectionController::class, 'show'])->name('sections.show');
+    Route::get('trophies', [JudgeTrophyController::class, 'index'])->name('trophies.index');
+    Route::get('trophies/{trophy}', [JudgeTrophyController::class, 'show'])->name('trophies.show');
 });
 
 Route::prefix('steward')->name('steward.')->middleware(['auth', 'steward'])->group(function () {
     Route::get('sections', [StewardSectionController::class, 'index'])->name('sections.index');
     Route::get('sections/{show_section}/classes', [StewardSectionController::class, 'show'])->name('sections.show');
+    Route::get('trophies', [StewardTrophyController::class, 'index'])->name('trophies.index');
+    Route::get('trophies/{trophy}', [StewardTrophyController::class, 'show'])->name('trophies.show');
 });
 
 Route::prefix('helper')->name('helper.')->middleware(['auth', 'helper'])->group(function () {

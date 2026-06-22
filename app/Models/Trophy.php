@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Collection;
 
-#[Fillable(['name', 'description', 'is_points_based', 'judge_id', 'winning_entry_id'])]
+#[Fillable(['name', 'description', 'is_points_based', 'judge_id', 'steward_id', 'winning_entry_id'])]
 class Trophy extends Model
 {
     /** @use HasFactory<TrophyFactory> */
@@ -31,6 +31,11 @@ class Trophy extends Model
     public function judge(): BelongsTo
     {
         return $this->belongsTo(User::class, 'judge_id');
+    }
+
+    public function steward(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'steward_id');
     }
 
     public function winningEntry(): BelongsTo

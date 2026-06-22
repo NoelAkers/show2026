@@ -24,6 +24,7 @@ class StoreTrophyRequest extends FormRequest
             'class_ids' => ['nullable', 'array', 'required_if:is_points_based,1'],
             'class_ids.*' => ['integer', 'exists:show_classes,id'],
             'judge_id' => ['nullable', 'integer', 'exists:users,id', 'required_if:is_points_based,0'],
+            'steward_id' => ['nullable', 'integer', 'exists:users,id'],
             'winning_entry_id' => ['nullable', 'integer', 'exists:entries,id'],
         ];
     }
