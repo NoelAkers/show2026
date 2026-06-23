@@ -213,8 +213,8 @@
 <div class="print-content">
     @if (! $selectedUser)
         <p class="empty-state">Select a judge or steward above to generate their paper backup report.</p>
-    @elseif ($sections->isEmpty())
-        <p class="empty-state">{{ $selectedUser->name }} has no sections assigned.</p>
+    @elseif ($sections->isEmpty() && $trophies->isEmpty())
+        <p class="empty-state">{{ $selectedUser->name }} has no sections or trophies assigned.</p>
     @else
         @foreach ($sections as $section)
             <div class="section-block">
@@ -258,6 +258,25 @@
                 @endforeach
             </div>
         @endforeach
+
+        @if ($trophies->isNotEmpty())
+            <div class="section-block">
+                <div class="section-heading">Trophies</div>
+                <div style="display:flex;flex-wrap:wrap;gap:6mm;">
+                    @foreach ($trophies as $trophy)
+                        <div style="break-inside:avoid;page-break-inside:avoid;min-width:60mm;max-width:90mm;">
+                            <div style="font-weight:700;font-size:11px;">{{ $trophy->name }}</div>
+                            @if ($trophy->description)
+                                <div style="font-size:10px;color:#6b7280;margin-bottom:2mm;">{{ $trophy->description }}</div>
+                            @else
+                                <div style="margin-bottom:2mm;"></div>
+                            @endif
+                            <div style="border:1px solid #d1d5db;width:30mm;height:10mm;"></div>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+        @endif
     @endif
 </div>
 

@@ -51,7 +51,7 @@ it('judge gets 403 viewing a trophy not assigned to them', function () {
         ->assertForbidden();
 });
 
-it('judge can save a winning entry for their trophy', function () {
+it('judge can save a winning entry for their trophy by entry number', function () {
     $judge = User::factory()->judge()->create();
     $trophy = Trophy::factory()->judgeAwarded()->create(['judge_id' => $judge->id]);
     $class = ShowClass::factory()->create();
@@ -60,10 +60,38 @@ it('judge can save a winning entry for their trophy', function () {
 
     Livewire::actingAs($judge)
         ->test(App\Livewire\Judge\Results\Trophy::class, ['trophy' => $trophy])
-        ->set('winningEntryId', $entry->id)
+        ->set('winningEntryNumber', $entry->formatted_entry_number)
         ->call('save');
 
     expect($trophy->fresh()->winning_entry_id)->toBe($entry->id);
+});
+
+it('judge sees an error when entering an invalid entry number', function () {
+    $judge = User::factory()->judge()->create();
+    $trophy = Trophy::factory()->judgeAwarded()->create(['judge_id' => $judge->id]);
+
+    Livewire::actingAs($judge)
+        ->test(App\Livewire\Judge\Results\Trophy::class, ['trophy' => $trophy])
+        ->set('winningEntryNumber', '999')
+        ->call('save')
+        ->assertHasErrors(['winningEntryNumber']);
+
+    expect($trophy->fresh()->winning_entry_id)->toBeNull();
+});
+
+it('judge can clear the winning entry by submitting an empty entry number', function () {
+    $judge = User::factory()->judge()->create();
+    $class = ShowClass::factory()->create();
+    $exhibitor = Exhibitor::factory()->create();
+    $entry = Entry::factory()->create(['show_class_id' => $class->id, 'exhibitor_id' => $exhibitor->id]);
+    $trophy = Trophy::factory()->judgeAwarded()->create(['judge_id' => $judge->id, 'winning_entry_id' => $entry->id]);
+
+    Livewire::actingAs($judge)
+        ->test(App\Livewire\Judge\Results\Trophy::class, ['trophy' => $trophy])
+        ->set('winningEntryNumber', '')
+        ->call('save');
+
+    expect($trophy->fresh()->winning_entry_id)->toBeNull();
 });
 
 it('judge cannot access winning entry form for a trophy not assigned to them', function () {
@@ -76,10 +104,10 @@ it('judge cannot access winning entry form for a trophy not assigned to them', f
         ->assertForbidden();
 });
 
-it('judge trophy index shows current winner when set', function () {
+it('judge trophy index shows winning entry number when set', function () {
     $judge = User::factory()->judge()->create();
     $class = ShowClass::factory()->create();
-    $exhibitor = Exhibitor::factory()->create(['first_name' => 'Alice', 'last_name' => 'Smith', 'full_name' => 'Alice Smith', 'sort_name' => 'Smith, Alice']);
+    $exhibitor = Exhibitor::factory()->create();
     $entry = Entry::factory()->create(['show_class_id' => $class->id, 'exhibitor_id' => $exhibitor->id]);
     Trophy::factory()->judgeAwarded()->create([
         'name' => 'Grand Award',
@@ -90,5 +118,5 @@ it('judge trophy index shows current winner when set', function () {
     $this->actingAs($judge)
         ->get(route('judge.trophies.index'))
         ->assertOk()
-        ->assertSee('Alice Smith');
+        ->assertSee($entry->formatted_entry_number);
 });

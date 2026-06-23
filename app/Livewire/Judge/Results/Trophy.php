@@ -11,7 +11,7 @@ class Trophy extends Component
 {
     public TrophyModel $trophy;
 
-    public ?int $winningEntryId = null;
+    public string $winningEntryNumber = '';
 
     public bool $saved = false;
 
@@ -20,19 +20,32 @@ class Trophy extends Component
         abort_unless($trophy->judge_id === auth()->id(), 403);
 
         $this->trophy = $trophy;
-        $this->winningEntryId = $trophy->winning_entry_id;
+        $this->winningEntryNumber = $trophy->winningEntry?->formatted_entry_number ?? '';
     }
 
     public function save(): void
     {
-        $this->trophy->update(['winning_entry_id' => $this->winningEntryId]);
+        if ($this->winningEntryNumber === '') {
+            $this->trophy->update(['winning_entry_id' => null]);
+            $this->saved = true;
+
+            return;
+        }
+
+        $entry = Entry::where('entry_number', (int) $this->winningEntryNumber)->first();
+
+        if (! $entry) {
+            $this->addError('winningEntryNumber', 'Entry number not found.');
+
+            return;
+        }
+
+        $this->trophy->update(['winning_entry_id' => $entry->id]);
         $this->saved = true;
     }
 
     public function render(): View
     {
-        $entries = Entry::with('exhibitor')->orderBy('entry_number')->get();
-
-        return view('livewire.judge.results.trophy', compact('entries'));
+        return view('livewire.judge.results.trophy');
     }
 }

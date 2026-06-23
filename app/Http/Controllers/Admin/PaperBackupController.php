@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Enums\UserRole;
 use App\Http\Controllers\Controller;
+use App\Models\Trophy;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -20,6 +21,7 @@ class PaperBackupController extends Controller
 
         $selectedUser = null;
         $sections = collect();
+        $trophies = collect();
 
         if ($userId = $request->query('user_id')) {
             $selectedUser = User::whereIn('role', [UserRole::Judge, UserRole::Steward])
@@ -33,8 +35,13 @@ class PaperBackupController extends Controller
                 ])
                 ->ordered()
                 ->get();
+
+            $trophies = Trophy::where('judge_id', $selectedUser->id)
+                ->orWhere('steward_id', $selectedUser->id)
+                ->orderBy('name')
+                ->get();
         }
 
-        return view('admin.paper-backup.index', compact('personnel', 'selectedUser', 'sections'));
+        return view('admin.paper-backup.index', compact('personnel', 'selectedUser', 'sections', 'trophies'));
     }
 }
