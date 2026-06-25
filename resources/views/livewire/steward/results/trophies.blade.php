@@ -17,16 +17,18 @@
                             @endif
                         </flux:table.cell>
                         <flux:table.cell>
-                            <flux:field>
-                                <flux:input
-                                    type="text"
-                                    wire:model="winningEntries.{{ $trophy->id }}"
-                                    wire:blur="saveTrophy({{ $trophy->id }})"
-                                    placeholder="e.g. 042"
-                                    size="sm"
-                                />
-                                <flux:error name="winningEntries.{{ $trophy->id }}" />
-                            </flux:field>
+                            <div class="w-24">
+                                <flux:field>
+                                    <flux:input
+                                        type="text"
+                                        wire:model="winningEntries.{{ $trophy->id }}"
+                                        wire:blur="saveTrophy({{ $trophy->id }})"
+                                        placeholder="e.g. 042"
+                                        size="sm"
+                                    />
+                                    <flux:error name="winningEntries.{{ $trophy->id }}" />
+                                </flux:field>
+                            </div>
                         </flux:table.cell>
                     </flux:table.row>
                 @endforeach
