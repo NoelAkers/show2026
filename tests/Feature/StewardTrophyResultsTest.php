@@ -1,5 +1,6 @@
 <?php
 
+use App\Livewire\Steward\Results\Trophies;
 use App\Models\Entry;
 use App\Models\Exhibitor;
 use App\Models\ShowClass;
@@ -31,26 +32,6 @@ it('steward does not see trophies assigned to other stewards', function () {
         ->assertDontSee('Other Trophy');
 });
 
-it('steward can view a trophy assigned to them', function () {
-    $steward = User::factory()->steward()->create();
-    $trophy = Trophy::factory()->judgeAwarded()->create(['name' => 'Special Award', 'steward_id' => $steward->id]);
-
-    $this->actingAs($steward)
-        ->get(route('steward.trophies.show', $trophy))
-        ->assertOk()
-        ->assertSee('Special Award');
-});
-
-it('steward gets 403 viewing a trophy not assigned to them', function () {
-    $steward = User::factory()->steward()->create();
-    $otherSteward = User::factory()->steward()->create();
-    $trophy = Trophy::factory()->judgeAwarded()->create(['steward_id' => $otherSteward->id]);
-
-    $this->actingAs($steward)
-        ->get(route('steward.trophies.show', $trophy))
-        ->assertForbidden();
-});
-
 it('steward can save a winning entry for their trophy by entry number', function () {
     $steward = User::factory()->steward()->create();
     $trophy = Trophy::factory()->judgeAwarded()->create(['steward_id' => $steward->id]);
@@ -59,9 +40,9 @@ it('steward can save a winning entry for their trophy by entry number', function
     $entry = Entry::factory()->create(['show_class_id' => $class->id, 'exhibitor_id' => $exhibitor->id]);
 
     Livewire::actingAs($steward)
-        ->test(App\Livewire\Steward\Results\Trophy::class, ['trophy' => $trophy])
-        ->set('winningEntryNumber', $entry->formatted_entry_number)
-        ->call('save');
+        ->test(Trophies::class)
+        ->set("winningEntries.{$trophy->id}", $entry->formatted_entry_number)
+        ->call('saveTrophy', $trophy->id);
 
     expect($trophy->fresh()->winning_entry_id)->toBe($entry->id);
 });
@@ -71,10 +52,10 @@ it('steward sees an error when entering an invalid entry number', function () {
     $trophy = Trophy::factory()->judgeAwarded()->create(['steward_id' => $steward->id]);
 
     Livewire::actingAs($steward)
-        ->test(App\Livewire\Steward\Results\Trophy::class, ['trophy' => $trophy])
-        ->set('winningEntryNumber', '999')
-        ->call('save')
-        ->assertHasErrors(['winningEntryNumber']);
+        ->test(Trophies::class)
+        ->set("winningEntries.{$trophy->id}", '999')
+        ->call('saveTrophy', $trophy->id)
+        ->assertHasErrors(["winningEntries.{$trophy->id}"]);
 
     expect($trophy->fresh()->winning_entry_id)->toBeNull();
 });
@@ -87,20 +68,22 @@ it('steward can clear the winning entry by submitting an empty entry number', fu
     $trophy = Trophy::factory()->judgeAwarded()->create(['steward_id' => $steward->id, 'winning_entry_id' => $entry->id]);
 
     Livewire::actingAs($steward)
-        ->test(App\Livewire\Steward\Results\Trophy::class, ['trophy' => $trophy])
-        ->set('winningEntryNumber', '')
-        ->call('save');
+        ->test(Trophies::class)
+        ->set("winningEntries.{$trophy->id}", '')
+        ->call('saveTrophy', $trophy->id);
 
     expect($trophy->fresh()->winning_entry_id)->toBeNull();
 });
 
-it('steward cannot access winning entry form for a trophy not assigned to them', function () {
+it('steward gets 403 attempting to save a trophy not assigned to them', function () {
     $steward = User::factory()->steward()->create();
     $otherSteward = User::factory()->steward()->create();
     $trophy = Trophy::factory()->judgeAwarded()->create(['steward_id' => $otherSteward->id]);
 
     Livewire::actingAs($steward)
-        ->test(App\Livewire\Steward\Results\Trophy::class, ['trophy' => $trophy])
+        ->test(Trophies::class)
+        ->set("winningEntries.{$trophy->id}", '001')
+        ->call('saveTrophy', $trophy->id)
         ->assertForbidden();
 });
 

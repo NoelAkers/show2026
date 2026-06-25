@@ -1,5 +1,6 @@
 <?php
 
+use App\Livewire\Judge\Results\Trophies;
 use App\Models\Entry;
 use App\Models\Exhibitor;
 use App\Models\ShowClass;
@@ -31,26 +32,6 @@ it('judge does not see trophies assigned to other judges', function () {
         ->assertDontSee('Other Trophy');
 });
 
-it('judge can view a trophy assigned to them', function () {
-    $judge = User::factory()->judge()->create();
-    $trophy = Trophy::factory()->judgeAwarded()->create(['name' => 'Special Award', 'judge_id' => $judge->id]);
-
-    $this->actingAs($judge)
-        ->get(route('judge.trophies.show', $trophy))
-        ->assertOk()
-        ->assertSee('Special Award');
-});
-
-it('judge gets 403 viewing a trophy not assigned to them', function () {
-    $judge = User::factory()->judge()->create();
-    $otherJudge = User::factory()->judge()->create();
-    $trophy = Trophy::factory()->judgeAwarded()->create(['judge_id' => $otherJudge->id]);
-
-    $this->actingAs($judge)
-        ->get(route('judge.trophies.show', $trophy))
-        ->assertForbidden();
-});
-
 it('judge can save a winning entry for their trophy by entry number', function () {
     $judge = User::factory()->judge()->create();
     $trophy = Trophy::factory()->judgeAwarded()->create(['judge_id' => $judge->id]);
@@ -59,9 +40,9 @@ it('judge can save a winning entry for their trophy by entry number', function (
     $entry = Entry::factory()->create(['show_class_id' => $class->id, 'exhibitor_id' => $exhibitor->id]);
 
     Livewire::actingAs($judge)
-        ->test(App\Livewire\Judge\Results\Trophy::class, ['trophy' => $trophy])
-        ->set('winningEntryNumber', $entry->formatted_entry_number)
-        ->call('save');
+        ->test(Trophies::class)
+        ->set("winningEntries.{$trophy->id}", $entry->formatted_entry_number)
+        ->call('saveTrophy', $trophy->id);
 
     expect($trophy->fresh()->winning_entry_id)->toBe($entry->id);
 });
@@ -71,10 +52,10 @@ it('judge sees an error when entering an invalid entry number', function () {
     $trophy = Trophy::factory()->judgeAwarded()->create(['judge_id' => $judge->id]);
 
     Livewire::actingAs($judge)
-        ->test(App\Livewire\Judge\Results\Trophy::class, ['trophy' => $trophy])
-        ->set('winningEntryNumber', '999')
-        ->call('save')
-        ->assertHasErrors(['winningEntryNumber']);
+        ->test(Trophies::class)
+        ->set("winningEntries.{$trophy->id}", '999')
+        ->call('saveTrophy', $trophy->id)
+        ->assertHasErrors(["winningEntries.{$trophy->id}"]);
 
     expect($trophy->fresh()->winning_entry_id)->toBeNull();
 });
@@ -87,20 +68,22 @@ it('judge can clear the winning entry by submitting an empty entry number', func
     $trophy = Trophy::factory()->judgeAwarded()->create(['judge_id' => $judge->id, 'winning_entry_id' => $entry->id]);
 
     Livewire::actingAs($judge)
-        ->test(App\Livewire\Judge\Results\Trophy::class, ['trophy' => $trophy])
-        ->set('winningEntryNumber', '')
-        ->call('save');
+        ->test(Trophies::class)
+        ->set("winningEntries.{$trophy->id}", '')
+        ->call('saveTrophy', $trophy->id);
 
     expect($trophy->fresh()->winning_entry_id)->toBeNull();
 });
 
-it('judge cannot access winning entry form for a trophy not assigned to them', function () {
+it('judge gets 403 attempting to save a trophy not assigned to them', function () {
     $judge = User::factory()->judge()->create();
     $otherJudge = User::factory()->judge()->create();
     $trophy = Trophy::factory()->judgeAwarded()->create(['judge_id' => $otherJudge->id]);
 
     Livewire::actingAs($judge)
-        ->test(App\Livewire\Judge\Results\Trophy::class, ['trophy' => $trophy])
+        ->test(Trophies::class)
+        ->set("winningEntries.{$trophy->id}", '001')
+        ->call('saveTrophy', $trophy->id)
         ->assertForbidden();
 });
 

@@ -71,14 +71,12 @@ Route::prefix('judge')->name('judge.')->middleware(['auth', 'judge'])->group(fun
     Route::get('sections', [SectionController::class, 'index'])->name('sections.index');
     Route::get('sections/{show_section}/classes', [SectionController::class, 'show'])->name('sections.show');
     Route::get('trophies', [JudgeTrophyController::class, 'index'])->name('trophies.index');
-    Route::get('trophies/{trophy}', [JudgeTrophyController::class, 'show'])->name('trophies.show');
 });
 
 Route::prefix('steward')->name('steward.')->middleware(['auth', 'steward'])->group(function () {
     Route::get('sections', [StewardSectionController::class, 'index'])->name('sections.index');
     Route::get('sections/{show_section}/classes', [StewardSectionController::class, 'show'])->name('sections.show');
     Route::get('trophies', [StewardTrophyController::class, 'index'])->name('trophies.index');
-    Route::get('trophies/{trophy}', [StewardTrophyController::class, 'show'])->name('trophies.show');
 });
 
 Route::prefix('helper')->name('helper.')->middleware(['auth', 'helper'])->group(function () {
