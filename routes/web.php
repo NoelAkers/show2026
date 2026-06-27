@@ -65,6 +65,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     Route::get('paper-backup', PaperBackupController::class)->name('paper-backup');
     Route::get('leaderboard', [LeaderboardController::class, 'index'])->name('leaderboard');
     Route::resource('trophies', TrophyController::class)->except(['show']);
+    Route::get('trophies/{trophy}/leaderboard', [TrophyController::class, 'leaderboard'])->name('trophies.leaderboard');
 });
 
 Route::prefix('judge')->name('judge.')->middleware(['auth', 'judge'])->group(function () {
