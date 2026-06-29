@@ -31,6 +31,7 @@
                 @error('is_points_based') <flux:error>{{ $message }}</flux:error> @enderror
             </flux:field>
 
+            <div x-show="awardType === '1'" class="space-y-4">
                 <flux:field>
                     <flux:label>Eligibility Restrictions</flux:label>
                     <flux:description>Only exhibitors meeting all selected criteria will be considered for this trophy.</flux:description>
@@ -50,9 +51,7 @@
                     </div>
                     @error('restrictions') <flux:error>{{ $message }}</flux:error> @enderror
                 </flux:field>
-            </div>
-
-            <div x-show="awardType === '1'" class="space-y-4">
+                
                 @if ($sections->isNotEmpty())
                     <flux:field>
                         <flux:label>Assigned Classes</flux:label>
@@ -80,6 +79,8 @@
                         @error('class_ids') <flux:error>{{ $message }}</flux:error> @enderror
                     </flux:field>
                 @endif
+
+            </div>
 
             <div x-show="awardType === '0'" class="space-y-4">
                 <flux:field>
