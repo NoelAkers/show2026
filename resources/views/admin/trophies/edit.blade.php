@@ -31,6 +31,27 @@
                 @error('is_points_based') <flux:error>{{ $message }}</flux:error> @enderror
             </flux:field>
 
+                <flux:field>
+                    <flux:label>Eligibility Restrictions</flux:label>
+                    <flux:description>Only exhibitors meeting all selected criteria will be considered for this trophy.</flux:description>
+                    <div class="space-y-1">
+                        <div class="flex items-center gap-2">
+                            <flux:checkbox name="restrictions[]" value="resident" :checked="in_array('resident', old('restrictions', $trophyRestrictions))" />
+                            <span class="text-sm">Residents only</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <flux:checkbox name="restrictions[]" value="novice" :checked="in_array('novice', old('restrictions', $trophyRestrictions))" />
+                            <span class="text-sm">Novices only</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <flux:checkbox name="restrictions[]" value="junior" :checked="in_array('junior', old('restrictions', $trophyRestrictions))" />
+                            <span class="text-sm">Juniors only</span>
+                        </div>
+                    </div>
+                    @error('restrictions') <flux:error>{{ $message }}</flux:error> @enderror
+                </flux:field>
+            </div>
+
             <div x-show="awardType === '1'" class="space-y-4">
                 @if ($sections->isNotEmpty())
                     <flux:field>
@@ -59,27 +80,6 @@
                         @error('class_ids') <flux:error>{{ $message }}</flux:error> @enderror
                     </flux:field>
                 @endif
-
-                <flux:field>
-                    <flux:label>Eligibility Restrictions</flux:label>
-                    <flux:description>Only exhibitors meeting all selected criteria will be considered for this trophy.</flux:description>
-                    <div class="space-y-1">
-                        <div class="flex items-center gap-2">
-                            <flux:checkbox name="restrictions[]" value="resident" :checked="in_array('resident', old('restrictions', $trophyRestrictions))" />
-                            <span class="text-sm">Residents only</span>
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <flux:checkbox name="restrictions[]" value="novice" :checked="in_array('novice', old('restrictions', $trophyRestrictions))" />
-                            <span class="text-sm">Novices only</span>
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <flux:checkbox name="restrictions[]" value="junior" :checked="in_array('junior', old('restrictions', $trophyRestrictions))" />
-                            <span class="text-sm">Juniors only</span>
-                        </div>
-                    </div>
-                    @error('restrictions') <flux:error>{{ $message }}</flux:error> @enderror
-                </flux:field>
-            </div>
 
             <div x-show="awardType === '0'" class="space-y-4">
                 <flux:field>
