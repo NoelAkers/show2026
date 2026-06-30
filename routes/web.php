@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\EntryController;
 use App\Http\Controllers\Admin\ExhibitorController;
 use App\Http\Controllers\Admin\JudgeController;
 use App\Http\Controllers\Admin\LeaderboardController;
+use App\Http\Controllers\Admin\PaperBackupController;
 use App\Http\Controllers\Admin\ResultCardsController;
 use App\Http\Controllers\Admin\ResultController as AdminResultController;
 use App\Http\Controllers\Admin\ShowClassController;
@@ -16,10 +17,12 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Exhibitor\ExhibitorController as ExhibitorSelfController;
 use App\Http\Controllers\Helper\ExhibitorController as HelperExhibitorController;
 use App\Http\Controllers\Judge\SectionController;
+use App\Http\Controllers\Judge\TrophyController as JudgeTrophyController;
 use App\Http\Controllers\Public\ResultController as PublicResultController;
 use App\Http\Controllers\Public\ScheduleController;
 use App\Http\Controllers\Public\TrophyController as PublicTrophyController;
 use App\Http\Controllers\Steward\SectionController as StewardSectionController;
+use App\Http\Controllers\Steward\TrophyController as StewardTrophyController;
 use Illuminate\Support\Facades\Route;
 
 Route::view('/', 'welcome')->name('home');
@@ -59,18 +62,22 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     Route::get('class-cards', ClassCardsController::class)->name('class-cards');
     Route::get('result-cards', [ResultCardsController::class, 'index'])->name('result-cards');
     Route::post('result-cards/mark-printed', [ResultCardsController::class, 'markPrinted'])->name('result-cards.mark-printed');
+    Route::get('paper-backup', PaperBackupController::class)->name('paper-backup');
     Route::get('leaderboard', [LeaderboardController::class, 'index'])->name('leaderboard');
     Route::resource('trophies', TrophyController::class)->except(['show']);
+    Route::get('trophies/{trophy}/leaderboard', [TrophyController::class, 'leaderboard'])->name('trophies.leaderboard');
 });
 
 Route::prefix('judge')->name('judge.')->middleware(['auth', 'judge'])->group(function () {
     Route::get('sections', [SectionController::class, 'index'])->name('sections.index');
     Route::get('sections/{show_section}/classes', [SectionController::class, 'show'])->name('sections.show');
+    Route::get('trophies', [JudgeTrophyController::class, 'index'])->name('trophies.index');
 });
 
 Route::prefix('steward')->name('steward.')->middleware(['auth', 'steward'])->group(function () {
     Route::get('sections', [StewardSectionController::class, 'index'])->name('sections.index');
     Route::get('sections/{show_section}/classes', [StewardSectionController::class, 'show'])->name('sections.show');
+    Route::get('trophies', [StewardTrophyController::class, 'index'])->name('trophies.index');
 });
 
 Route::prefix('helper')->name('helper.')->middleware(['auth', 'helper'])->group(function () {

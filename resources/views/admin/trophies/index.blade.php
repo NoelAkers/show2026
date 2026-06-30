@@ -23,7 +23,7 @@
                     <flux:table.column>Name</flux:table.column>
                     <flux:table.column>Description</flux:table.column>
                     <flux:table.column>Type</flux:table.column>
-                    <flux:table.column>Classes</flux:table.column>
+                    <flux:table.column>Classes / Personnel</flux:table.column>
                     <flux:table.column>Current Winner(s)</flux:table.column>
                     <flux:table.column></flux:table.column>
                 </flux:table.columns>
@@ -41,9 +41,19 @@
                             </flux:table.cell>
                             <flux:table.cell>
                                 @if ($trophy->is_points_based)
-                                    {{ $trophy->showClasses->count() }}
+                                    {{ $trophy->showClasses->count() }} {{ Str::plural('class', $trophy->showClasses->count()) }}
                                 @else
-                                    —
+                                    <div class="space-y-0.5 text-sm">
+                                        @if ($trophy->judge)
+                                            <div><span class="text-zinc-400">Judge:</span> {{ $trophy->judge->name }}</div>
+                                        @endif
+                                        @if ($trophy->steward)
+                                            <div><span class="text-zinc-400">Steward:</span> {{ $trophy->steward->name }}</div>
+                                        @endif
+                                        @if (! $trophy->judge && ! $trophy->steward)
+                                            <span class="text-zinc-400">—</span>
+                                        @endif
+                                    </div>
                                 @endif
                             </flux:table.cell>
                             <flux:table.cell>
@@ -64,6 +74,9 @@
                             </flux:table.cell>
                             <flux:table.cell>
                                 <div class="flex gap-2">
+                                    @if ($trophy->is_points_based)
+                                        <flux:button size="sm" :href="route('admin.trophies.leaderboard', $trophy)" variant="ghost" wire:navigate>Leaderboard</flux:button>
+                                    @endif
                                     <flux:button size="sm" :href="route('admin.trophies.edit', $trophy)" wire:navigate>Edit</flux:button>
                                     <form method="POST" action="{{ route('admin.trophies.destroy', $trophy) }}">
                                         @csrf

@@ -53,10 +53,10 @@ it('selects the newest ZIP by filename when multiple backups exist', function ()
     $this->mock(MysqlImporter::class)
         ->shouldReceive('import')
         ->once()
-        ->andReturnUsing(function (string $sqlFile) use (&$capturedSql): bool {
+        ->andReturnUsing(function (string $sqlFile) use (&$capturedSql): array {
             $capturedSql = file_get_contents($sqlFile);
 
-            return true;
+            return ['success' => true, 'error' => ''];
         });
 
     $this->artisan('show:restore-latest', ['--no-interaction' => true])
@@ -79,7 +79,7 @@ it('reports success when the import succeeds', function (): void {
     Storage::disk('backups')->put('Show/2026-06-20-12-00-00.zip', file_get_contents($tmpZip));
     unlink($tmpZip);
 
-    $this->mock(MysqlImporter::class)->shouldReceive('import')->once()->andReturn(true);
+    $this->mock(MysqlImporter::class)->shouldReceive('import')->once()->andReturn(['success' => true, 'error' => '']);
 
     $this->artisan('show:restore-latest', ['--no-interaction' => true])
         ->assertSuccessful()
@@ -98,8 +98,28 @@ it('reports failure and returns a failure exit code when the import fails', func
     Storage::disk('backups')->put('Show/2026-06-20-12-00-00.zip', file_get_contents($tmpZip));
     unlink($tmpZip);
 
-    $this->mock(MysqlImporter::class)->shouldReceive('import')->once()->andReturn(false);
+    $this->mock(MysqlImporter::class)->shouldReceive('import')->once()->andReturn(['success' => false, 'error' => '']);
 
     $this->artisan('show:restore-latest', ['--no-interaction' => true])
         ->assertFailed();
+});
+
+it('displays the mysql error output when the import fails', function (): void {
+    Storage::fake('backups');
+
+    $zip = new ZipArchive;
+    $tmpZip = tempnam(sys_get_temp_dir(), 'test-backup-').'.zip';
+    $zip->open($tmpZip, ZipArchive::CREATE);
+    $zip->addFromString('dump.sql', '-- SQL dump');
+    $zip->close();
+
+    Storage::disk('backups')->put('Show/2026-06-20-12-00-00.zip', file_get_contents($tmpZip));
+    unlink($tmpZip);
+
+    $this->mock(MysqlImporter::class)->shouldReceive('import')->once()
+        ->andReturn(['success' => false, 'error' => "ERROR 1044 (42000): Access denied for user 'show2026'@'localhost'"]);
+
+    $this->artisan('show:restore-latest', ['--no-interaction' => true])
+        ->assertFailed()
+        ->expectsOutputToContain('ERROR 1044');
 });

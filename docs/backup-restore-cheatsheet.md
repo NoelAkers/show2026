@@ -62,8 +62,8 @@ php artisan backup:list   # note the filename of the newest backup
 
 ```bash
 # From your local machine (or directly from pre-show server if SSH access allows)
-scp user@pre-show-server:/path/to/show/storage/app/backups/"Calverley Show 2026"/YYYY-MM-DD-HH-II-SS.zip \
-    user@live-server:/path/to/show/storage/app/backups/"Calverley Show 2026"/
+scp user@pre-show-server:/path/to/show/storage/app/backups/"CalverleyShow2026"/YYYY-MM-DD-HH-II-SS.zip \
+    user@live-server:/path/to/show/storage/app/backups/"CalverleyShow2026"/
 
 # Alternative: copy to USB, then to live server
 ```

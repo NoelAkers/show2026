@@ -7,6 +7,7 @@ use App\Models\ShowClass;
 use App\Models\Trophy;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\DB;
 
 uses(RefreshDatabase::class);
 
@@ -147,6 +148,23 @@ it('trophy index shows type badge for each trophy', function () {
         ->assertSee('Judge');
 });
 
+it('admin can create a judge-awarded trophy with a steward', function () {
+    $judge = User::factory()->judge()->create(['name' => 'Dr. Smith']);
+    $steward = User::factory()->steward()->create(['name' => 'Jane Steward']);
+
+    $this->actingAs(trophyAdmin())
+        ->post(route('admin.trophies.store'), [
+            'name' => 'Special Award',
+            'is_points_based' => '0',
+            'judge_id' => $judge->id,
+            'steward_id' => $steward->id,
+        ])
+        ->assertRedirect(route('admin.trophies.index'));
+
+    $trophy = Trophy::where('name', 'Special Award')->first();
+    expect($trophy->steward_id)->toBe($steward->id);
+});
+
 it('admin can create a judge-awarded trophy', function () {
     $judge = User::factory()->judge()->create(['name' => 'Dr. Smith']);
 
@@ -228,6 +246,73 @@ it('trophy index shows the winning exhibitor for a judge-awarded trophy', functi
         ->get(route('admin.trophies.index'))
         ->assertOk()
         ->assertSee('Carol White');
+});
+
+it('admin can create a trophy with eligibility restrictions', function () {
+    $class = ShowClass::factory()->create();
+
+    $this->actingAs(trophyAdmin())
+        ->post(route('admin.trophies.store'), [
+            'name' => 'Resident Trophy',
+            'class_ids' => [$class->id],
+            'restrictions' => ['resident', 'novice'],
+        ])
+        ->assertRedirect(route('admin.trophies.index'));
+
+    $trophy = Trophy::where('name', 'Resident Trophy')->first();
+    $restrictions = DB::table('trophy_restrictions')->where('trophy_id', $trophy->id)->pluck('restriction')->toArray();
+    expect($restrictions)->toContain('resident')->toContain('novice');
+});
+
+it('admin can update a trophy to add restrictions', function () {
+    $class = ShowClass::factory()->create();
+    $trophy = Trophy::factory()->create();
+    $trophy->showClasses()->attach($class->id);
+
+    $this->actingAs(trophyAdmin())
+        ->put(route('admin.trophies.update', $trophy), [
+            'name' => $trophy->name,
+            'class_ids' => [$class->id],
+            'restrictions' => ['junior'],
+        ])
+        ->assertRedirect(route('admin.trophies.index'));
+
+    $restrictions = DB::table('trophy_restrictions')->where('trophy_id', $trophy->id)->pluck('restriction')->toArray();
+    expect($restrictions)->toContain('junior');
+});
+
+it('admin can update a trophy to remove all restrictions', function () {
+    $class = ShowClass::factory()->create();
+    $trophy = Trophy::factory()->create();
+    $trophy->showClasses()->attach($class->id);
+    DB::table('trophy_restrictions')->insert(['trophy_id' => $trophy->id, 'restriction' => 'resident']);
+
+    $this->actingAs(trophyAdmin())
+        ->put(route('admin.trophies.update', $trophy), [
+            'name' => $trophy->name,
+            'class_ids' => [$class->id],
+        ])
+        ->assertRedirect(route('admin.trophies.index'));
+
+    expect(DB::table('trophy_restrictions')->where('trophy_id', $trophy->id)->count())->toBe(0);
+});
+
+it('restrictions are cleared when trophy is changed to judge-awarded', function () {
+    $judge = User::factory()->judge()->create();
+    $class = ShowClass::factory()->create();
+    $trophy = Trophy::factory()->pointsBased()->create();
+    $trophy->showClasses()->attach($class->id);
+    DB::table('trophy_restrictions')->insert(['trophy_id' => $trophy->id, 'restriction' => 'resident']);
+
+    $this->actingAs(trophyAdmin())
+        ->put(route('admin.trophies.update', $trophy), [
+            'name' => $trophy->name,
+            'is_points_based' => '0',
+            'judge_id' => $judge->id,
+        ])
+        ->assertRedirect(route('admin.trophies.index'));
+
+    expect(DB::table('trophy_restrictions')->where('trophy_id', $trophy->id)->count())->toBe(0);
 });
 
 it('trophy index lists all tied winners', function () {

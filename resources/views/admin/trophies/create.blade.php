@@ -30,7 +30,27 @@
                 @error('is_points_based') <flux:error>{{ $message }}</flux:error> @enderror
             </flux:field>
 
-            <div x-show="awardType === '1'">
+            <div x-show="awardType === '1'" class="space-y-4">
+                <flux:field>
+                    <flux:label>Eligibility Restrictions</flux:label>
+                    <flux:description>Only exhibitors meeting all selected criteria will be considered for this trophy.</flux:description>
+                    <div class="space-y-1">
+                        <div class="flex items-center gap-2">
+                            <flux:checkbox name="restrictions[]" value="resident" :checked="in_array('resident', old('restrictions', []))" />
+                            <span class="text-sm">Residents only</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <flux:checkbox name="restrictions[]" value="novice" :checked="in_array('novice', old('restrictions', []))" />
+                            <span class="text-sm">Novices only</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <flux:checkbox name="restrictions[]" value="junior" :checked="in_array('junior', old('restrictions', []))" />
+                            <span class="text-sm">Juniors only</span>
+                        </div>
+                    </div>
+                    @error('restrictions') <flux:error>{{ $message }}</flux:error> @enderror
+                </flux:field>
+                
                 @if ($sections->isNotEmpty())
                     <flux:field>
                         <flux:label>Assigned Classes</flux:label>
@@ -58,9 +78,10 @@
                         @error('class_ids') <flux:error>{{ $message }}</flux:error> @enderror
                     </flux:field>
                 @endif
+
             </div>
 
-            <div x-show="awardType === '0'">
+            <div x-show="awardType === '0'" class="space-y-4">
                 <flux:field>
                     <flux:label>Judge</flux:label>
                     @if ($judges->isNotEmpty())
@@ -76,6 +97,23 @@
                         <p class="text-sm text-zinc-500">No judges are set up yet.</p>
                     @endif
                     @error('judge_id') <flux:error>{{ $message }}</flux:error> @enderror
+                </flux:field>
+
+                <flux:field>
+                    <flux:label>Steward</flux:label>
+                    @if ($stewards->isNotEmpty())
+                        <flux:select name="steward_id">
+                            <flux:select.option value="">Select a steward…</flux:select.option>
+                            @foreach ($stewards as $steward)
+                                <flux:select.option value="{{ $steward->id }}" :selected="old('steward_id') == $steward->id">
+                                    {{ $steward->name }}
+                                </flux:select.option>
+                            @endforeach
+                        </flux:select>
+                    @else
+                        <p class="text-sm text-zinc-500">No stewards are set up yet.</p>
+                    @endif
+                    @error('steward_id') <flux:error>{{ $message }}</flux:error> @enderror
                 </flux:field>
             </div>
 

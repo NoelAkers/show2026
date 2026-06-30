@@ -11,6 +11,7 @@ class TrophySeeder extends Seeder
     public function run(): void
     {
         $judge = User::where('email', 'judge@villageshow.org')->sole();
+        $steward = User::where('email', 'chief.steward@villageshow.org')->sole();
 
         Trophy::create([
             'name' => 'The Edward and Sheila Garnett Trophy',
@@ -22,6 +23,7 @@ class TrophySeeder extends Seeder
             'description' => 'Best individual exhibit in the Flowers and Vegetables Sections. (This may be awarded to a single item in Classes 1 and 2).',
             'is_points_based' => false,
             'judge_id' => $judge->id,
+            'steward_id' => $steward->id,
         ]);
 
         Trophy::create([
@@ -39,6 +41,7 @@ class TrophySeeder extends Seeder
             'description' => 'Best Rose in Class 42 and 43',
             'is_points_based' => false,
             'judge_id' => $judge->id,
+            'steward_id' => $steward->id,
         ]);
 
         Trophy::create([
@@ -46,6 +49,7 @@ class TrophySeeder extends Seeder
             'description' => 'Best Gladioli in Class 44.',
             'is_points_based' => false,
             'judge_id' => $judge->id,
+            'steward_id' => $steward->id,
         ]);
 
         Trophy::create([
@@ -63,6 +67,7 @@ class TrophySeeder extends Seeder
             'description' => 'Best exhibit in the Vegetable Section',
             'is_points_based' => false,
             'judge_id' => $judge->id,
+            'steward_id' => $steward->id,
         ]);
 
         Trophy::create([
@@ -80,6 +85,7 @@ class TrophySeeder extends Seeder
             'description' => 'Best exhibit in Handicrafts section',
             'is_points_based' => false,
             'judge_id' => $judge->id,
+            'steward_id' => $steward->id,
         ]);
 
         Trophy::create([
@@ -87,6 +93,7 @@ class TrophySeeder extends Seeder
             'description' => 'Best exhibit in Art section',
             'is_points_based' => false,
             'judge_id' => $judge->id,
+            'steward_id' => $steward->id,
         ]);
     }
 }

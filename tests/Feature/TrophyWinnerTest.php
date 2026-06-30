@@ -6,6 +6,7 @@ use App\Models\Result;
 use App\Models\ShowClass;
 use App\Models\Trophy;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\DB;
 
 uses(RefreshDatabase::class);
 
@@ -107,4 +108,114 @@ it('judge-awarded trophy returns the winning entry exhibitor as winner', functio
     expect($winners)->toHaveCount(1);
     expect($winners->first()['exhibitor']->id)->toBe($exhibitor->id);
     expect($winners->first()['points'])->toBeNull();
+});
+
+it('resident restriction excludes non-residents from winners', function () {
+    $trophy = Trophy::factory()->create();
+    $class = ShowClass::factory()->create(['max_entries_per_exhibitor' => 20]);
+    $trophy->showClasses()->attach($class->id);
+    DB::table('trophy_restrictions')->insert(['trophy_id' => $trophy->id, 'restriction' => 'resident']);
+
+    $resident = Exhibitor::factory()->resident()->create();
+    $nonResident = Exhibitor::factory()->nonResident()->create();
+
+    $entry1 = Entry::factory()->create(['show_class_id' => $class->id, 'exhibitor_id' => $nonResident->id]);
+    $entry2 = Entry::factory()->create(['show_class_id' => $class->id, 'exhibitor_id' => $resident->id]);
+
+    Result::factory()->create(['entry_id' => $entry1->id, 'placement' => '1st']); // 4 pts
+    Result::factory()->create(['entry_id' => $entry2->id, 'placement' => '2nd']); // 2 pts
+
+    $winners = $trophy->winners();
+
+    expect($winners)->toHaveCount(1);
+    expect($winners->first()['exhibitor']->id)->toBe($resident->id);
+});
+
+it('novice restriction excludes non-novices from winners', function () {
+    $trophy = Trophy::factory()->create();
+    $class = ShowClass::factory()->create(['max_entries_per_exhibitor' => 20]);
+    $trophy->showClasses()->attach($class->id);
+    DB::table('trophy_restrictions')->insert(['trophy_id' => $trophy->id, 'restriction' => 'novice']);
+
+    $novice = Exhibitor::factory()->novice()->create();
+    $experienced = Exhibitor::factory()->notNovice()->create();
+
+    $entry1 = Entry::factory()->create(['show_class_id' => $class->id, 'exhibitor_id' => $experienced->id]);
+    $entry2 = Entry::factory()->create(['show_class_id' => $class->id, 'exhibitor_id' => $novice->id]);
+
+    Result::factory()->create(['entry_id' => $entry1->id, 'placement' => '1st']); // 4 pts
+    Result::factory()->create(['entry_id' => $entry2->id, 'placement' => '2nd']); // 2 pts
+
+    $winners = $trophy->winners();
+
+    expect($winners)->toHaveCount(1);
+    expect($winners->first()['exhibitor']->id)->toBe($novice->id);
+});
+
+it('junior restriction excludes adult exhibitors from winners', function () {
+    $trophy = Trophy::factory()->create();
+    $class = ShowClass::factory()->create(['max_entries_per_exhibitor' => 20]);
+    $trophy->showClasses()->attach($class->id);
+    DB::table('trophy_restrictions')->insert(['trophy_id' => $trophy->id, 'restriction' => 'junior']);
+
+    $junior = Exhibitor::factory()->junior()->create();
+    $adult = Exhibitor::factory()->adult()->create();
+
+    $entry1 = Entry::factory()->create(['show_class_id' => $class->id, 'exhibitor_id' => $adult->id]);
+    $entry2 = Entry::factory()->create(['show_class_id' => $class->id, 'exhibitor_id' => $junior->id]);
+
+    Result::factory()->create(['entry_id' => $entry1->id, 'placement' => '1st']); // 4 pts
+    Result::factory()->create(['entry_id' => $entry2->id, 'placement' => '2nd']); // 2 pts
+
+    $winners = $trophy->winners();
+
+    expect($winners)->toHaveCount(1);
+    expect($winners->first()['exhibitor']->id)->toBe($junior->id);
+});
+
+it('combined restrictions require all criteria to be met', function () {
+    $trophy = Trophy::factory()->create();
+    $class = ShowClass::factory()->create(['max_entries_per_exhibitor' => 20]);
+    $trophy->showClasses()->attach($class->id);
+    DB::table('trophy_restrictions')->insert([
+        ['trophy_id' => $trophy->id, 'restriction' => 'resident'],
+        ['trophy_id' => $trophy->id, 'restriction' => 'novice'],
+    ]);
+
+    $residentNovice = Exhibitor::factory()->resident()->novice()->create();
+    $residentExperienced = Exhibitor::factory()->resident()->notNovice()->create();
+    $nonResidentNovice = Exhibitor::factory()->nonResident()->novice()->create();
+
+    $entry1 = Entry::factory()->create(['show_class_id' => $class->id, 'exhibitor_id' => $residentExperienced->id]);
+    $entry2 = Entry::factory()->create(['show_class_id' => $class->id, 'exhibitor_id' => $nonResidentNovice->id]);
+    $entry3 = Entry::factory()->create(['show_class_id' => $class->id, 'exhibitor_id' => $residentNovice->id]);
+
+    Result::factory()->create(['entry_id' => $entry1->id, 'placement' => '1st']); // 4 pts
+    Result::factory()->create(['entry_id' => $entry2->id, 'placement' => '1st']); // 4 pts
+    Result::factory()->create(['entry_id' => $entry3->id, 'placement' => '2nd']); // 2 pts
+
+    $winners = $trophy->winners();
+
+    expect($winners)->toHaveCount(1);
+    expect($winners->first()['exhibitor']->id)->toBe($residentNovice->id);
+});
+
+it('trophy with no restrictions considers all exhibitors', function () {
+    $trophy = Trophy::factory()->create();
+    $class = ShowClass::factory()->create(['max_entries_per_exhibitor' => 20]);
+    $trophy->showClasses()->attach($class->id);
+
+    $resident = Exhibitor::factory()->resident()->create();
+    $nonResident = Exhibitor::factory()->nonResident()->create();
+
+    $entry1 = Entry::factory()->create(['show_class_id' => $class->id, 'exhibitor_id' => $nonResident->id]);
+    $entry2 = Entry::factory()->create(['show_class_id' => $class->id, 'exhibitor_id' => $resident->id]);
+
+    Result::factory()->create(['entry_id' => $entry1->id, 'placement' => '1st']); // 4 pts
+    Result::factory()->create(['entry_id' => $entry2->id, 'placement' => '2nd']); // 2 pts
+
+    $winners = $trophy->winners();
+
+    expect($winners)->toHaveCount(1);
+    expect($winners->first()['exhibitor']->id)->toBe($nonResident->id);
 });

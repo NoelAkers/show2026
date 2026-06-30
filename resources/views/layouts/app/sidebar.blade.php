@@ -44,17 +44,26 @@
                         <flux:sidebar.item icon="trophy" :href="route('admin.leaderboard')" :current="request()->routeIs('admin.leaderboard')" wire:navigate>
                             {{ __('Leaderboard') }}
                         </flux:sidebar.item>
+                        <flux:sidebar.item icon="printer" :href="route('admin.paper-backup')" :current="request()->routeIs('admin.paper-backup')" wire:navigate>
+                            {{ __('Paper Backup') }}
+                        </flux:sidebar.item>
                     </flux:sidebar.group>
                 @elseif (auth()->user()?->isJudge())
-                    <flux:sidebar.group :heading="__('My Sections')" class="grid">
-                        <flux:sidebar.item icon="rectangle-stack" :href="route('judge.sections.index')" :current="request()->routeIs('judge.*')" wire:navigate>
+                    <flux:sidebar.group :heading="__('My Work')" class="grid">
+                        <flux:sidebar.item icon="rectangle-stack" :href="route('judge.sections.index')" :current="request()->routeIs('judge.sections.*')" wire:navigate>
                             {{ __('Sections') }}
+                        </flux:sidebar.item>
+                        <flux:sidebar.item icon="gift" :href="route('judge.trophies.index')" :current="request()->routeIs('judge.trophies.*')" wire:navigate>
+                            {{ __('Trophies') }}
                         </flux:sidebar.item>
                     </flux:sidebar.group>
                 @elseif (auth()->user()?->isSteward())
-                    <flux:sidebar.group :heading="__('My Sections')" class="grid">
-                        <flux:sidebar.item icon="rectangle-stack" :href="route('steward.sections.index')" :current="request()->routeIs('steward.*')" wire:navigate>
+                    <flux:sidebar.group :heading="__('My Work')" class="grid">
+                        <flux:sidebar.item icon="rectangle-stack" :href="route('steward.sections.index')" :current="request()->routeIs('steward.sections.*')" wire:navigate>
                             {{ __('Sections') }}
+                        </flux:sidebar.item>
+                        <flux:sidebar.item icon="gift" :href="route('steward.trophies.index')" :current="request()->routeIs('steward.trophies.*')" wire:navigate>
+                            {{ __('Trophies') }}
                         </flux:sidebar.item>
                     </flux:sidebar.group>
                 @elseif (auth()->user()?->isHelper())
