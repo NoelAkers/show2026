@@ -27,15 +27,12 @@
                 </div>
 
                 <div class="text-center">
-                    <h2 class="text-5xl font-semibold tracking-tight text-zinc-900">Saturday 14 August 2026</h2>
+                    <h2 class="text-2xl font-semibold tracking-tight text-zinc-900">Saturday 14 August 2026</h2>
                 </div>
 
                 <div class="text-center">
-                    <h2 class="text-5xl font-semibold tracking-tight text-zinc-900">Calverley Methodist Hall and Church</h2>
-                </div>
-
-                <div class="text-center">
-                    <h2 class="text-5xl font-semibold tracking-tight text-zinc-900">Doors open 1.00 pm</h2>
+                    <h2 class="text-3xl font-semibold tracking-tight text-zinc-900">Calverley Methodist Hall and Church</h2>
+                    <h2 class="text-2xl font-semibold tracking-tight text-zinc-900">Doors open 1.00 pm</h2>
                 </div>
 
                 <div class="max-w-2xl px-8 py-7 text-center">
