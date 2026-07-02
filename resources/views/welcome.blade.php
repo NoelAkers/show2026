@@ -34,10 +34,10 @@
 
                 <div class="max-w-2xl px-8 py-7 text-center">
                     <p class="leading-relaxed text-zinc-700">
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.
+                        We’re looking forward to welcoming you to our 105th show this year, we’re hoping it will be bigger and better than ever. We have our traditional vegetable, fruit and flower classes displayed in the main hall. Baking and junior classes will be in the school room and for the first time, we’ll be displaying the art in the church. As always we’ll have refreshments, stalls and a tombola, we’re also delighted to welcome back Drighlington Brass Band, who were a big hit last year.
                     </p>
                     <p class="mt-4 leading-relaxed text-zinc-700">
-                        Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est qui dolorem ipsum quia dolor sit amet consectetur adipisci velit. For more information about classes, trophies, and timings, visit the <a href="{{ route('public.show-details') }}" class="text-zinc-900 underline underline-offset-2 transition-colors hover:text-zinc-600">Show Details</a> page.
+                        For more information about the classes, trophies, timings for visitors and exhibitors and how to enter, click here: <a href="{{ route('public.show-details') }}" class="text-zinc-900 underline underline-offset-2 transition-colors hover:text-zinc-600">Show Details</a>.
                     </p>
                     <p class="mt-4 text-sm text-zinc-500">
                         If you would like to enter classes in advance of the show, you can <a href="{{ route('register') }}" class="text-zinc-700 underline underline-offset-2 transition-colors hover:text-zinc-900">register here</a> to create an account and submit your entries online.
