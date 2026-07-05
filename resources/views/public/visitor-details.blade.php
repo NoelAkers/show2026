@@ -16,7 +16,7 @@
                     along with our always popular Tombola stall. 
                 </p>
                 <p class="mt-4 leading-relaxed text-zinc-700">      
-                    Prizes will be announced and awarded around 4.00 pm after which some items from the Baking, Preserves, Fruit, Vegetable and Flowers sections will be available in the schoolroom, for a suitable donation 
+                    Trophy winners  will be announced and trophiesawarded around 4.00 pm after which some items from the Baking, Preserves, Fruit, Vegetable and Flowers sections will be available in the schoolroom, for a suitable donation 
                     which will be used to support the society. The show will close at 4.30 pm. 
                 </p>
             </div>

@@ -86,7 +86,7 @@ Route::prefix('helper')->name('helper.')->middleware(['auth', 'helper'])->group(
 });
 
 Route::prefix('public')->name('public.')->group(function () {
-    Route::view('show-details', 'public.show-details')->name('show-details');
+    Route::view('visitor-details', 'public.visitor-details')->name('visitor-details');
     Route::view('exhibitor-details', 'public.exhibitor-details')->name('exhibitor-details');
     Route::get('schedule', [ScheduleController::class, 'index'])->name('schedule');
     Route::get('results', [PublicResultController::class, 'index'])->name('results');

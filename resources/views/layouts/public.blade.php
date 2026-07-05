@@ -14,7 +14,7 @@
             </a>
 
             <flux:navbar class="-mb-px max-lg:hidden">
-                <flux:navbar.item :href="route('public.show-details')" :current="request()->routeIs('public.show-details')" wire:navigate>For Visitors</flux:navbar.item>
+                <flux:navbar.item :href="route('public.visitor-details')" :current="request()->routeIs('public.visitor-details')" wire:navigate>For Visitors</flux:navbar.item>
                 <flux:navbar.item :href="route('public.exhibitor-details')" :current="request()->routeIs('public.exhibitor-details')" wire:navigate>For Exhibitors</flux:navbar.item>
                 <flux:navbar.item :href="route('public.schedule')" :current="request()->routeIs('public.schedule')" wire:navigate>Schedule</flux:navbar.item>
                 <flux:navbar.item :href="route('public.results')" :current="request()->routeIs('public.results')" wire:navigate>Results</flux:navbar.item>
@@ -43,7 +43,7 @@
             </flux:sidebar.header>
 
             <flux:sidebar.nav>
-                <flux:sidebar.item :href="route('public.show-details')" :current="request()->routeIs('public.show-details')" wire:navigate>For Visitors</flux:sidebar.item>
+                <flux:sidebar.item :href="route('public.visitor-details')" :current="request()->routeIs('public.visitor-details')" wire:navigate>For Visitors</flux:sidebar.item>
                 <flux:sidebar.item :href="route('public.exhibitor-details')" :current="request()->routeIs('public.exhibitor-details')" wire:navigate>For Exhibitors</flux:sidebar.item>
                 <flux:sidebar.item :href="route('public.schedule')" :current="request()->routeIs('public.schedule')" wire:navigate>Schedule</flux:sidebar.item>
                 <flux:sidebar.item :href="route('public.results')" :current="request()->routeIs('public.results')" wire:navigate>Results</flux:sidebar.item>
