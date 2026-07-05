@@ -24,9 +24,10 @@
                     exhibitor needs to provide the container. Assistance will be available from our stewards to help you stage your entries, and to answer any questions you may have about the show. If you need to change or add to your entries,
                     this can be done straightforwardly up to the time when judging commences.
                 </p>
-                    If you would like to save a little time by registering in advance, you can <a href="{{ route('register') }}" class="text-zinc-700 underline underline-offset-2 transition-colors hover:text-zinc-900">register 
-                        here</a> to create an account and submit your entries online up to the Thurday evening before the show. After that time, we can stll make changes when you are physically present for staging in the same way as
-                        for those who have not registered in advance.
+                <p class="mt-4 leading-relaxed text-zinc-700">
+                    If you would like to save a little time by registering in advance, you can <a href="{{ route('register') }}" class="text-zinc-700 underline underline-offset-2 transition-colors hover:text-zinc-900">click 
+                    here</a> to create an account and submit your entries online up to the Thurday evening before the show. After that time, you can stll make changes to your entries when you arrive for staging in the same way as
+                    those who have not registered in advance.
                 </p>
                 <p class="mt-4 leading-relaxed text-zinc-700">      
                     Trophy winners  will be announced and trophies awarded around 4.00 pm. after which prize money can be collected from the show secretary. If you wish to make any of your entries available for 
