@@ -1,9 +1,9 @@
-<x-layouts::public :title="__('For Visitors')">
+<x-layouts::public :title="__('For Exhibitors')">
     <div class="flex min-h-screen flex-col">
         <main class="flex flex-1 flex-col items-center gap-10 px-6 py-12">
             <div class="text-center">
                 <h1 class="text-3xl font-semibold tracking-tight text-zinc-900">Calverley Show</h1>
-                <h2 class="text-2xl font-semibold tracking-tight text-zinc-900">For Visitors</h2>
+                <h2 class="text-2xl font-semibold tracking-tight text-zinc-900">For Exhibitors</h2>
             </div>
             <div class="w-full max-w-full sm:max-w-3xl px-4 sm:px-8 py-7 text-justify">
                 <p class="leading-relaxed text-zinc-700">
@@ -17,6 +17,9 @@
                 </p>
                 <p class="mt-4 leading-relaxed text-zinc-700">      
                     Prizes will be announced and awarded around 4.00 pm after which some items from the Baking, Fruit and Vegetable sections will be available in the schoolroom, for a suitable donation . The show will close at 4.30 pm. For more information about the classes, trophies, timings for visitors and exhibitors and how to enter, click here: <a href="{{ route('public.show-details') }}" class="text-zinc-900 underline underline-offset-2 transition-colors hover:text-zinc-600">Show Details</a>.
+                </p>
+                <p class="mt-4 leading-relaxed text-zinc-700">
+                    If you would like to enter classes in advance of the show, you can <a href="{{ route('register') }}" class="text-zinc-700 underline underline-offset-2 transition-colors hover:text-zinc-900">register here</a> to create an account and submit your entries online.
                 </p>
             </div>
         </main>

@@ -37,10 +37,10 @@
                         We’re looking forward to welcoming you to our 105th show this year, we’re hoping it will be bigger and better than ever. We have our traditional vegetable, fruit and flower classes displayed in the main hall. Baking and junior classes will be in the school room and for the first time, we’ll be displaying the art in the church. As always we’ll have refreshments, stalls and a tombola, we’re also delighted to welcome back Drighlington Brass Band, who were a big hit last year.
                     </p>
                     <p class="mt-4 leading-relaxed text-zinc-700">
-                        For more information about the classes, trophies, timings for visitors and exhibitors and how to enter, click here: <a href="{{ route('public.show-details') }}" class="text-zinc-900 underline underline-offset-2 transition-colors hover:text-zinc-600">Show Details</a>.
+                        For more information for visitors to the show see here: <a href="{{ route('public.show-details') }}" class="text-zinc-900 underline underline-offset-2 transition-colors hover:text-zinc-600">For Visitors</a>.
                     </p>
-                    <p class="mt-4 text-sm text-zinc-500">
-                        If you would like to enter classes in advance of the show, you can <a href="{{ route('register') }}" class="text-zinc-700 underline underline-offset-2 transition-colors hover:text-zinc-900">register here</a> to create an account and submit your entries online.
+                    <p class="mt-4 leading-relaxed text-zinc-700">
+                        If you're planning on entering, more information can be found here: <a href="{{ route('public.exhibitor-details') }}" class="text-zinc-900 underline underline-offset-2 transition-colors hover:text-zinc-600">For Exhibitors</a>.
                     </p>
                 </div>
             </main>
