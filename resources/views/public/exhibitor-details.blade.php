@@ -7,33 +7,52 @@
             </div>
             <div class="w-full max-w-full sm:max-w-3xl px-4 sm:px-8 py-7 text-justify">
                 <p class="leading-relaxed text-zinc-700">
-                    Calverley Horticultural Society’s 105th show will be held on Saturday 14 August 2026, at the Calverley Methodist Hall and Church, Chapel Street, LS28 5PS. We want to encourage entries from as many
+                    Calverley Horticultural Society’s 105th show will be held on Saturday 15 August 2026, at the Calverley Methodist Hall and Church, Chapel Street, LS28 5PS. We want to encourage entries from as many
                      people as possible, you do not have to be a Calverley Horticultural Society (CHS) member to enter. 
                 </p>
+                <h2 class="mt-4 text-2xl font-semibold tracking-tight text-zinc-900">How to enter</h2>
                 <p class="mt-4 leading-relaxed text-zinc-700">
                     Details of the classes can be found in the printed schedule and from the link in the menu. For adults it costs 50p per entry up to 10 entries, after which additional entries are free. 
-                    For juniors (up to age 15), entry is free. We can take payment in cash or by card. Entries can be brought to the Methodist Hall on Friday 13 August 2026 between 6.00 pm and 8.00 pm (preferred), or on Saturday 14 August 2026 
+                    For juniors (up to age 15), entry is free. We can take payment in cash or by card. Entries can be brought to the Methodist Hall on Friday 14 August 2026 between 6.00 pm and 8.00 pm (preferred), or on Saturday 15 August 2026 
                     between 9.30 am and 11.30 am. Judging will start promptly at 11.30 am, please allow adequate time for registration and staging if you are entering on Saturday.
-                    Please note that the hall will be closed to exhibitors and visitors during judging. Art entries will be displayed in the church and staged by our stewards.
+                    <span class="font-bold italic">Please note that the hall will be closed to exhibitors and visitors during judging.</span> 
                 </p>
                 <p class="mt-4 leading-relaxed text-zinc-700">
-                    All entries can be made without prior registration, when you arrive at the show. You will need to provide your name and specify whether you are an adult or junior. Some trophies are restricted to entrants 
+                    All entries can be made without prior registration, when arriving at the show to stage. Exhibitors will need to provide their full name and specify whether they are an adult or junior. Some trophies are restricted to entrants 
                     who are residents of Calverley, or have an allotment plot in the village and some are only open to novices, i.e. exhibitors who have not previously won a trophy at this or similar shows, 
-                    so we will also need this information at the time of registration. You will also need to provide details of each how many entries you are making in each class and will be provided with a uniquely numbered
-                    printed label for each entry, which you will need to attach to your entry. Paper plates and vases will be provided for your entries where required. Please see the schedule for the (very few) exceptions where the 
-                    exhibitor needs to provide the container. Assistance will be available from our stewards to help you stage your entries, and to answer any questions you may have about the show. If you need to change or add to your entries,
+                    so we will also need this information at the time of registration. Exhibitors also need to provide details of each how many entries they are making in each class and will be provided with a uniquely numbered
+                    printed label for each entry, which they will need to attach to their entry. Paper plates and vases will be provided for your entries where required. Please see the schedule for the (very few) exceptions where the 
+                    exhibitor needs to provide a container. 
+                </p>
+                <p class="mt-4 leading-relaxed text-zinc-700">
+                    Assistance will be available from our stewards to help you stage your entries, and to answer any questions you may have about the show. If you need to change or add to your entries,
                     this can be done straightforwardly up to the time when judging commences.
                 </p>
                 <p class="mt-4 leading-relaxed text-zinc-700">
                     If you would like to save a little time by registering in advance, you can <a href="{{ route('register') }}" class="text-zinc-700 underline underline-offset-2 transition-colors hover:text-zinc-900">click 
-                    here</a> to create an account and submit your entries online up to the Thurday evening before the show. After that time, you can stll make changes to your entries when you arrive for staging in the same way as
+                    here</a> to create an account and submit your entries online up to midday Friday before the show. After that time, if you want to make changes to your entries you can do so when you arrive for staging in the same way as
                     those who have not registered in advance.
                 </p>
+                <h2 class="mt-4 text-xl font-semibold tracking-tight text-zinc-900">Art Classes 73-77</h2>
+                <p class="mt-4 leading-relaxed text-zinc-700">
+                    Art entries will be displayed in the church and staged by our stewards. Please ensure that your entries are ready to hang, with a suitable cord or wire attached to the back of the frame. 
+                    Please note that we cannot accept any entries that are not ready to hang.
+                </p>
+                <h2 class="mt-4 text-xl font-semibold tracking-tight text-zinc-900">Photography Classes 78, 79, 83</h2>
+                <p class="mt-4 leading-relaxed text-zinc-700">
+                    Photos should have been taken after August 2025 and be <span class="font-italic">emailed in jpeg format</span> (no pngs)to: anne.akers@oleana.co.uk by noon on August 14th.  
+                    Entry fees should be paid at the show, children’s entries are free. Photo entries will be displayed on-screen in the schoolroom.
+                </p>
+                <h2 class="mt-4 text-xl font-semibold tracking-tight text-zinc-900">Junior Classes 84-86</h2>
+                <p class="mt-4 leading-relaxed text-zinc-700">
+                    Somthing here about the junior classes that are being organised vua the library, what they are, how to enter, and any special instructions for juniors.
+                </p>
+                <h2 class="mt-4 text-xl font-semibold tracking-tight text-zinc-900">Trophies, prize money and collection of entries</h2>
                 <p class="mt-4 leading-relaxed text-zinc-700">      
                     Trophy winners  will be announced and trophies awarded around 4.00 pm. after which prize money can be collected from the show secretary. If you wish to make any of your entries available for 
                     sale to visitors, (Vegetables, Fruit, Flowers, Baking, Preserves only), please place a red sticker (available at the show) on that entry's label. The stewards will move these into the schoolroom 
-                    for the post-show auction, all proceeds to Calverley Horticultural Society. Any other items will need to be collected by exhibitors promptly after the show closes at 4.30 pm. The show organisers 
-                    will be very busy with clearing up after the show, so please be considerate and collect your entries promptly. We cannot be held responsible for any items left after 5.30 pm.
+                    for the post-show sale, all proceeds to Calverley Horticultural Society to help cover show costs. <span class="font-bold italic">Any other items will need to be collected by exhibitors promptly after the show closes at 4.30 pm</span>. The show organisers 
+                    will be very busy with clearing up after the show, so please be considerate and collect your entries promptly. <span class="font-bold italic">We cannot be held responsible for any items left after 5.30 pm.</span>
                 </p>
             </div>
         </main>
