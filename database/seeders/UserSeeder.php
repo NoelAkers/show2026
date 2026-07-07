@@ -22,6 +22,42 @@ class UserSeeder extends Seeder
             'password' => Hash::make(env('SEEDER_JUDGE_PASSWORD')),
         ]);
 
+        User::factory()->judge()->create([
+            'name' => 'Stephen Ryan',
+            'email' => 'stephen.ryan@villageshow.org',
+            'password' => Hash::make(env('SEEDER_JUDGE_PASSWORD')),
+        ]);
+
+        User::factory()->judge()->create([
+            'name' => 'Andrew Carter',
+            'email' => 'andrew.carter@villageshow.org',
+            'password' => Hash::make(env('SEEDER_JUDGE_PASSWORD')),
+        ]);
+
+        User::factory()->judge()->create([
+            'name' => 'Peter Hoskins',
+            'email' => 'peter.hoskins@villageshow.org',
+            'password' => Hash::make(env('SEEDER_JUDGE_PASSWORD')),
+        ]);
+
+        User::factory()->judge()->create([
+            'name' => 'Lorna Muir',
+            'email' => 'lorna.muir@villageshow.org',
+            'password' => Hash::make(env('SEEDER_JUDGE_PASSWORD')),
+        ]);
+
+        User::factory()->judge()->create([
+            'name' => 'Linda Wood',
+            'email' => 'linda.wood@villageshow.org',
+            'password' => Hash::make(env('SEEDER_JUDGE_PASSWORD')),
+        ]);
+
+        User::factory()->judge()->create([
+            'name' => 'Anne Akers',
+            'email' => 'anne.akers@villageshow.org',
+            'password' => Hash::make(env('SEEDER_JUDGE_PASSWORD')),
+        ]);
+
         User::factory()->helper()->create([
             'name' => 'Generic Helper',
             'email' => 'helper@villageshow.org',

@@ -21,10 +21,41 @@ class ShowSectionSeeder extends Seeder
         ShowSection::create(['sort_order' => 9, 'name' => 'Photography', 'description' => 'Photography']);
         ShowSection::create(['sort_order' => 10, 'name' => 'Juniors', 'description' => 'Classes for juniors: under 11 and 11-15']);
 
-        $judge = User::where('name', 'Judge TBC')->sole();
-        ShowSection::all()->each(fn (ShowSection $section) => $section->judges()->attach($judge));
+        $sectionJudges = [
+            'Fruit & Veg' => 'Stephen Ryan',
+            'Giant Veg' => 'Stephen Ryan',
+            'Flowers' => 'Stephen Ryan',
+            'Celebrating Calverley in Bloom' => 'Andrew Carter',
+            'Baking' => 'Peter Hoskins',
+            'Preserves' => 'Peter Hoskins',
+            'Handicrafts' => 'Lorna Muir',
+            'Art' => 'Linda Wood',
+            'Photography' => 'Anne Akers',
+            'Juniors' => 'Judge TBC',
+        ];
 
-        $steward = User::where('name', 'Head Steward')->sole();
-        ShowSection::all()->each(fn (ShowSection $section) => $section->stewards()->attach($steward));
+        ShowSection::all()->each(function (ShowSection $section) use ($sectionJudges) {
+            $judge = User::where('name', $sectionJudges[$section->name])->sole();
+            $section->judges()->attach($judge);
+        });
+
+        $sectionStewards = [
+            'Fruit & Veg' => 'Head Steward',
+            'Giant Veg' => 'Head Steward',
+            'Flowers' => 'Head Steward',
+            'Celebrating Calverley in Bloom' => 'Head Steward',
+            'Baking' => 'Head Steward',
+            'Preserves' => 'Head Steward',
+            'Handicrafts' => 'Head Steward',
+            'Art' => 'Head Steward',
+            'Photography' => 'Head Steward',
+            'Juniors' => 'Head Steward',
+        ];
+
+        ShowSection::all()->each(function (ShowSection $section) use ($sectionStewards) {
+            $steward = User::where('name', $sectionStewards[$section->name])->sole();
+            $section->stewards()->attach($steward);
+        });
+
     }
 }
