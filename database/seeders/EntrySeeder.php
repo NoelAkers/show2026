@@ -19,10 +19,12 @@ class EntrySeeder extends Seeder
             $targetCount = random_int(2, 20);
             $isSingleSection = random_int(1, 100) <= 60;
 
-            // Adults may not enter the Junior section
-            $eligible = $exhibitor->isAdult()
-                ? $sections->reject(fn ($s) => $s->id === $juniorSection->id)
-                : $sections;
+            // Adults may not enter the Junior section; Juniors may only enter the Junior section
+            $eligible = match (true) {
+                $exhibitor->isAdult() => $sections->reject(fn ($s) => $s->id === $juniorSection->id),
+                $exhibitor->isJunior() => $sections->filter(fn ($s) => $s->id === $juniorSection->id),
+                default => $sections,
+            };
 
             $eligibleClasses = $isSingleSection
                 ? $eligible->random()->showClasses

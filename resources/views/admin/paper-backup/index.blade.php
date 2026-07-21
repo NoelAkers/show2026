@@ -229,7 +229,7 @@
                 @foreach ($section->showClasses->filter(fn ($c) => $c->entries->isNotEmpty()) as $class)
                     <div class="class-block">
                         <div class="class-heading">
-                            {{ $class->name }}
+                            {{ $class->id }}. {{ $class->name }}
                             <span style="font-weight:400;color:#6b7280">({{ $class->entries->count() }} {{ Str::plural('entry', $class->entries->count()) }})</span>
                         </div>
                         <table>

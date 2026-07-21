@@ -9,9 +9,10 @@ class ExhibitorSeeder extends Seeder
 {
     public function run(): void
     {
-        // 30 exhibitors: 70% residents (21), ~5% juniors (2)
-        Exhibitor::factory()->adult()->resident()->count(19)->create();
-        Exhibitor::factory()->adult()->nonResident()->count(9)->create();
-        Exhibitor::factory()->junior()->resident()->count(2)->create();
+        // 60 exhibitors: 70% residents (42), ~20% juniors (12)
+        Exhibitor::factory()->adult()->resident()->count(34)->create();
+        Exhibitor::factory()->adult()->nonResident()->count(14)->create();
+        Exhibitor::factory()->junior()->resident()->count(9)->create();
+        Exhibitor::factory()->junior()->nonResident()->count(3)->create();
     }
 }
