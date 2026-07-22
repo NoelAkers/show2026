@@ -38,11 +38,21 @@
                     this can be done any time up to 11.00 am Saturday.
                 </p>
                 <h3>Pre-registration</h3>
-                <p>
-                    If you would like to save time by registering in advance, <a href="{{ route('register') }}">click here</a>
-                    to create an account and submit your entries online up to midday Friday before the show. After that time, if you want to make changes to your entries you can do so when you
-                    arrive for staging in the same way as those who have not registered in advance.
-                </p>
+                @if (config('show.show_live'))
+                    <p>
+                        It is now too late to pre-register. Please enter, or change your existing entries, in person when you arrive at the show.
+                    </p>
+                @elseif (config('show.self_entry_open'))
+                    <p>
+                        If you would like to save time by registering in advance, <a href="{{ route('register') }}">click here</a>
+                        to create an account and submit your entries online up to midday Friday before the show. After that time, if you want to make changes to your entries you can do so when you
+                        arrive for staging in the same way as those who have not registered in advance.
+                    </p>
+                @else
+                    <p>
+                        Online pre-registration is not yet open, please check back later.
+                    </p>
+                @endif
                 <h3>Art Classes 73-77</h3>
                 <p>
                     Art entries will be displayed in the church and <em><strong>staged by our stewards</strong></em>.

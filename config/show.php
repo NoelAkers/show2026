@@ -5,6 +5,8 @@ return [
 
     'self_entry_open' => env('SELF_ENTRY_OPEN', false),
 
+    'show_live' => env('BACKUP_MODE', 'pre_show') === 'show',
+
     'title' => 'Calverley Show 2026',
 
     'placement_points' => [
