@@ -1,6 +1,9 @@
 <?php
 
+use App\Models\Entry;
+use App\Models\Exhibitor;
 use App\Models\Result;
+use App\Models\ShowClass;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Carbon;
@@ -126,6 +129,30 @@ it('card shows prize label, winner name, show title and entry info', function ()
         ->assertSee(config('show.title'))
         ->assertSee((string) $entry->entry_number)
         ->assertSee((string) $entry->exhibitor->id);
+});
+
+it('orders cards by placement rather than entry number within a class', function () {
+    $admin = User::factory()->admin()->create();
+    $showClass = ShowClass::factory()->create();
+
+    // Created in reverse placement order, so entry_number would otherwise put Dan first.
+    $highlyCommended = Result::factory()->for(
+        Entry::factory()->for($showClass)->for(
+            Exhibitor::factory()->create(['full_name' => 'Dan Fourth'])
+        )->create()
+    )->create(['placement' => 'highly_commended']);
+
+    $first = Result::factory()->for(
+        Entry::factory()->for($showClass)->for(
+            Exhibitor::factory()->create(['full_name' => 'Amy First'])
+        )->create()
+    )->create(['placement' => '1st']);
+
+    $response = $this->actingAs($admin)
+        ->get(route('admin.result-cards'))
+        ->assertOk();
+
+    $response->assertSeeInOrder(['Amy First', 'Dan Fourth']);
 });
 
 it('mark printed sets card_printed_at on the given results', function () {

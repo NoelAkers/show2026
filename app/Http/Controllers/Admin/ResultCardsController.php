@@ -24,6 +24,7 @@ class ResultCardsController extends Controller
             ->whereNotNull('results.placement')
             ->orderBy('show_sections.sort_order')
             ->orderBy('show_classes.sort_order')
+            ->orderByRaw("CASE results.placement WHEN '1st' THEN 1 WHEN '2nd' THEN 2 WHEN '3rd' THEN 3 WHEN 'highly_commended' THEN 4 ELSE 5 END")
             ->orderBy('entries.entry_number')
             ->select('results.*');
 
