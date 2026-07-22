@@ -52,9 +52,10 @@
                     Photos should have been taken after August 2025 and be <em><strong>emailed in jpeg format</strong></em> (no pngs)to: anne.akers@oleana.co.uk by noon on August 14th.
                     Entry fees should be paid at the show, children’s entries are free. Photo entries will be displayed on-screen in the schoolroom.
                 </p>
-                <h3>Junior Classes 84-86</h3>
+                <h3>Children’s Classes 84-86</h3>
                 <p>
-                    [Something here about the junior classes that are being organised via the library, what they are, how to enter, and any special instructions for juniors.]
+                    A template for class 84 (colouring in) can be collected from Calverley Children's Library. Completed entries can be returned to the library <em>before</em> Friday 14th or brought to the show
+                     during either the Friday evening or Saturday morning staging times. 
                 </p>
                 <h3>Trophies, prize money and collection of entries</h3>
                 <p>
