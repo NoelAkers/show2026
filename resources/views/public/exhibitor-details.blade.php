@@ -18,7 +18,7 @@
                 </p>
                 <p>
                     Entries can be brought to the Methodist Hall on Friday 14 August 2026 between 6.00 pm and 8.00 pm (preferred), or on Saturday 15 August 2026
-                    between 9.30 am and 11.00 am. Judging will start promptly at 11.30 am, please allow adequate time for registration and staging if you are entering on Saturday.
+                    between 8.00 am and 9.30 am. Judging will start promptly at 10.00 am, please allow adequate time for registration and staging if you are entering on Saturday.
                     <em><strong>Please note that the hall will be closed to exhibitors and visitors during judging.</strong></em>
                 </p>
                 <h3>Registration</h3>
@@ -35,7 +35,7 @@
                 </p>
                 <p>
                     Our stewards will be on hand to help you stage your entries, and to answer any questions you may have about the show. If you need to change or add to your entries,
-                    this can be done any time up to 11.00 am Saturday.
+                    this can be done any time up to 10.00 am Saturday.
                 </p>
                 <h3>Pre-registration</h3>
                 @if (config('show.show_live'))
