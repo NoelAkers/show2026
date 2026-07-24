@@ -65,6 +65,83 @@ it('admin can create an exhibitor', function () {
     ]);
 });
 
+it('admin can create an exhibitor with an email address', function () {
+    $this->actingAs(exhibitorAdmin())
+        ->post(route('admin.exhibitors.store'), [
+            'first_name' => 'Jane',
+            'last_name' => 'Doe',
+            'email' => 'jane.doe@example.com',
+            'type' => 'adult',
+        ])
+        ->assertRedirect(route('admin.exhibitors.index'));
+
+    $this->assertDatabaseHas('exhibitors', [
+        'first_name' => 'Jane',
+        'last_name' => 'Doe',
+        'email' => 'jane.doe@example.com',
+    ]);
+});
+
+it('exhibitor email is optional when created by admin', function () {
+    $this->actingAs(exhibitorAdmin())
+        ->post(route('admin.exhibitors.store'), [
+            'first_name' => 'Jane',
+            'last_name' => 'Doe',
+            'type' => 'adult',
+        ])
+        ->assertRedirect(route('admin.exhibitors.index'));
+
+    $this->assertDatabaseHas('exhibitors', [
+        'first_name' => 'Jane',
+        'last_name' => 'Doe',
+        'email' => null,
+    ]);
+});
+
+it('exhibitor email must be a valid email address', function (string $invalidEmail) {
+    $this->actingAs(exhibitorAdmin())
+        ->post(route('admin.exhibitors.store'), [
+            'first_name' => 'Jane',
+            'last_name' => 'Doe',
+            'email' => $invalidEmail,
+            'type' => 'adult',
+        ])
+        ->assertSessionHasErrors('email');
+})->with([
+    'not-an-email',
+    'jane@doe', // no TLD — accepted by Laravel's default RFC email validator, so must reject explicitly
+]);
+
+it('rejects an invalidly formatted email address on update, without overwriting the existing valid one', function () {
+    $exhibitor = Exhibitor::factory()->create(['email' => 'original@example.com']);
+
+    $this->actingAs(exhibitorAdmin())
+        ->put(route('admin.exhibitors.update', $exhibitor), [
+            'first_name' => $exhibitor->first_name,
+            'last_name' => $exhibitor->last_name,
+            'email' => 'jane@doe', // no TLD
+            'type' => 'adult',
+        ])
+        ->assertSessionHasErrors('email');
+
+    expect($exhibitor->fresh()->email)->toBe('original@example.com');
+});
+
+it('admin can update an exhibitor email address', function () {
+    $exhibitor = Exhibitor::factory()->create(['email' => null]);
+
+    $this->actingAs(exhibitorAdmin())
+        ->put(route('admin.exhibitors.update', $exhibitor), [
+            'first_name' => $exhibitor->first_name,
+            'last_name' => $exhibitor->last_name,
+            'email' => 'updated@example.com',
+            'type' => 'adult',
+        ])
+        ->assertRedirect(route('admin.exhibitors.show', $exhibitor));
+
+    expect($exhibitor->fresh()->email)->toBe('updated@example.com');
+});
+
 it('admin can view an exhibitor', function () {
     $exhibitor = Exhibitor::factory()->create(['first_name' => 'Alice', 'last_name' => 'Smith', 'full_name' => 'Alice Smith', 'sort_name' => 'Smith, Alice']);
 

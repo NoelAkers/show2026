@@ -33,6 +33,12 @@ test('login validates required fields', function () {
         ->assertJsonValidationErrors(['email', 'password']);
 });
 
+test('login rejects an email address without a TLD', function () {
+    $this->postJson('/api/login', ['email' => 'judge@doe', 'password' => 'secret'])
+        ->assertUnprocessable()
+        ->assertJsonValidationErrors(['email']);
+});
+
 test('protected endpoints require a token', function () {
     $this->getJson('/api/show-classes?number=1')->assertUnauthorized();
     $this->getJson('/api/entries/1')->assertUnauthorized();

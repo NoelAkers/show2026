@@ -131,6 +131,48 @@ it('exhibitor can update their editable profile fields', function () {
     expect($exhibitor->is_novice)->toBeFalse();
 });
 
+it('exhibitor can update their email address', function () {
+    $user = User::factory()->withExhibitor()->create();
+
+    $this->actingAs($user)->put(route('exhibitor.profile.update'), [
+        'first_name' => 'Jane',
+        'last_name' => 'Smith',
+        'full_name' => 'Jane Smith',
+        'email' => 'jane.smith@example.com',
+        'type' => 'adult',
+    ])->assertRedirect(route('exhibitor.dashboard'));
+
+    expect($user->fresh()->exhibitor->email)->toBe('jane.smith@example.com');
+});
+
+it('exhibitor email is optional on profile update', function () {
+    $user = User::factory()->withExhibitor()->create();
+
+    $this->actingAs($user)->put(route('exhibitor.profile.update'), [
+        'first_name' => 'Jane',
+        'last_name' => 'Smith',
+        'full_name' => 'Jane Smith',
+        'type' => 'adult',
+    ])->assertRedirect(route('exhibitor.dashboard'));
+
+    expect($user->fresh()->exhibitor->email)->toBeNull();
+});
+
+it('exhibitor email must be a valid email address on profile update', function (string $invalidEmail) {
+    $user = User::factory()->withExhibitor()->create();
+
+    $this->actingAs($user)->put(route('exhibitor.profile.update'), [
+        'first_name' => 'Jane',
+        'last_name' => 'Smith',
+        'full_name' => 'Jane Smith',
+        'email' => $invalidEmail,
+        'type' => 'adult',
+    ])->assertSessionHasErrors('email');
+})->with([
+    'not-an-email',
+    'jane@doe', // no TLD — accepted by Laravel's default RFC email validator, so must reject explicitly
+]);
+
 it('exhibitor cannot update has_paid via the profile update endpoint', function () {
     $user = User::factory()->withExhibitor()->create();
     $exhibitor = $user->exhibitor;

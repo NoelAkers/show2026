@@ -20,6 +20,7 @@ class StoreExhibitorRequest extends FormRequest
         return [
             'first_name' => ['required', 'string', 'max:255'],
             'last_name' => ['required', 'string', 'max:255'],
+            'email' => ['nullable', 'email:filter', 'max:255'],
             'type' => ['required', 'in:adult,junior'],
             'is_resident' => ['boolean'],
             'has_paid' => ['boolean'],

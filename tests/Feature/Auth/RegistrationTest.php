@@ -33,6 +33,18 @@ test('new users can register', function () {
     $this->assertAuthenticated();
 });
 
+test('registration rejects an email address without a TLD', function () {
+    $response = $this->post(route('register.store'), [
+        'name' => 'John Doe',
+        'email' => 'john@doe',
+        'password' => 'password',
+        'password_confirmation' => 'password',
+    ]);
+
+    $response->assertSessionHasErrors(['email']);
+    $this->assertGuest();
+});
+
 test('duplicate email registration shows helpful family member message', function () {
     User::factory()->create(['email' => 'shared@example.com']);
 

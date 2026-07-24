@@ -85,6 +85,16 @@ it('duplicate email is rejected on create', function () {
         ->assertSessionHasErrors(['email']);
 });
 
+it('email without a TLD is rejected on create', function () {
+    $this->actingAs(userAdmin())
+        ->post(route('admin.users.store'), [
+            'name' => 'Another User',
+            'email' => 'jane@doe',
+            'role' => 'exhibitor',
+        ])
+        ->assertSessionHasErrors(['email']);
+});
+
 it('role is required on create', function () {
     $this->actingAs(userAdmin())
         ->post(route('admin.users.store'), [
@@ -172,6 +182,20 @@ it('email must be unique on update', function () {
             'role' => 'exhibitor',
         ])
         ->assertSessionHasErrors(['email']);
+});
+
+it('email without a TLD is rejected on update, without overwriting the existing one', function () {
+    $user = User::factory()->exhibitor()->create(['email' => 'original@example.com']);
+
+    $this->actingAs(userAdmin())
+        ->put(route('admin.users.update', $user), [
+            'name' => $user->name,
+            'email' => 'jane@doe',
+            'role' => 'exhibitor',
+        ])
+        ->assertSessionHasErrors(['email']);
+
+    expect($user->fresh()->email)->toBe('original@example.com');
 });
 
 // --- Destroy ---

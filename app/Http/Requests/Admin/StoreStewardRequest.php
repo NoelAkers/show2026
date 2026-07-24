@@ -19,7 +19,7 @@ class StoreStewardRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'email', 'max:255'],
+            'email' => ['required', 'email:filter', 'max:255'],
             'phone' => ['nullable', 'string', 'max:50'],
             'section_ids' => ['nullable', 'array'],
             'section_ids.*' => ['integer', 'exists:show_sections,id'],

@@ -58,6 +58,7 @@ class ExhibitorController extends Controller
             'first_name' => ['required', 'string', 'max:255'],
             'last_name' => ['required', 'string', 'max:255'],
             'full_name' => ['required', 'string', 'max:255'],
+            'email' => ['nullable', 'email:filter', 'max:255'],
             'type' => ['required', Rule::in(['adult', 'junior'])],
             'is_resident' => ['boolean'],
             'is_novice' => ['boolean'],

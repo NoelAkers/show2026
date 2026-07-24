@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 #[Fillable([
-    'user_id', 'first_name', 'last_name', 'full_name', 'sort_name',
+    'user_id', 'first_name', 'last_name', 'full_name', 'sort_name', 'email',
     'type', 'is_resident', 'has_paid', 'is_novice', 'amount_paid_pence',
 ])]
 class Exhibitor extends Model

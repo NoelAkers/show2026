@@ -21,7 +21,7 @@ class UpdateUserRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'email', 'max:255', Rule::unique('users')->ignore($this->route('user'))],
+            'email' => ['required', 'email:filter', 'max:255', Rule::unique('users')->ignore($this->route('user'))],
             'phone' => ['nullable', 'string', 'max:50'],
             'role' => ['required', Rule::enum(UserRole::class)],
         ];

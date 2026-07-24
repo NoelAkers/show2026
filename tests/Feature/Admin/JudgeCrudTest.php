@@ -46,6 +46,17 @@ it('admin can create a new judge account', function () {
     ]);
 });
 
+it('email without a TLD is rejected when creating a judge', function () {
+    $this->actingAs(judgeAdmin())
+        ->post(route('admin.judges.store'), [
+            'name' => 'New Judge',
+            'email' => 'newjudge@doe',
+        ])
+        ->assertSessionHasErrors(['email']);
+
+    $this->assertDatabaseMissing('users', ['name' => 'New Judge']);
+});
+
 it('adding an existing user as judge does not create a duplicate account', function () {
     $existingUser = User::factory()->admin()->create(['email' => 'admin@example.com']);
 
@@ -58,6 +69,19 @@ it('adding an existing user as judge does not create a duplicate account', funct
 
     expect(User::where('email', 'admin@example.com')->count())->toBe(1)
         ->and($existingUser->fresh()->isAdmin())->toBeTrue();
+});
+
+it('email without a TLD is rejected when updating a judge, without overwriting the existing one', function () {
+    $judge = User::factory()->judge()->create(['email' => 'original@example.com']);
+
+    $this->actingAs(judgeAdmin())
+        ->put(route('admin.judges.update', $judge), [
+            'name' => $judge->name,
+            'email' => 'jane@doe',
+        ])
+        ->assertSessionHasErrors(['email']);
+
+    expect($judge->fresh()->email)->toBe('original@example.com');
 });
 
 it('admin can assign sections when creating a judge', function () {
