@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('entry_id')->unique()->constrained()->cascadeOnDelete();
             $table->foreignId('entered_by_user_id')->nullable()->constrained('users')->nullOnDelete();
             $table->string('placement')->nullable()->comment('1st|2nd|3rd|highly_commended');
-            $table->text('notes')->nullable();
+            $table->timestamp('card_printed_at')->nullable();
             $table->timestamps();
         });
     }
