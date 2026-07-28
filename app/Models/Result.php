@@ -63,6 +63,11 @@ class Result extends Model
         return config('show.result_card_colours')[$this->placement] ?? '#111827';
     }
 
+    public function prizeIcon(): ?string
+    {
+        return config('show.result_card_icons')[$this->placement] ?? null;
+    }
+
     public function isPrinted(): bool
     {
         return $this->card_printed_at !== null;

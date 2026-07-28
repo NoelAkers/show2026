@@ -22,4 +22,11 @@ return [
         '3rd' => '#16a34a',
         'highly_commended' => '#9ca3af',
     ],
+
+    'result_card_icons' => [
+        '1st' => 'images/1st.png',
+        '2nd' => 'images/2nd.png',
+        '3rd' => 'images/3rd.png',
+        'highly_commended' => 'images/hc.png',
+    ],
 ];

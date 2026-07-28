@@ -6,7 +6,7 @@
     <title>Result Cards</title>
     @vite(['resources/css/app.css'])
     <style>
-        @page { size: 150mm 100mm landscape; margin: 8mm; }
+        @page { size: 150mm 100mm landscape; margin: 0; }
 
         * { box-sizing: border-box; }
 
@@ -20,6 +20,15 @@
             text-align: center;
             font-family: ui-sans-serif, system-ui, sans-serif;
             padding: 5mm 4mm;
+            position: relative;
+        }
+
+        .card-icon {
+            position: absolute;
+            top: 4mm;
+            left: 4mm;
+            width: 16mm;
+            height: 16mm;
         }
 
         .card-show-title {
@@ -148,7 +157,6 @@
                 height: 100mm;
                 border: 1px dashed #bbb;
                 background: white;
-                position: relative;
             }
 
             .reprint-badge {
@@ -169,11 +177,12 @@
             .screen-header { display: none; }
             .reprint-badge { display: none; }
             .card {
+                width: 150mm;
+                height: 100mm;
                 border: none;
                 background: none;
                 break-after: page;
                 page-break-after: always;
-                height: 84mm; /* page 100mm - top margin 8mm - bottom margin 8mm */
             }
         }
     </style>
@@ -224,6 +233,9 @@
         <div class="cards-list">
             @foreach ($results as $result)
                 <div class="card">
+                    @if ($result->prizeIcon())
+                        <img src="{{ asset($result->prizeIcon()) }}" alt="{{ $result->prizeLabel() }}" class="card-icon">
+                    @endif
                     @if ($result->needsReprint())
                         <div class="reprint-badge">Modified since last print</div>
                     @endif

@@ -59,6 +59,18 @@ it('prizeColour falls back to dark colour for unknown placement', function () {
     expect($result->prizeColour())->toBe('#111827');
 });
 
+it('prizeIcon returns configured icon path for placement', function () {
+    $result = Result::factory()->create(['placement' => '1st']);
+
+    expect($result->prizeIcon())->toBe(config('show.result_card_icons.1st'));
+});
+
+it('prizeIcon returns null for unknown placement', function () {
+    $result = Result::factory()->create(['placement' => null]);
+
+    expect($result->prizeIcon())->toBeNull();
+});
+
 // --- Controller ---
 
 it('guest is redirected to login', function () {
@@ -128,7 +140,8 @@ it('card shows prize label, winner name, show title and entry info', function ()
         ->assertSee($entry->exhibitor->full_name)
         ->assertSee(config('show.title'))
         ->assertSee((string) $entry->entry_number)
-        ->assertSee((string) $entry->exhibitor->id);
+        ->assertSee((string) $entry->exhibitor->id)
+        ->assertSee(asset(config('show.result_card_icons.1st')), false);
 });
 
 it('orders cards by placement rather than entry number within a class', function () {

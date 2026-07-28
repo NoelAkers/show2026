@@ -6,7 +6,7 @@
     <title>Class Cards</title>
     @vite(['resources/css/app.css'])
     <style>
-        @page { size: 148mm 105mm landscape; margin: 8mm; }
+        @page { size: 148mm 105mm landscape; margin: 0; }
 
         * { box-sizing: border-box; }
 
@@ -19,8 +19,19 @@
             align-items: center;
             text-align: center;
             font-family: ui-sans-serif, system-ui, sans-serif;
-            padding: 6mm 0;
+            padding: 6mm 26mm;
             gap: 4mm;
+            position: relative;
+            z-index: 0;
+        }
+
+        .card-border {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -1;
         }
 
         .card-id {
@@ -37,7 +48,7 @@
             font-weight: 700;
             color: #111827;
             line-height: 1.3;
-            max-width: 120mm;
+            max-width: 90mm;
         }
 
         .card-divider {
@@ -114,6 +125,8 @@
         @media print {
             .screen-header { display: none; }
             .card {
+                width: 148mm;
+                height: 105mm;
                 border: none;
                 background: none;
                 break-after: page;
@@ -135,6 +148,7 @@
         <div class="cards-list">
             @foreach ($classes as $class)
                 <div class="card">
+                    <img src="{{ asset('images/Class-card-border.png') }}" alt="" class="card-border">
                     <div class="card-id">Class {{ $class->id }}</div>
                     <hr class="card-divider">
                     <div class="card-name">{{ $class->name }}</div>
