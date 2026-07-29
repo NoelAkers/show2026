@@ -50,9 +50,9 @@ class Result extends Model
     public function prizeLabel(): string
     {
         return match ($this->placement) {
-            '1st' => '1st Prize',
-            '2nd' => '2nd Prize',
-            '3rd' => '3rd Prize',
+            '1st' => '1st',
+            '2nd' => '2nd',
+            '3rd' => '3rd',
             'highly_commended' => 'Highly Commended',
             default => '',
         };

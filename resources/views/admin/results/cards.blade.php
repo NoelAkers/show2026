@@ -27,47 +27,50 @@
             position: absolute;
             top: 4mm;
             left: 4mm;
-            width: 16mm;
-            height: 16mm;
+            width: 24mm;
+            height: 24mm;
         }
 
         .card-show-title {
-            font-size: 18px;
+            font-size: 24px;
             font-weight: 700;
-            color: #111827;
+            color: black;
             line-height: 1.2;
+            margin-top: 30px;
         }
 
         .card-result {
-            font-size: 38px;
+            font-size: 48px;
             font-weight: 900;
             line-height: 1;
             letter-spacing: -0.02em;
         }
 
         .card-class {
-            font-size: 20px;
-            font-weight: 600;
+            font-size: 28px;
+            font-weight: 700;
             font-style: italic;
-            color: #111827;
+            color: black;
             line-height: 1.3;
             max-width: 126mm;
         }
 
         .card-winner {
-            font-size: 32px;
+            font-size: 36px;
             font-weight: 700;
-            color: #111827;
+            color: black;
             line-height: 1.2;
             max-width: 126mm;
         }
 
         .card-entry-info {
-            font-size: 10px;
-            color: #9ca3af;
+            font-size: 12px;
+            font-weight: 700;
+            color: black;
             letter-spacing: 0.02em;
             text-align: right;
             width: 100%;
+            margin-right: 20mm;
         }
 
         @media screen {
@@ -236,14 +239,14 @@
                     @if ($result->prizeIcon())
                         <img src="{{ asset($result->prizeIcon()) }}" alt="{{ $result->prizeLabel() }}" class="card-icon">
                     @endif
-                    @if ($result->needsReprint())
+                    @if ($result->needsReprint()) --}}
                         <div class="reprint-badge">Modified since last print</div>
                     @endif
                     <div class="card-show-title">{{ $title }}</div>
-                    <div class="card-result" style="color: {{ $result->prizeColour() }}">{{ $result->prizeLabel() }}</div>
                     <div class="card-class">Class {{ $result->entry->showClass->id }} &ndash; {{ $result->entry->showClass->name }}</div>
+                    <div class="card-result" style="color: {{ $result->prizeColour() }}">{{ $result->prizeLabel() }}</div>
                     <div class="card-winner">{{ $result->entry->exhibitor->full_name }}</div>
-                    <div class="card-entry-info">Entry {{ $result->entry->formatted_entry_number }} | Exhibitor {{ $result->entry->exhibitor->id }}</div>
+                    <div class="card-entry-info">Entry {{ $result->entry->formatted_entry_number }} </div>
                 </div>
             @endforeach
         </div>
