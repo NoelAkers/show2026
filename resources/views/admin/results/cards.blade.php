@@ -27,8 +27,8 @@
             position: absolute;
             top: 4mm;
             left: 4mm;
-            width: 24mm;
-            height: 24mm;
+            width: 16mm;
+            height: 16mm;
         }
 
         .card-show-title {
@@ -40,10 +40,11 @@
         }
 
         .card-result {
-            font-size: 48px;
+            font-size: 60px;
             font-weight: 900;
             line-height: 1;
             letter-spacing: -0.02em;
+            max-width: 126mm;
         }
 
         .card-class {
