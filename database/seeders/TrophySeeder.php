@@ -82,7 +82,7 @@ class TrophySeeder extends Seeder
 
         Trophy::create([
             'name' => 'The Gibson Wells Trophy for Handicrafts',
-            'description' => 'Best exhibit in theHandicrafts section',
+            'description' => 'Best exhibit in the Handicrafts section',
             'is_points_based' => false,
             'judge_id' => $judge->id,
             'steward_id' => $steward->id,
