@@ -224,11 +224,27 @@ it('admin can record a winning entry on a judge-awarded trophy', function () {
             'name' => $trophy->name,
             'is_points_based' => '0',
             'judge_id' => $judge->id,
-            'winning_entry_id' => $entry->id,
+            'winning_entry_number' => $entry->entry_number,
         ])
         ->assertRedirect(route('admin.trophies.index'));
 
     expect($trophy->fresh()->winning_entry_id)->toBe($entry->id);
+});
+
+it('rejects an unknown winning entry number', function () {
+    $judge = User::factory()->judge()->create();
+    $trophy = Trophy::factory()->judgeAwarded()->create(['judge_id' => $judge->id]);
+
+    $this->actingAs(trophyAdmin())
+        ->put(route('admin.trophies.update', $trophy), [
+            'name' => $trophy->name,
+            'is_points_based' => '0',
+            'judge_id' => $judge->id,
+            'winning_entry_number' => 999,
+        ])
+        ->assertSessionHasErrors('winning_entry_number');
+
+    expect($trophy->fresh()->winning_entry_id)->toBeNull();
 });
 
 it('trophy index shows the winning exhibitor for a judge-awarded trophy', function () {

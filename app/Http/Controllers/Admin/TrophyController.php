@@ -61,15 +61,29 @@ class TrophyController extends Controller
         $sections = ShowSection::with('showClasses')->ordered()->get();
         $judges = User::where('role', UserRole::Judge)->orderBy('name')->get();
         $stewards = User::where('role', UserRole::Steward)->orderBy('name')->get();
-        $entries = Entry::with('exhibitor')->orderBy('entry_number')->get();
         $trophyRestrictions = $trophy->restrictions()->map(fn (TrophyRestriction $r) => $r->value)->toArray();
 
-        return view('admin.trophies.edit', compact('trophy', 'sections', 'judges', 'stewards', 'entries', 'trophyRestrictions'));
+        return view('admin.trophies.edit', compact('trophy', 'sections', 'judges', 'stewards', 'trophyRestrictions'));
     }
 
     public function update(UpdateTrophyRequest $request, Trophy $trophy): RedirectResponse
     {
         $isPointsBased = (bool) $request->input('is_points_based', true);
+        $winningEntryId = null;
+
+        if (! $isPointsBased) {
+            $winningEntryNumber = $request->validated('winning_entry_number');
+
+            if ($winningEntryNumber !== null) {
+                $entry = Entry::where('entry_number', (int) $winningEntryNumber)->first();
+
+                if (! $entry) {
+                    return back()->withErrors(['winning_entry_number' => 'Entry number not found.'])->withInput();
+                }
+
+                $winningEntryId = $entry->id;
+            }
+        }
 
         $trophy->update([
             'name' => $request->validated('name'),
@@ -77,7 +91,7 @@ class TrophyController extends Controller
             'is_points_based' => $isPointsBased,
             'judge_id' => $isPointsBased ? null : $request->validated('judge_id'),
             'steward_id' => $isPointsBased ? null : $request->validated('steward_id'),
-            'winning_entry_id' => $isPointsBased ? null : $request->validated('winning_entry_id'),
+            'winning_entry_id' => $winningEntryId,
         ]);
 
         if ($isPointsBased) {

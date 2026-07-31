@@ -119,19 +119,12 @@
 
                 <flux:field>
                     <flux:label>Winning Entry</flux:label>
-                    @if ($entries->isNotEmpty())
-                        <flux:select name="winning_entry_id">
-                            <flux:select.option value="">No winner selected</flux:select.option>
-                            @foreach ($entries as $entry)
-                                <flux:select.option value="{{ $entry->id }}" :selected="old('winning_entry_id', $trophy->winning_entry_id) == $entry->id">
-                                    {{ $entry->formatted_entry_number }} — {{ $entry->exhibitor->full_name }}
-                                </flux:select.option>
-                            @endforeach
-                        </flux:select>
-                    @else
-                        <p class="text-sm text-zinc-500">No entries exist yet.</p>
-                    @endif
-                    @error('winning_entry_id') <flux:error>{{ $message }}</flux:error> @enderror
+                    <flux:input
+                        name="winning_entry_number"
+                        value="{{ old('winning_entry_number', $trophy->winningEntry?->formatted_entry_number) }}"
+                        placeholder="e.g. 042"
+                    />
+                    @error('winning_entry_number') <flux:error>{{ $message }}</flux:error> @enderror
                 </flux:field>
             </div>
 

@@ -27,7 +27,7 @@ class UpdateTrophyRequest extends FormRequest
             'class_ids.*' => ['integer', 'exists:show_classes,id'],
             'judge_id' => ['nullable', 'integer', 'exists:users,id', 'required_if:is_points_based,0'],
             'steward_id' => ['nullable', 'integer', 'exists:users,id'],
-            'winning_entry_id' => ['nullable', 'integer', 'exists:entries,id'],
+            'winning_entry_number' => ['nullable', 'integer'],
             'restrictions' => ['nullable', 'array'],
             'restrictions.*' => ['string', new Enum(TrophyRestriction::class)],
         ];
