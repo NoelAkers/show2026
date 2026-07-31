@@ -2,9 +2,14 @@
     <div class="flex h-full w-full flex-1 flex-col gap-4 p-4">
         <div class="flex items-center justify-between">
             <flux:heading size="xl">Trophies</flux:heading>
-            <flux:button :href="route('admin.trophies.create')" variant="primary" icon="plus" wire:navigate>
-                Add Trophy
-            </flux:button>
+            <div class="flex gap-2">
+                <flux:button :href="route('admin.trophy-cards')" variant="ghost" icon="printer">
+                    Trophy Cards
+                </flux:button>
+                <flux:button :href="route('admin.trophies.create')" variant="primary" icon="plus" wire:navigate>
+                    Add Trophy
+                </flux:button>
+            </div>
         </div>
 
         @if (session('success'))

@@ -20,7 +20,7 @@ class TrophySeeder extends Seeder
 
         Trophy::create([
             'name' => 'The J Aubrey Grimshaw Rose Bowl',
-            'description' => 'Best individual exhibit in the Flowers and Vegetables Sections. (This may be awarded to a single item in Classes 1 and 2).',
+            'description' => 'Best individual exhibit in the Flowers & Vegetables sections',
             'is_points_based' => false,
             'judge_id' => $judge->id,
             'steward_id' => $steward->id,
@@ -38,7 +38,7 @@ class TrophySeeder extends Seeder
 
         Trophy::create([
             'name' => 'The Alf Parker Rose Bowl',
-            'description' => 'Best Rose in Class 42 and 43',
+            'description' => 'Best Rose',
             'is_points_based' => false,
             'judge_id' => $judge->id,
             'steward_id' => $steward->id,
@@ -46,7 +46,7 @@ class TrophySeeder extends Seeder
 
         Trophy::create([
             'name' => 'The Alan Saul Memorial Trophy',
-            'description' => 'Best Gladioli in Class 44.',
+            'description' => 'Best Gladioli',
             'is_points_based' => false,
             'judge_id' => $judge->id,
             'steward_id' => $steward->id,
@@ -54,17 +54,17 @@ class TrophySeeder extends Seeder
 
         Trophy::create([
             'name' => 'The Councillor Wylde Cup',
-            'description' => 'Most points in the Flower Section',
+            'description' => 'Most points in the Flowers section',
         ])->showClasses()->attach(range(31, 49));
 
         Trophy::create([
             'name' => 'The Dr N Hughes Cup',
-            'description' => 'Most points in the Vegetable Section',
+            'description' => 'Most points in the Vegetables Section',
         ])->showClasses()->attach(range(2, 24));
 
         Trophy::create([
             'name' => "The National Vegetable Society's Medal",
-            'description' => 'Best exhibit in the Vegetable Section',
+            'description' => 'Best exhibit in the Vegetables section',
             'is_points_based' => false,
             'judge_id' => $judge->id,
             'steward_id' => $steward->id,
@@ -82,7 +82,7 @@ class TrophySeeder extends Seeder
 
         Trophy::create([
             'name' => 'The Gibson Wells Trophy for Handicrafts',
-            'description' => 'Best exhibit in Handicrafts section',
+            'description' => 'Best exhibit in theHandicrafts section',
             'is_points_based' => false,
             'judge_id' => $judge->id,
             'steward_id' => $steward->id,

@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
-#[Fillable(['name', 'description', 'is_points_based', 'judge_id', 'steward_id', 'winning_entry_id'])]
+#[Fillable(['name', 'description', 'is_points_based', 'judge_id', 'steward_id', 'winning_entry_id', 'card_printed_at'])]
 class Trophy extends Model
 {
     /** @use HasFactory<TrophyFactory> */
@@ -22,6 +22,7 @@ class Trophy extends Model
     {
         return [
             'is_points_based' => 'boolean',
+            'card_printed_at' => 'datetime',
         ];
     }
 
@@ -43,6 +44,16 @@ class Trophy extends Model
     public function winningEntry(): BelongsTo
     {
         return $this->belongsTo(Entry::class, 'winning_entry_id');
+    }
+
+    public function isPrinted(): bool
+    {
+        return $this->card_printed_at !== null;
+    }
+
+    public function needsReprint(): bool
+    {
+        return $this->card_printed_at !== null && $this->updated_at > $this->card_printed_at;
     }
 
     /** @return Collection<int, TrophyRestriction> */
