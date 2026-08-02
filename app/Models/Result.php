@@ -63,6 +63,28 @@ class Result extends Model
         return config('show.result_card_colours')[$this->placement] ?? '#111827';
     }
 
+    public function placementRank(): int
+    {
+        return match ($this->placement) {
+            '1st' => 1,
+            '2nd' => 2,
+            '3rd' => 3,
+            'highly_commended' => 4,
+            default => 5,
+        };
+    }
+
+    public function badgeColour(): string
+    {
+        return match ($this->placement) {
+            '1st' => 'red',
+            '2nd' => 'blue',
+            '3rd' => 'green',
+            'highly_commended' => 'zinc',
+            default => 'zinc',
+        };
+    }
+
     public function prizeIcon(): ?string
     {
         return config('show.result_card_icons')[$this->placement] ?? null;

@@ -35,7 +35,7 @@ it('exhibitor detail shows entry list with class name, section name, entry numbe
         ->assertSee('2nd Place');
 });
 
-it('exhibitor detail shows pending when no result entered', function () {
+it('exhibitor detail shows no placement badge when no result entered', function () {
     $section = ShowSection::factory()->create();
     $class = ShowClass::factory()->create(['show_section_id' => $section->id]);
     $exhibitor = Exhibitor::factory()->create(['full_name' => 'Bob Jones', 'sort_name' => 'Jones, Bob']);
@@ -44,7 +44,8 @@ it('exhibitor detail shows pending when no result entered', function () {
     $this->actingAs(User::factory()->admin()->create())
         ->get(route('admin.exhibitors.show', $exhibitor))
         ->assertOk()
-        ->assertSee('Pending');
+        ->assertDontSee('Pending')
+        ->assertDontSee('No Placement');
 });
 
 it('fee summary on exhibitor detail is correct', function () {

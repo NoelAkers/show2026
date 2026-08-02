@@ -165,10 +165,8 @@
                                 @endif
                             </flux:table.cell>
                             <flux:table.cell>
-                                @if ($entry->result)
-                                    <flux:badge color="green">{{ $entry->result->placementLabel() }}</flux:badge>
-                                @else
-                                    <flux:badge color="zinc">Pending</flux:badge>
+                                @if ($entry->result?->placement)
+                                    <flux:badge color="{{ $entry->result->badgeColour() }}">{{ $entry->result->placementLabel() }}</flux:badge>
                                 @endif
                             </flux:table.cell>
                         </flux:table.row>
