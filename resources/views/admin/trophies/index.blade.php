@@ -79,15 +79,15 @@
                             </flux:table.cell>
                             <flux:table.cell>
                                 <div class="flex gap-2">
-                                    @if ($trophy->is_points_based)
-                                        <flux:button size="sm" :href="route('admin.trophies.leaderboard', $trophy)" variant="ghost" wire:navigate>Leaderboard</flux:button>
-                                    @endif
                                     <flux:button size="sm" :href="route('admin.trophies.edit', $trophy)" wire:navigate>Edit</flux:button>
                                     <form method="POST" action="{{ route('admin.trophies.destroy', $trophy) }}">
                                         @csrf
                                         @method('DELETE')
                                         <flux:button size="sm" variant="danger" type="submit">Delete</flux:button>
                                     </form>
+                                    @if ($trophy->is_points_based)
+                                        <flux:button size="sm" :href="route('admin.trophies.leaderboard', $trophy)" variant="ghost" wire:navigate>Leaderboard</flux:button>
+                                    @endif
                                 </div>
                             </flux:table.cell>
                         </flux:table.row>
