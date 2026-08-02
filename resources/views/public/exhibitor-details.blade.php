@@ -13,7 +13,8 @@
                 </p>
                 <h3>How to enter</h3>
                 <p>
-                    Details of the classes are in the printed schedule or click the link in the menu. Adults pay 50p per entry up to 10 entries, additional entries are free.
+                    Details of the classes are in the printed schedule or click the link in the menu. A downloadable PDF copy of the show schedule is available <a href="{{ asset('files/CalverleyHS26.pdf') }}" rel="noopener noreferrer" target="_blank">here</a>. 
+                    Adults pay 50p per entry up to 10 entries, additional entries are free.
                     For juniors (up to age 15), entry is free. We can take payment in cash or by card.
                 </p>
                 <p>

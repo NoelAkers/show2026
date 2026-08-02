@@ -19,6 +19,9 @@
                 <p>
                     Trophy winners  will be announced and trophies awarded around 3.30 pm. Some items from the baking, preserves, fruit, vegetable and flowers sections will be available to buy in the schoolroom, for a suitable donation. The show will close at 4.30 pm.
                 </p>
+                <p>
+                    A downloadable PDF copy of the show schedule is available <a href="{{ asset('files/CalverleyHS26.pdf') }}" rel="noopener noreferrer" target="_blank">here</a>.
+                </p>
             </div>
         </main>
     </div>
