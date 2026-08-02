@@ -55,25 +55,8 @@ return [
             'unix_socket' => env('DB_SOCKET', ''),
             'charset' => env('DB_CHARSET', 'utf8mb4'),
             'collation' => env('DB_COLLATION', 'utf8mb4_unicode_ci'),
-            'dump' => [ 
-                'exclude_tables' => [
-                    'cache',
-                    'cache_locks',
-                    'sessions',
-                    'failed_jobs', 
-                    'jobs',
-                    'job_batches',
-                    'migrations',
-                    'password_reset_tokens', 
-                    'personal_access_tokens',
-                    'prize_levels',
-                    'show_classes',
-                    'show_class_trophy',
-                    'show_sections',
-                    'show_section_user',
-                    'trophies',
-                    'trophy_restrictions',
-                ]
+            'dump' => [
+                'exclude_tables' => array_filter(explode(',', (string) env('DB_DUMP', 'cache,cache_locks,sessions,failed_jobs,jobs,job_batches,migrations,password_reset_tokens,personal_access_tokens,prize_levels,show_classes,show_class_trophy,show_sections,show_section_user,trophies,trophy_restrictions'))),
             ],
             'prefix' => '',
             'prefix_indexes' => true,
