@@ -29,7 +29,7 @@ if (env('BACKUP_MODE') === 'show') {
     Schedule::command('backup:clean')->hourly();
     Schedule::command('backup:monitor')->everyFifteenMinutes();
 } else {
-    Schedule::command('backup:run --only-db --disable-notifications')->hourly();
+    Schedule::command('backup:run --only-db --disable-notifications')->hourly()->between('08:00', '22:59');
     Schedule::command('backup:clean')->daily()->at('01:00');
     Schedule::command('backup:monitor')->daily()->at('01:30');
 }

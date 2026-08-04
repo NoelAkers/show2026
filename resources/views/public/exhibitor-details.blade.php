@@ -60,7 +60,7 @@
                 </p>
                 <h3>Photography Classes 78, 79, 83</h3>
                 <p>
-                    Photos should have been taken after August 2025 and be <em><strong>emailed in jpeg format</strong></em> (no pngs)to: anne.akers@oleana.co.uk by noon on August 14th.
+                    Photos should have been taken after August 2025 and be <em><strong>emailed in jpeg format</strong></em> (no pngs)to: <a href="mailto:photos@villageshow.org">photos@villageshow.org</a> by noon on August 14th.
                     Entry fees should be paid at the show, children’s entries are free. Photo entries will be displayed on-screen in the schoolroom.
                 </p>
                 <h3>Children’s Classes 84-86</h3>
