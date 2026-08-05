@@ -14,8 +14,8 @@
             flex-direction: column;
             justify-content: center; /* centers vertically */
             /* align-items: center;
-            text-align: center; */
-            gap: 2mm;
+            text-align: center; 
+            gap: 2mm;*/
             font-family: ui-sans-serif, system-ui, sans-serif;
             box-sizing: border-box;
         }
@@ -51,6 +51,7 @@
             font-weight: 900;
             letter-spacing: -0.02em;
             line-height: 1;
+            margin-top: 4mm;
             font-variant-numeric: tabular-nums;
             text-align: center;
         }
@@ -148,7 +149,7 @@
             @foreach ($entries as $entry)
                 <div class="label">
                     {{-- <div class="label-section">{{ $entry->showClass->showSection->name }}</div> --}}
-                    <div class="label-class">{{ $entry->showClass->id }}. {{ Str::limit($entry->showClass->name, 30) }}</div>
+                    <div class="label-class">{{ $entry->showClass->id }}. {{ Str::limit($entry->showClass->name, 60) }}</div>
                     <hr class="label-divider">
                     <div class="label-entry">{{ $entry->formatted_entry_number }}</div>
                     <div class="label-exhibitor">Exhibitor: {{ $exhibitor->id }}</div>
