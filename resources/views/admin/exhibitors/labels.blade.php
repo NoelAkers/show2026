@@ -12,9 +12,10 @@
             padding: 1mm 2mm;
             display: flex;
             flex-direction: column;
-            align-items: center;
-            text-align: center;
-            gap: 0.8mm;
+            justify-content: center; /* centers vertically */
+            /* align-items: center;
+            text-align: center; */
+            gap: 2mm;
             font-family: ui-sans-serif, system-ui, sans-serif;
             box-sizing: border-box;
         }
@@ -28,9 +29,10 @@
         }
 
         .label-class {
-            font-size: 11px;
-            font-weight: 700;
+            font-size: 10px;
+            font-weight: 500;
             line-height: 1.2;
+            text-align: center;
         }
 
         .label-divider {
@@ -40,7 +42,8 @@
 
         .label-exhibitor {
             font-size: 7px;
-            color: #555;
+            color: #777;
+            text-align: right;
         }
 
         .label-entry {
@@ -49,6 +52,7 @@
             letter-spacing: -0.02em;
             line-height: 1;
             font-variant-numeric: tabular-nums;
+            text-align: center;
         }
 
 @media screen {
@@ -146,8 +150,8 @@
                     {{-- <div class="label-section">{{ $entry->showClass->showSection->name }}</div> --}}
                     <div class="label-class">{{ $entry->showClass->id }}. {{ Str::limit($entry->showClass->name, 30) }}</div>
                     <hr class="label-divider">
-                    <div class="label-exhibitor">Exhibitor: {{ $exhibitor->id }}</div>
                     <div class="label-entry">{{ $entry->formatted_entry_number }}</div>
+                    <div class="label-exhibitor">Exhibitor: {{ $exhibitor->id }}</div>
                 </div>
             @endforeach
         </div>
