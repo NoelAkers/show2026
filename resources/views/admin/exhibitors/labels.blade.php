@@ -31,27 +31,27 @@
         .label-class {
             font-size: 10px;
             font-weight: 500;
-            line-height: 1.2;
+            line-height: 1.1;
             text-align: center;
         }
 
         .label-divider {
             width: 100%;
-            border-top: 1px solid #ddd;
+            border-top: 1px solid black;
         }
 
         .label-exhibitor {
             font-size: 7px;
-            color: #777;
+            color: black;
             text-align: right;
         }
 
         .label-entry {
             font-size: 36px;
-            font-weight: 900;
+            font-weight: 700;
             letter-spacing: -0.02em;
             line-height: 1;
-            margin-top: 4mm;
+            margin-top: 2mm;
             font-variant-numeric: tabular-nums;
             text-align: center;
         }
