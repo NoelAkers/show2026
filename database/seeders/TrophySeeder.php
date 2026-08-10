@@ -95,5 +95,21 @@ class TrophySeeder extends Seeder
             'judge_id' => $judge->id,
             'steward_id' => $steward->id,
         ]);
+
+        Trophy::create([
+            'name' => 'The Trustees Fancy Trophy',
+            'description' => 'Favorite exhibit in the Show chosen by the CHS Trustees',
+            'is_points_based' => false,
+            'judge_id' => $judge->id,
+            'steward_id' => $steward->id,
+        ]);
+
+        Trophy::create([
+            'name' => 'The President\'s Junior Award',
+            'description' => 'Best exhibit in Junior Classes',
+            'is_points_based' => false,
+            'judge_id' => $judge->id,
+            'steward_id' => $steward->id,
+        ]);
     }
 }
