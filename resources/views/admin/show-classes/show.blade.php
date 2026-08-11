@@ -5,7 +5,7 @@
                 <flux:button :href="route('admin.show-sections.show-classes.index', $showSection)" variant="ghost" icon="arrow-left" size="sm" wire:navigate>
                     {{ $showSection->name }}
                 </flux:button>
-                <flux:heading size="xl">{{ $showClass->name }}</flux:heading>
+                <flux:heading size="xl">{{ $showClass->id }}. {{ $showClass->name }}</flux:heading>
             </div>
             <flux:button :href="route('admin.show-sections.show-classes.edit', [$showSection, $showClass])" wire:navigate>Edit Class</flux:button>
         </div>

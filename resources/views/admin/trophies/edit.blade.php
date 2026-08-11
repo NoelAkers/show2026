@@ -68,7 +68,7 @@
                                                         value="{{ $class->id }}"
                                                         :checked="in_array($class->id, old('class_ids', $trophy->showClasses->pluck('id')->toArray()))"
                                                     />
-                                                    <span class="text-sm">{{ $class->name }}</span>
+                                                    <span class="text-sm">{{ $class->id }}. {{ $class->name }}</span>
                                                 </div>
                                             @endforeach
                                         </div>

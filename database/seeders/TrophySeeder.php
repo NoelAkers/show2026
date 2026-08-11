@@ -34,7 +34,7 @@ class TrophySeeder extends Seeder
         Trophy::create([
             'name' => 'The "C.R.A.G." Rose Bowl',
             'description' => 'Most points in Classes 32-36 by a Calverley resident and/or Calverley Allotment Holder showing the greatest variety in garden flowers.',
-        ])->showClasses()->attach(range(31, 36));
+        ])->showClasses()->attach(range(32, 36));
 
         Trophy::create([
             'name' => 'The Alf Parker Rose Bowl',

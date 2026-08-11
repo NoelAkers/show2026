@@ -8,7 +8,7 @@
 
                 @foreach ($section->showClasses as $class)
                     <div class="mb-4">
-                        <flux:subheading class="mb-2">{{ $class->name }}</flux:subheading>
+                        <flux:subheading class="mb-2">{{ $class->id }}. {{ $class->name }}</flux:subheading>
 
                         @if ($class->entries->isEmpty())
                             <flux:text class="text-zinc-500 italic">Results pending.</flux:text>

@@ -66,6 +66,23 @@ it('admin can update name, description, and class assignments', function () {
     expect($classIds)->not->toContain($class1->id);
 });
 
+it('create form shows each class preceded by its class ID', function () {
+    $class = ShowClass::factory()->create(['name' => 'Calverley Master Gardener']);
+
+    $this->actingAs(trophyAdmin())
+        ->get(route('admin.trophies.create'))
+        ->assertSee($class->id.'. '.$class->name);
+});
+
+it('edit form shows each class preceded by its class ID', function () {
+    $trophy = Trophy::factory()->create();
+    $class = ShowClass::factory()->create(['name' => 'Best Rose']);
+
+    $this->actingAs(trophyAdmin())
+        ->get(route('admin.trophies.edit', $trophy))
+        ->assertSee($class->id.'. '.$class->name);
+});
+
 it('a class can be assigned to multiple trophies simultaneously', function () {
     $class = ShowClass::factory()->create();
     $trophy1 = Trophy::factory()->create();

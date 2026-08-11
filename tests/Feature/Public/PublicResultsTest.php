@@ -26,6 +26,15 @@ test('placement labels are shown per result', function () {
     $response->assertSee('1st Place');
 });
 
+test('class name is preceded by class ID', function () {
+    $section = ShowSection::factory()->create(['sort_order' => 1]);
+    $class = ShowClass::factory()->for($section)->create(['sort_order' => 1, 'name' => 'Roses']);
+
+    $response = $this->get(route('public.results'));
+
+    $response->assertSee($class->id.'. Roses');
+});
+
 test('points totals are not present in the response', function () {
     $section = ShowSection::factory()->create(['sort_order' => 1]);
     $class = ShowClass::factory()->for($section)->create(['sort_order' => 1]);

@@ -26,7 +26,17 @@ it('admin can view class list for a section', function () {
     $this->actingAs(classAdmin())
         ->get(route('admin.show-sections.show-classes.index', $section))
         ->assertOk()
-        ->assertSee('Roses');
+        ->assertSee($class->id.'. Roses');
+});
+
+it('class show page shows the class ID preceding the name', function () {
+    $section = ShowSection::factory()->create();
+    $class = ShowClass::factory()->create(['show_section_id' => $section->id, 'name' => 'Roses']);
+
+    $this->actingAs(classAdmin())
+        ->get(route('admin.show-sections.show-classes.show', [$section, $class]))
+        ->assertOk()
+        ->assertSee($class->id.'. Roses');
 });
 
 it('admin can create a class with valid data', function () {
