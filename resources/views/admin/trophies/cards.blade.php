@@ -193,7 +193,7 @@
 </head>
 <body>
     <div class="screen-header">
-        <a href="{{ route('admin.trophies.index') }}">← Trophies</a>
+        <a href="{{ route('admin.leaderboard') }}">← Leaderboard</a>
         <h1>
             Trophy Cards —
             @if ($filter === 'unprinted')

@@ -13,6 +13,7 @@ use App\Http\Controllers\Admin\ShowSectionController;
 use App\Http\Controllers\Admin\StewardController;
 use App\Http\Controllers\Admin\TrophyCardsController;
 use App\Http\Controllers\Admin\TrophyController;
+use App\Http\Controllers\Admin\TrophyListController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Exhibitor\ExhibitorController as ExhibitorSelfController;
@@ -69,6 +70,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     Route::get('trophies/{trophy}/leaderboard', [TrophyController::class, 'leaderboard'])->name('trophies.leaderboard');
     Route::get('trophy-cards', [TrophyCardsController::class, 'index'])->name('trophy-cards');
     Route::post('trophy-cards/mark-printed', [TrophyCardsController::class, 'markPrinted'])->name('trophy-cards.mark-printed');
+    Route::get('trophy-list', TrophyListController::class)->name('trophy-list');
 });
 
 Route::prefix('judge')->name('judge.')->middleware(['auth', 'judge'])->group(function () {

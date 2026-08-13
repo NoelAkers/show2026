@@ -1,92 +1,136 @@
 <?php
 
+use App\Livewire\Admin\Leaderboard;
 use App\Models\Entry;
 use App\Models\Exhibitor;
-use App\Models\Result;
 use App\Models\ShowClass;
-use App\Models\ShowSection;
+use App\Models\Trophy;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Livewire\Livewire;
 
 uses(RefreshDatabase::class);
 
-it('leaderboard shows exhibitors in descending points order', function () {
+it('lists trophies with name, description and type', function () {
     $admin = User::factory()->admin()->create();
-    $section = ShowSection::factory()->create();
-    $class = ShowClass::factory()->create(['show_section_id' => $section->id]);
-
-    $exhibitorA = Exhibitor::factory()->create(['first_name' => 'Alice', 'last_name' => 'Smith', 'full_name' => 'Alice Smith', 'sort_name' => 'Smith, Alice']);
-    $exhibitorB = Exhibitor::factory()->create(['first_name' => 'Bob', 'last_name' => 'Jones', 'full_name' => 'Bob Jones', 'sort_name' => 'Jones, Bob']);
-
-    $entryA = Entry::factory()->create(['show_class_id' => $class->id, 'exhibitor_id' => $exhibitorA->id]);
-    $entryB = Entry::factory()->create(['show_class_id' => $class->id, 'exhibitor_id' => $exhibitorB->id]);
-
-    Result::factory()->create(['entry_id' => $entryA->id, 'placement' => '1st']); // 3 points
-    Result::factory()->create(['entry_id' => $entryB->id, 'placement' => '3rd']); // 1 point
-
-    $response = $this->actingAs($admin)->get(route('admin.leaderboard'));
-
-    $response->assertOk();
-    $content = $response->getContent();
-    // Alice (1st, 3pts) should appear before Bob (3rd, 1pt)
-    expect(strpos($content, 'Alice'))->toBeLessThan(strpos($content, 'Bob'));
-});
-
-it('section filter shows only points from that section', function () {
-    $admin = User::factory()->admin()->create();
-    $section1 = ShowSection::factory()->create();
-    $section2 = ShowSection::factory()->create();
-    $class1 = ShowClass::factory()->create(['show_section_id' => $section1->id]);
-    $class2 = ShowClass::factory()->create(['show_section_id' => $section2->id]);
-
-    $exhibitor = Exhibitor::factory()->create();
-    $entry1 = Entry::factory()->create(['show_class_id' => $class1->id, 'exhibitor_id' => $exhibitor->id]);
-    $entry2 = Entry::factory()->create(['show_class_id' => $class2->id, 'exhibitor_id' => $exhibitor->id]);
-
-    Result::factory()->create(['entry_id' => $entry1->id, 'placement' => '1st']); // 3 pts in section1
-    Result::factory()->create(['entry_id' => $entry2->id, 'placement' => '1st']); // 3 pts in section2
-
-    // Without filter: 6 pts total
-    $this->actingAs($admin)
-        ->get(route('admin.leaderboard'))
-        ->assertOk()
-        ->assertSee('6');
-
-    // With section1 filter: 3 pts
-    $this->actingAs($admin)
-        ->get(route('admin.leaderboard', ['section' => $section1->id]))
-        ->assertOk()
-        ->assertSee('3');
-});
-
-it('exhibitor with no results shows 0 points', function () {
-    $admin = User::factory()->admin()->create();
-    Exhibitor::factory()->create(['first_name' => 'Carol', 'last_name' => 'Doe', 'full_name' => 'Carol Doe', 'sort_name' => 'Doe, Carol']);
+    Trophy::factory()->pointsBased()->create(['name' => 'Best in Show', 'description' => 'The top prize']);
 
     $this->actingAs($admin)
         ->get(route('admin.leaderboard'))
         ->assertOk()
-        ->assertSee('Carol')
-        ->assertSee('0');
+        ->assertSee('Best in Show')
+        ->assertSee('The top prize')
+        ->assertSee('Points');
 });
 
-it('tied exhibitors appear at the same rank position', function () {
+it('does not show trophy management controls', function () {
     $admin = User::factory()->admin()->create();
-    $section = ShowSection::factory()->create();
-    $class = ShowClass::factory()->create(['show_section_id' => $section->id]);
-
-    $exhibitorA = Exhibitor::factory()->create(['first_name' => 'Alice', 'last_name' => 'A', 'full_name' => 'Alice A', 'sort_name' => 'A, Alice']);
-    $exhibitorB = Exhibitor::factory()->create(['first_name' => 'Bob', 'last_name' => 'B', 'full_name' => 'Bob B', 'sort_name' => 'B, Bob']);
-
-    $entryA = Entry::factory()->create(['show_class_id' => $class->id, 'exhibitor_id' => $exhibitorA->id]);
-    $entryB = Entry::factory()->create(['show_class_id' => $class->id, 'exhibitor_id' => $exhibitorB->id]);
-
-    Result::factory()->create(['entry_id' => $entryA->id, 'placement' => '2nd']); // 2 pts
-    Result::factory()->create(['entry_id' => $entryB->id, 'placement' => '2nd']); // 2 pts — tie
+    Trophy::factory()->pointsBased()->create();
 
     $response = $this->actingAs($admin)->get(route('admin.leaderboard'));
+
     $response->assertOk()
-        ->assertSee('Alice A')
-        ->assertSee('Bob B')
-        ->assertSee('2'); // both have 2 points
+        ->assertDontSee('Add Trophy')
+        ->assertDontSee('Delete');
+});
+
+it('shows the trophy cards and trophy list buttons', function () {
+    $admin = User::factory()->admin()->create();
+
+    $this->actingAs($admin)
+        ->get(route('admin.leaderboard'))
+        ->assertOk()
+        ->assertSee('Trophy Cards')
+        ->assertSee('Trophy List')
+        ->assertSee(route('admin.trophy-cards'), false)
+        ->assertSee(route('admin.trophy-list'), false);
+});
+
+it('links a points-based trophy leader to its trophy leaderboard', function () {
+    $admin = User::factory()->admin()->create();
+    $trophy = Trophy::factory()->pointsBased()->create();
+
+    $this->actingAs($admin)
+        ->get(route('admin.leaderboard'))
+        ->assertOk()
+        ->assertSee(route('admin.trophies.leaderboard', $trophy), false);
+});
+
+it('guest is redirected to login', function () {
+    $this->get(route('admin.leaderboard'))
+        ->assertRedirect(route('login'));
+});
+
+it('judge receives 403', function () {
+    $this->actingAs(User::factory()->judge()->create())
+        ->get(route('admin.leaderboard'))
+        ->assertForbidden();
+});
+
+it('admin can save a winning entry for a judge-awarded trophy by entry number', function () {
+    $admin = User::factory()->admin()->create();
+    $trophy = Trophy::factory()->judgeAwarded()->create();
+    $class = ShowClass::factory()->create();
+    $exhibitor = Exhibitor::factory()->create(['full_name' => 'Winning Exhibitor']);
+    $entry = Entry::factory()->create(['show_class_id' => $class->id, 'exhibitor_id' => $exhibitor->id]);
+
+    $component = Livewire::actingAs($admin)
+        ->test(Leaderboard::class)
+        ->set("winningEntries.{$trophy->id}", $entry->formatted_entry_number)
+        ->call('saveTrophy', $trophy->id);
+
+    expect($trophy->fresh()->winning_entry_id)->toBe($entry->id);
+    $component->assertSee('Winning Exhibitor');
+});
+
+it('shows the current leader name and winning entry number for a judge-awarded trophy', function () {
+    $admin = User::factory()->admin()->create();
+    $class = ShowClass::factory()->create();
+    $exhibitor = Exhibitor::factory()->create(['full_name' => 'Winning Exhibitor']);
+    $entry = Entry::factory()->create(['show_class_id' => $class->id, 'exhibitor_id' => $exhibitor->id]);
+    Trophy::factory()->judgeAwarded()->create(['winning_entry_id' => $entry->id]);
+
+    $this->actingAs($admin)
+        ->get(route('admin.leaderboard'))
+        ->assertOk()
+        ->assertSee('Winning Exhibitor')
+        ->assertSee($entry->formatted_entry_number);
+});
+
+it('shows "No winner yet" for a judge-awarded trophy with no winning entry', function () {
+    $admin = User::factory()->admin()->create();
+    Trophy::factory()->judgeAwarded()->create(['winning_entry_id' => null]);
+
+    $this->actingAs($admin)
+        ->get(route('admin.leaderboard'))
+        ->assertOk()
+        ->assertSee('No winner yet');
+});
+
+it('admin sees an error when entering an invalid entry number', function () {
+    $admin = User::factory()->admin()->create();
+    $trophy = Trophy::factory()->judgeAwarded()->create();
+
+    Livewire::actingAs($admin)
+        ->test(Leaderboard::class)
+        ->set("winningEntries.{$trophy->id}", '999')
+        ->call('saveTrophy', $trophy->id)
+        ->assertHasErrors(["winningEntries.{$trophy->id}"]);
+
+    expect($trophy->fresh()->winning_entry_id)->toBeNull();
+});
+
+it('admin can clear the winning entry by submitting an empty entry number', function () {
+    $admin = User::factory()->admin()->create();
+    $class = ShowClass::factory()->create();
+    $exhibitor = Exhibitor::factory()->create();
+    $entry = Entry::factory()->create(['show_class_id' => $class->id, 'exhibitor_id' => $exhibitor->id]);
+    $trophy = Trophy::factory()->judgeAwarded()->create(['winning_entry_id' => $entry->id]);
+
+    Livewire::actingAs($admin)
+        ->test(Leaderboard::class)
+        ->set("winningEntries.{$trophy->id}", '')
+        ->call('saveTrophy', $trophy->id);
+
+    expect($trophy->fresh()->winning_entry_id)->toBeNull();
 });
