@@ -54,6 +54,11 @@ class ExhibitorController extends Controller
 
         abort_unless($exhibitor, 404);
 
+        $request->merge([
+            'is_resident' => $request->boolean('is_resident'),
+            'is_novice' => $request->boolean('is_novice'),
+        ]);
+
         $validated = $request->validate([
             'first_name' => ['required', 'string', 'max:255'],
             'last_name' => ['required', 'string', 'max:255'],

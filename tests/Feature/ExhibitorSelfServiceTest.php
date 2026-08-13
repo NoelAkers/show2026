@@ -131,6 +131,22 @@ it('exhibitor can update their editable profile fields', function () {
     expect($exhibitor->is_novice)->toBeFalse();
 });
 
+it('unchecking is_resident and is_novice checkboxes clears them', function () {
+    $user = User::factory()->withExhibitor()->create();
+    $user->exhibitor->update(['is_resident' => true, 'is_novice' => true]);
+
+    $this->actingAs($user)->put(route('exhibitor.profile.update'), [
+        'first_name' => 'Jane',
+        'last_name' => 'Smith',
+        'full_name' => 'Jane Smith',
+        'type' => 'adult',
+    ])->assertRedirect(route('exhibitor.dashboard'));
+
+    $exhibitor = $user->fresh()->exhibitor;
+    expect($exhibitor->is_resident)->toBeFalse();
+    expect($exhibitor->is_novice)->toBeFalse();
+});
+
 it('exhibitor can update their email address', function () {
     $user = User::factory()->withExhibitor()->create();
 
