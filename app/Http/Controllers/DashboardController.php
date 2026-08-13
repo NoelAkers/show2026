@@ -27,17 +27,21 @@ class DashboardController extends Controller
 
         $sectionCount = ShowSection::count();
         $classCount = ShowClass::count();
+        $classesWithEntries = ShowClass::has('entries')->count();
+        $classesAwaitingJudging = ShowClass::has('entries')->whereDoesntHave('entries.result')->count();
         $adultCount = Exhibitor::where('type', 'adult')->count();
         $juniorCount = Exhibitor::where('type', 'junior')->count();
         $entryCount = Entry::count();
         $resultsEntered = Result::whereNotNull('placement')->count();
-        $resultsOutstanding = $entryCount - $resultsEntered;
+        $resultsOutstanding = Entry::whereDoesntHave('result')->count();
         $paidCount = Exhibitor::where('type', 'adult')->where('has_paid', true)->count();
         $unpaidCount = Exhibitor::where('type', 'adult')->where('has_paid', false)->count();
 
         return view('dashboard', compact(
             'sectionCount',
             'classCount',
+            'classesWithEntries',
+            'classesAwaitingJudging',
             'adultCount',
             'juniorCount',
             'entryCount',

@@ -69,7 +69,23 @@ test('correct results entered and outstanding counts are displayed', function ()
     $this->actingAs(User::factory()->admin()->create())
         ->get(route('dashboard'))
         ->assertSee('1')
-        ->assertSee('2 outstanding');
+        ->assertSee('1 outstanding');
+});
+
+test('correct class counts are displayed', function () {
+    $section = ShowSection::factory()->create();
+    ShowClass::factory()->for($section)->create();
+    $judgedClass = ShowClass::factory()->for($section)->create();
+    $awaitingClass = ShowClass::factory()->for($section)->create();
+
+    Entry::factory()->for($judgedClass)->has(Result::factory())->create();
+    Entry::factory()->for($awaitingClass)->create();
+
+    $this->actingAs(User::factory()->admin()->create())
+        ->get(route('dashboard'))
+        ->assertSee('3')
+        ->assertSee('2 with entries')
+        ->assertSee('1 awaiting judging');
 });
 
 test('correct paid and unpaid exhibitor count is displayed', function () {
