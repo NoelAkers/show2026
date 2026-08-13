@@ -3,9 +3,6 @@
         <div class="flex items-center justify-between">
             <flux:heading size="xl">Trophies</flux:heading>
             <div class="flex gap-2">
-                <flux:button :href="route('admin.trophy-cards')" variant="ghost" icon="printer">
-                    Trophy Cards
-                </flux:button>
                 <flux:button :href="route('admin.trophies.create')" variant="primary" icon="plus" wire:navigate>
                     Add Trophy
                 </flux:button>
@@ -29,7 +26,6 @@
                     <flux:table.column>Description</flux:table.column>
                     <flux:table.column>Type</flux:table.column>
                     <flux:table.column>Classes / Personnel</flux:table.column>
-                    <flux:table.column>Current Winner(s)</flux:table.column>
                     <flux:table.column></flux:table.column>
                 </flux:table.columns>
                 <flux:table.rows>
@@ -66,22 +62,6 @@
                                 @endif
                             </flux:table.cell>
                             <flux:table.cell>
-                                @if ($trophy->is_points_based)
-                                    @php $winners = $trophy->winners(); @endphp
-                                    @if ($winners->isEmpty())
-                                        <span class="text-zinc-400">No winner yet</span>
-                                    @else
-                                        {{ $winners->pluck('exhibitor')->pluck('full_name')->join(', ') }}
-                                    @endif
-                                @else
-                                    @if ($trophy->winningEntry)
-                                        {{ $trophy->winningEntry->exhibitor->full_name }}
-                                    @else
-                                        <span class="text-zinc-400">No winner yet</span>
-                                    @endif
-                                @endif
-                            </flux:table.cell>
-                            <flux:table.cell>
                                 <div class="flex gap-2">
                                     <flux:button size="sm" :href="route('admin.trophies.edit', $trophy)" wire:navigate>Edit</flux:button>
                                     <form method="POST" action="{{ route('admin.trophies.destroy', $trophy) }}">
@@ -89,9 +69,6 @@
                                         @method('DELETE')
                                         <flux:button size="sm" variant="danger" type="submit">Delete</flux:button>
                                     </form>
-                                    @if ($trophy->is_points_based)
-                                        <flux:button size="sm" :href="route('admin.trophies.leaderboard', $trophy)" variant="ghost" wire:navigate>Leaderboard</flux:button>
-                                    @endif
                                 </div>
                             </flux:table.cell>
                         </flux:table.row>

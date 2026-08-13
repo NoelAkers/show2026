@@ -2,7 +2,6 @@
 
 use App\Models\Entry;
 use App\Models\Exhibitor;
-use App\Models\Result;
 use App\Models\ShowClass;
 use App\Models\Trophy;
 use App\Models\User;
@@ -127,32 +126,6 @@ it('judge receives 403 on trophy routes', function () {
         ->assertForbidden();
 });
 
-it('trophy index shows the current winner for each trophy', function () {
-    $trophy = Trophy::factory()->create(['name' => 'Grand Champion']);
-    $class = ShowClass::factory()->create(['max_entries_per_exhibitor' => 20]);
-    $trophy->showClasses()->attach($class->id);
-
-    $winner = Exhibitor::factory()->create(['first_name' => 'Jane', 'last_name' => 'Smith']);
-    $entry = Entry::factory()->create(['show_class_id' => $class->id, 'exhibitor_id' => $winner->id]);
-    Result::factory()->create(['entry_id' => $entry->id, 'placement' => '1st']);
-
-    $this->actingAs(trophyAdmin())
-        ->get(route('admin.trophies.index'))
-        ->assertOk()
-        ->assertSee($winner->full_name);
-});
-
-it('trophy index shows "No winner yet" when no results entered', function () {
-    $trophy = Trophy::factory()->create(['name' => 'Empty Trophy']);
-    $class = ShowClass::factory()->create();
-    $trophy->showClasses()->attach($class->id);
-
-    $this->actingAs(trophyAdmin())
-        ->get(route('admin.trophies.index'))
-        ->assertOk()
-        ->assertSee('No winner yet');
-});
-
 it('trophy index shows type badge for each trophy', function () {
     Trophy::factory()->pointsBased()->create(['name' => 'Points Trophy']);
     $judge = User::factory()->judge()->create();
@@ -264,23 +237,6 @@ it('rejects an unknown winning entry number', function () {
     expect($trophy->fresh()->winning_entry_id)->toBeNull();
 });
 
-it('trophy index shows the winning exhibitor for a judge-awarded trophy', function () {
-    $judge = User::factory()->judge()->create();
-    $class = ShowClass::factory()->create();
-    $exhibitor = Exhibitor::factory()->create(['first_name' => 'Carol', 'last_name' => 'White', 'full_name' => 'Carol White', 'sort_name' => 'White, Carol']);
-    $entry = Entry::factory()->create(['show_class_id' => $class->id, 'exhibitor_id' => $exhibitor->id]);
-    Trophy::factory()->judgeAwarded()->create([
-        'name' => 'Judge Award',
-        'judge_id' => $judge->id,
-        'winning_entry_id' => $entry->id,
-    ]);
-
-    $this->actingAs(trophyAdmin())
-        ->get(route('admin.trophies.index'))
-        ->assertOk()
-        ->assertSee('Carol White');
-});
-
 it('admin can create a trophy with eligibility restrictions', function () {
     $class = ShowClass::factory()->create();
 
@@ -346,25 +302,4 @@ it('restrictions are cleared when trophy is changed to judge-awarded', function 
         ->assertRedirect(route('admin.trophies.index'));
 
     expect(DB::table('trophy_restrictions')->where('trophy_id', $trophy->id)->count())->toBe(0);
-});
-
-it('trophy index lists all tied winners', function () {
-    $trophy = Trophy::factory()->create(['name' => 'Tied Trophy']);
-    $class = ShowClass::factory()->create(['max_entries_per_exhibitor' => 20]);
-    $trophy->showClasses()->attach($class->id);
-
-    $exhibitor1 = Exhibitor::factory()->create(['first_name' => 'Alice', 'last_name' => 'Adams']);
-    $exhibitor2 = Exhibitor::factory()->create(['first_name' => 'Bob', 'last_name' => 'Brown']);
-
-    $entry1 = Entry::factory()->create(['show_class_id' => $class->id, 'exhibitor_id' => $exhibitor1->id]);
-    $entry2 = Entry::factory()->create(['show_class_id' => $class->id, 'exhibitor_id' => $exhibitor2->id]);
-
-    Result::factory()->create(['entry_id' => $entry1->id, 'placement' => '1st']);
-    Result::factory()->create(['entry_id' => $entry2->id, 'placement' => '1st']);
-
-    $this->actingAs(trophyAdmin())
-        ->get(route('admin.trophies.index'))
-        ->assertOk()
-        ->assertSee($exhibitor1->full_name)
-        ->assertSee($exhibitor2->full_name);
 });

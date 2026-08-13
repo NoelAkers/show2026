@@ -19,7 +19,7 @@ class TrophyController extends Controller
 {
     public function index(): View
     {
-        $trophies = Trophy::with(['showClasses', 'judge', 'steward', 'winningEntry.exhibitor'])->orderBy('id')->get();
+        $trophies = Trophy::with(['showClasses', 'judge', 'steward'])->orderBy('id')->get();
 
         return view('admin.trophies.index', compact('trophies'));
     }
