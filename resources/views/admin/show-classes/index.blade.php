@@ -23,20 +23,20 @@
         @else
             <flux:table>
                 <flux:table.columns>
-                    <flux:table.column>Name</flux:table.column>
-                    <flux:table.column>Description</flux:table.column>
-                    <flux:table.column>Max Entries</flux:table.column>
-                    <flux:table.column>Sort Order</flux:table.column>
-                    <flux:table.column>Entries</flux:table.column>
-                    <flux:table.column></flux:table.column>
+                    <flux:table.column class="w-1/5">Name</flux:table.column>
+                    <flux:table.column class="w-[35%]">Description</flux:table.column>
+                    <flux:table.column class="w-[12%]">Max Entries</flux:table.column>
+                    <flux:table.column class="w-[10%]">Sort Order</flux:table.column>
+                    <flux:table.column class="w-[8%]">Entries</flux:table.column>
+                    <flux:table.column class="w-[15%]"></flux:table.column>
                 </flux:table.columns>
                 <flux:table.rows>
                     @foreach ($classes as $class)
                         <flux:table.row :key="$class->id">
-                            <flux:table.cell variant="strong">
+                            <flux:table.cell variant="strong" class="max-w-0 truncate" title="{{ $class->id }}. {{ $class->name }}">
                                 <a href="{{ route('admin.show-sections.show-classes.show', [$showSection, $class]) }}" class="hover:underline" wire:navigate>{{ $class->id }}. {{ $class->name }}</a>
                             </flux:table.cell>
-                            <flux:table.cell>{{ $class->description ?? '—' }}</flux:table.cell>
+                            <flux:table.cell class="max-w-0 truncate" title="{{ $class->description }}">{{ $class->description ?? '—' }}</flux:table.cell>
                             <flux:table.cell>{{ $class->max_entries_per_exhibitor }}</flux:table.cell>
                             <flux:table.cell>{{ $class->sort_order }}</flux:table.cell>
                             <flux:table.cell>{{ $class->entries()->count() }}</flux:table.cell>

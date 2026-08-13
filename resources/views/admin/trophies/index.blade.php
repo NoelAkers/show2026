@@ -35,8 +35,12 @@
                 <flux:table.rows>
                     @foreach ($trophies as $trophy)
                         <flux:table.row :key="$trophy->id">
-                            <flux:table.cell variant="strong">{{ $trophy->name }}</flux:table.cell>
-                            <flux:table.cell>{{ $trophy->description ?? '—' }}</flux:table.cell>
+                            <flux:table.cell variant="strong">
+                                <div class="max-w-[16rem] truncate" title="{{ $trophy->name }}">{{ $trophy->name }}</div>
+                            </flux:table.cell>
+                            <flux:table.cell>
+                                <div class="max-w-xs truncate" title="{{ $trophy->description }}">{{ $trophy->description ?? '—' }}</div>
+                            </flux:table.cell>
                             <flux:table.cell>
                                 @if ($trophy->is_points_based)
                                     <flux:badge color="blue">Points</flux:badge>

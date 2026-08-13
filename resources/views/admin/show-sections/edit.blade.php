@@ -17,7 +17,7 @@
 
             <flux:field>
                 <flux:label>Description</flux:label>
-                <flux:input name="description" value="{{ old('description', $showSection->description) }}" />
+                <flux:textarea name="description">{{ old('description', $showSection->description) }}</flux:textarea>
                 @error('description') <flux:error>{{ $message }}</flux:error> @enderror
             </flux:field>
 

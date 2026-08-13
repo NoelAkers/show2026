@@ -40,11 +40,15 @@
                     @foreach ($sections as $section)
                         <flux:table.row :key="$section->id">
                             <flux:table.cell variant="strong">
-                                <a href="{{ route('admin.show-sections.show-classes.index', $section) }}" class="hover:underline" wire:navigate>
-                                    {{ $section->name }}
-                                </a>
+                                <div class="max-w-[16rem] truncate" title="{{ $section->name }}">
+                                    <a href="{{ route('admin.show-sections.show-classes.index', $section) }}" class="hover:underline" wire:navigate>
+                                        {{ $section->name }}
+                                    </a>
+                                </div>
                             </flux:table.cell>
-                            <flux:table.cell>{{ $section->description ?? '—' }}</flux:table.cell>
+                            <flux:table.cell>
+                                <div class="max-w-xs truncate" title="{{ $section->description }}">{{ $section->description ?? '—' }}</div>
+                            </flux:table.cell>
                             <flux:table.cell>{{ $section->sort_order }}</flux:table.cell>
                             <flux:table.cell>{{ $section->showClasses()->count() }}</flux:table.cell>
                             <flux:table.cell>
