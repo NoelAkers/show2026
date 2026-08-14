@@ -90,12 +90,12 @@
                                         <form method="POST" action="{{ route('admin.show-sections.show-classes.results.update', [$showSection, $showClass, $entry->result]) }}" class="flex items-center gap-2">
                                             @csrf
                                             @method('PATCH')
-                                            <flux:select name="placement" class="w-44">
-                                                <flux:select.option value="">No placement</flux:select.option>
-                                                <flux:select.option value="1st" :selected="$entry->result->placement === '1st'">1st Place</flux:select.option>
-                                                <flux:select.option value="2nd" :selected="$entry->result->placement === '2nd'">2nd Place</flux:select.option>
-                                                <flux:select.option value="3rd" :selected="$entry->result->placement === '3rd'">3rd Place</flux:select.option>
-                                                <flux:select.option value="highly_commended" :selected="$entry->result->placement === 'highly_commended'">Highly Commended</flux:select.option>
+                                            <flux:select name="placement" class="w-24">
+                                                <flux:select.option value="">None</flux:select.option>
+                                                <flux:select.option value="1st" :selected="$entry->result->placement === '1st'">1st</flux:select.option>
+                                                <flux:select.option value="2nd" :selected="$entry->result->placement === '2nd'">2nd</flux:select.option>
+                                                <flux:select.option value="3rd" :selected="$entry->result->placement === '3rd'">3rd</flux:select.option>
+                                                <flux:select.option value="highly_commended" :selected="$entry->result->placement === 'highly_commended'">HC</flux:select.option>
                                             </flux:select>
                                             <flux:button size="sm" type="submit">Save</flux:button>
                                         </form>
@@ -103,12 +103,12 @@
                                         <form method="POST" action="{{ route('admin.show-sections.show-classes.results.store', [$showSection, $showClass]) }}" class="flex items-center gap-2">
                                             @csrf
                                             <input type="hidden" name="entry_id" value="{{ $entry->id }}">
-                                            <flux:select name="placement" class="w-44">
-                                                <flux:select.option value="">No placement</flux:select.option>
-                                                <flux:select.option value="1st">1st Place</flux:select.option>
-                                                <flux:select.option value="2nd">2nd Place</flux:select.option>
-                                                <flux:select.option value="3rd">3rd Place</flux:select.option>
-                                                <flux:select.option value="highly_commended">Highly Commended</flux:select.option>
+                                            <flux:select name="placement" class="w-24">
+                                                <flux:select.option value="">None</flux:select.option>
+                                                <flux:select.option value="1st">1st</flux:select.option>
+                                                <flux:select.option value="2nd">2nd</flux:select.option>
+                                                <flux:select.option value="3rd">3rd</flux:select.option>
+                                                <flux:select.option value="highly_commended">HC</flux:select.option>
                                             </flux:select>
                                             <flux:button size="sm" type="submit">Save</flux:button>
                                         </form>
