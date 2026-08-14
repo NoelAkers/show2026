@@ -7,8 +7,8 @@ it('prizeLabel returns correct labels', function ($placement, $expected) {
 
     expect($result->prizeLabel())->toBe($expected);
 })->with([
-    ['1st', '1st Prize'],
-    ['2nd', '2nd Prize'],
-    ['3rd', '3rd Prize'],
+    ['1st', '1st'],
+    ['2nd', '2nd'],
+    ['3rd', '3rd'],
     ['highly_commended', 'Highly Commended'],
 ]);

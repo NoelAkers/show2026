@@ -1,7 +1,9 @@
 <?php
 
 use App\Models\Entry;
+use App\Models\Exhibitor;
 use App\Models\PrizeLevel;
+use App\Models\Result;
 use App\Models\ShowClass;
 use App\Models\ShowSection;
 use App\Models\User;
@@ -37,6 +39,41 @@ it('class show page shows the class ID preceding the name', function () {
         ->get(route('admin.show-sections.show-classes.show', [$section, $class]))
         ->assertOk()
         ->assertSee($class->id.'. Roses');
+});
+
+it('class show page has a reprint label link for each entry', function () {
+    $section = ShowSection::factory()->create();
+    $class = ShowClass::factory()->create(['show_section_id' => $section->id]);
+    $exhibitor = Exhibitor::factory()->create();
+    $entry = Entry::factory()->for($class)->for($exhibitor)->create();
+
+    $this->actingAs(classAdmin())
+        ->get(route('admin.show-sections.show-classes.show', [$section, $class]))
+        ->assertOk()
+        ->assertSee(route('admin.exhibitors.labels', ['exhibitor' => $exhibitor, 'entries' => [$entry->id]]), false);
+});
+
+it('class show page hides print result cards button when no results have a placement', function () {
+    $section = ShowSection::factory()->create();
+    $class = ShowClass::factory()->create(['show_section_id' => $section->id]);
+    Entry::factory()->for($class)->create();
+
+    $this->actingAs(classAdmin())
+        ->get(route('admin.show-sections.show-classes.show', [$section, $class]))
+        ->assertOk()
+        ->assertDontSee('Print Result Cards');
+});
+
+it('class show page shows print result cards button when a result has a placement', function () {
+    $section = ShowSection::factory()->create();
+    $class = ShowClass::factory()->create(['show_section_id' => $section->id]);
+    $entry = Entry::factory()->for($class)->create();
+    Result::factory()->for($entry)->create(['placement' => '1st']);
+
+    $this->actingAs(classAdmin())
+        ->get(route('admin.show-sections.show-classes.show', [$section, $class]))
+        ->assertOk()
+        ->assertSee(route('admin.result-cards', ['filter' => 'all', 'show_class_id' => $class->id]));
 });
 
 it('admin can create a class with valid data', function () {

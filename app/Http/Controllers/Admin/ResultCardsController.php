@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Result;
+use App\Models\ShowClass;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -13,6 +14,7 @@ class ResultCardsController extends Controller
     public function index(Request $request): View
     {
         $filter = $request->query('filter', 'unprinted');
+        $showClassId = $request->query('show_class_id');
 
         $query = Result::with([
             'entry.showClass.showSection',
@@ -27,6 +29,10 @@ class ResultCardsController extends Controller
             ->orderByRaw("CASE results.placement WHEN '1st' THEN 1 WHEN '2nd' THEN 2 WHEN '3rd' THEN 3 WHEN 'highly_commended' THEN 4 ELSE 5 END")
             ->orderBy('entries.entry_number')
             ->select('results.*');
+
+        if ($showClassId) {
+            $query->where('entries.show_class_id', $showClassId);
+        }
 
         if ($filter === 'unprinted') {
             $query->where(function ($q) {
@@ -50,6 +56,7 @@ class ResultCardsController extends Controller
             'title' => config('show.title'),
             'allCount' => $allCount,
             'unprintedCount' => $unprintedCount,
+            'showClass' => $showClassId ? ShowClass::find($showClassId) : null,
         ]);
     }
 

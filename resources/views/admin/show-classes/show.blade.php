@@ -7,7 +7,12 @@
                 </flux:button>
                 <flux:heading size="xl">{{ $showClass->id }}. {{ $showClass->name }}</flux:heading>
             </div>
-            <flux:button :href="route('admin.show-sections.show-classes.edit', [$showSection, $showClass])" wire:navigate>Edit Class</flux:button>
+            <div class="flex gap-2">
+                @if ($showClass->entries->pluck('result')->filter(fn ($result) => $result?->placement)->isNotEmpty())
+                    <flux:button :href="route('admin.result-cards', ['filter' => 'all', 'show_class_id' => $showClass->id])" target="_blank" icon="printer">Print Result Cards</flux:button>
+                @endif
+                <flux:button :href="route('admin.show-sections.show-classes.edit', [$showSection, $showClass])" wire:navigate>Edit Class</flux:button>
+            </div>
         </div>
 
         @if (session('success'))
@@ -115,21 +120,26 @@
                                     @endif
                                 </flux:table.cell>
 
-                                {{-- Delete action --}}
+                                {{-- Actions --}}
                                 <flux:table.cell>
-                                    @if ($entry->result)
-                                        <form method="POST" action="{{ route('admin.show-sections.show-classes.results.destroy', [$showSection, $showClass, $entry->result]) }}">
-                                            @csrf
-                                            @method('DELETE')
-                                            <flux:button size="sm" variant="danger" type="submit">Delete Result</flux:button>
-                                        </form>
-                                    @else
-                                        <form method="POST" action="{{ route('admin.show-sections.show-classes.entries.destroy', [$showSection, $showClass, $entry]) }}">
-                                            @csrf
-                                            @method('DELETE')
-                                            <flux:button size="sm" variant="danger" type="submit">Delete Entry</flux:button>
-                                        </form>
-                                    @endif
+                                    <div class="flex items-center gap-2">
+                                        <flux:button :href="route('admin.exhibitors.labels', ['exhibitor' => $entry->exhibitor, 'entries' => [$entry->id]])" target="_blank" size="sm" icon="printer">
+                                            Reprint Label
+                                        </flux:button>
+                                        @if ($entry->result)
+                                            <form method="POST" action="{{ route('admin.show-sections.show-classes.results.destroy', [$showSection, $showClass, $entry->result]) }}">
+                                                @csrf
+                                                @method('DELETE')
+                                                <flux:button size="sm" variant="danger" type="submit">Delete Result</flux:button>
+                                            </form>
+                                        @else
+                                            <form method="POST" action="{{ route('admin.show-sections.show-classes.entries.destroy', [$showSection, $showClass, $entry]) }}">
+                                                @csrf
+                                                @method('DELETE')
+                                                <flux:button size="sm" variant="danger" type="submit">Delete Entry</flux:button>
+                                            </form>
+                                        @endif
+                                    </div>
                                 </flux:table.cell>
                             </flux:table.row>
                         @endforeach

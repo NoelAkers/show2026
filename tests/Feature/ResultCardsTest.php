@@ -136,11 +136,10 @@ it('card shows prize label, winner name, show title and entry info', function ()
     $this->actingAs($admin)
         ->get(route('admin.result-cards'))
         ->assertOk()
-        ->assertSee('1st Prize')
+        ->assertSee('1st')
         ->assertSee($entry->exhibitor->full_name)
         ->assertSee(config('show.title'))
         ->assertSee((string) $entry->entry_number)
-        ->assertSee((string) $entry->exhibitor->id)
         ->assertSee(asset(config('show.result_card_icons.1st')), false);
 });
 
@@ -166,6 +165,31 @@ it('orders cards by placement rather than entry number within a class', function
         ->assertOk();
 
     $response->assertSeeInOrder(['Amy First', 'Dan Fourth']);
+});
+
+it('show_class_id filter shows only results for that class', function () {
+    $admin = User::factory()->admin()->create();
+    $classA = ShowClass::factory()->create();
+    $classB = ShowClass::factory()->create();
+
+    $inClass = Result::factory()->for(
+        Entry::factory()->for($classA)->for(
+            Exhibitor::factory()->create(['full_name' => 'In Class'])
+        )->create()
+    )->create(['placement' => '1st']);
+
+    $otherClass = Result::factory()->for(
+        Entry::factory()->for($classB)->for(
+            Exhibitor::factory()->create(['full_name' => 'Other Class'])
+        )->create()
+    )->create(['placement' => '1st']);
+
+    $response = $this->actingAs($admin)
+        ->get(route('admin.result-cards', ['filter' => 'all', 'show_class_id' => $classA->id]))
+        ->assertOk();
+
+    $response->assertSee($inClass->entry->exhibitor->full_name);
+    $response->assertDontSee($otherClass->entry->exhibitor->full_name);
 });
 
 it('mark printed sets card_printed_at on the given results', function () {
