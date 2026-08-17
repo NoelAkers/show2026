@@ -193,10 +193,16 @@
 </head>
 <body>
     <div class="screen-header">
-        <a href="{{ route('admin.show-sections.index') }}">← Show Sections</a>
+        @if ($exhibitor)
+            <a href="{{ route('admin.exhibitors.show', $exhibitor) }}">← {{ $exhibitor->full_name }}</a>
+        @else
+            <a href="{{ route('admin.show-sections.index') }}">← Show Sections</a>
+        @endif
         <h1>
             @if ($showClass)
                 Result Cards — Class {{ $showClass->id }}. {{ $showClass->name }} —
+            @elseif ($exhibitor)
+                Result Cards — {{ $exhibitor->full_name }} —
             @else
                 Result Cards —
             @endif
@@ -207,11 +213,11 @@
             @endif
         </h1>
         <div class="screen-header-actions">
-            <a href="{{ route('admin.result-cards', ['filter' => 'unprinted', 'show_class_id' => $showClass?->id]) }}"
+            <a href="{{ route('admin.result-cards', ['filter' => 'unprinted', 'show_class_id' => $showClass?->id, 'exhibitor_id' => $exhibitor?->id]) }}"
                class="filter-link {{ $filter === 'unprinted' ? 'active' : '' }}">
                 Unprinted ({{ $unprintedCount }})
             </a>
-            <a href="{{ route('admin.result-cards', ['filter' => 'all', 'show_class_id' => $showClass?->id]) }}"
+            <a href="{{ route('admin.result-cards', ['filter' => 'all', 'show_class_id' => $showClass?->id, 'exhibitor_id' => $exhibitor?->id]) }}"
                class="filter-link {{ $filter === 'all' ? 'active' : '' }}">
                 All ({{ $allCount }})
             </a>
@@ -232,7 +238,7 @@
         <p style="text-align:center; color:#6b7280; padding: 40px 0;">
             @if ($filter === 'unprinted')
                 All result cards have been printed.
-                <a href="{{ route('admin.result-cards', ['filter' => 'all', 'show_class_id' => $showClass?->id]) }}" style="color:#4f46e5;">View all</a>
+                <a href="{{ route('admin.result-cards', ['filter' => 'all', 'show_class_id' => $showClass?->id, 'exhibitor_id' => $exhibitor?->id]) }}" style="color:#4f46e5;">View all</a>
             @else
                 No results to print yet.
             @endif

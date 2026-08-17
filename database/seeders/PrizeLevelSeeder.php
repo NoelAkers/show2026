@@ -12,8 +12,8 @@ class PrizeLevelSeeder extends Seeder
         PrizeLevel::create([
             'name' => 'Standard',
             'first_place_pence' => 100,
-            'second_place_pence' => 50,
-            'third_place_pence' => 25,
+            'second_place_pence' => 75,
+            'third_place_pence' => 50,
         ]);
 
         PrizeLevel::create([

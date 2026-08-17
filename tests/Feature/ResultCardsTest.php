@@ -192,6 +192,27 @@ it('show_class_id filter shows only results for that class', function () {
     $response->assertDontSee($otherClass->entry->exhibitor->full_name);
 });
 
+it('exhibitor_id filter shows only results for that exhibitor', function () {
+    $admin = User::factory()->admin()->create();
+    $exhibitorA = Exhibitor::factory()->create(['full_name' => 'Exhibitor A']);
+    $exhibitorB = Exhibitor::factory()->create(['full_name' => 'Exhibitor B']);
+
+    $forA = Result::factory()->for(
+        Entry::factory()->for($exhibitorA)->create()
+    )->create(['placement' => '1st']);
+
+    $forB = Result::factory()->for(
+        Entry::factory()->for($exhibitorB)->create()
+    )->create(['placement' => '1st']);
+
+    $response = $this->actingAs($admin)
+        ->get(route('admin.result-cards', ['filter' => 'all', 'exhibitor_id' => $exhibitorA->id]))
+        ->assertOk();
+
+    $response->assertSee($forA->entry->exhibitor->full_name);
+    $response->assertDontSee($forB->entry->exhibitor->full_name);
+});
+
 it('mark printed sets card_printed_at on the given results', function () {
     $admin = User::factory()->admin()->create();
     $result = Result::factory()->create(['placement' => '1st', 'card_printed_at' => null]);

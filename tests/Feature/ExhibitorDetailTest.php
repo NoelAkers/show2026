@@ -48,6 +48,32 @@ it('exhibitor detail shows no placement badge when no result entered', function 
         ->assertDontSee('No Placement');
 });
 
+it('print result cards button is shown when exhibitor has a placed result', function () {
+    $section = ShowSection::factory()->create();
+    $class = ShowClass::factory()->create(['show_section_id' => $section->id]);
+    $exhibitor = Exhibitor::factory()->create();
+    $entry = Entry::factory()->create(['show_class_id' => $class->id, 'exhibitor_id' => $exhibitor->id]);
+    Result::factory()->create(['entry_id' => $entry->id, 'placement' => '1st']);
+
+    $this->actingAs(User::factory()->admin()->create())
+        ->get(route('admin.exhibitors.show', $exhibitor))
+        ->assertOk()
+        ->assertSee('Print Result Cards')
+        ->assertSee(route('admin.result-cards', ['filter' => 'all', 'exhibitor_id' => $exhibitor->id]));
+});
+
+it('print result cards button is hidden when exhibitor has no placed results', function () {
+    $section = ShowSection::factory()->create();
+    $class = ShowClass::factory()->create(['show_section_id' => $section->id]);
+    $exhibitor = Exhibitor::factory()->create();
+    Entry::factory()->create(['show_class_id' => $class->id, 'exhibitor_id' => $exhibitor->id]);
+
+    $this->actingAs(User::factory()->admin()->create())
+        ->get(route('admin.exhibitors.show', $exhibitor))
+        ->assertOk()
+        ->assertDontSee('Print Result Cards');
+});
+
 it('fee summary on exhibitor detail is correct', function () {
     $section = ShowSection::factory()->create();
     $class = ShowClass::factory()->create(['show_section_id' => $section->id]);

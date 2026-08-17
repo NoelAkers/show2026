@@ -52,7 +52,7 @@
                     <flux:table.column>Type</flux:table.column>
                     <flux:table.column>Resident</flux:table.column>
                     <flux:table.column>Entries</flux:table.column>
-                    <flux:table.column>Fee Owed</flux:table.column>
+                    <flux:table.column>Balance Owed</flux:table.column>
                     <flux:table.column>Paid</flux:table.column>
                     <flux:table.column></flux:table.column>
                 </flux:table.columns>
@@ -67,7 +67,13 @@
                             <flux:table.cell>{{ ucfirst($exhibitor->type) }}</flux:table.cell>
                             <flux:table.cell>{{ $exhibitor->is_resident ? 'Yes' : 'No' }}</flux:table.cell>
                             <flux:table.cell>{{ $exhibitor->totalEntries() }}</flux:table.cell>
-                            <flux:table.cell>£{{ number_format($exhibitor->feeOwedPence() / 100, 2) }}</flux:table.cell>
+                            <flux:table.cell class="{{ $exhibitor->balancePence() > 0 ? 'text-amber-600 dark:text-amber-400' : 'text-green-600 dark:text-green-400' }}">
+                                @if ($exhibitor->balancePence() < 0)
+                                    −£{{ number_format(abs($exhibitor->balancePence()) / 100, 2) }} (refund owed)
+                                @else
+                                    £{{ number_format($exhibitor->balancePence() / 100, 2) }}
+                                @endif
+                            </flux:table.cell>
                             <flux:table.cell>
                                 @if ($exhibitor->has_paid)
                                     <flux:badge color="green">Paid</flux:badge>

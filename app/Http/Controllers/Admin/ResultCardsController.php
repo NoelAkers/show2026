@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Exhibitor;
 use App\Models\Result;
 use App\Models\ShowClass;
 use Illuminate\Http\RedirectResponse;
@@ -15,6 +16,7 @@ class ResultCardsController extends Controller
     {
         $filter = $request->query('filter', 'unprinted');
         $showClassId = $request->query('show_class_id');
+        $exhibitorId = $request->query('exhibitor_id');
 
         $query = Result::with([
             'entry.showClass.showSection',
@@ -32,6 +34,10 @@ class ResultCardsController extends Controller
 
         if ($showClassId) {
             $query->where('entries.show_class_id', $showClassId);
+        }
+
+        if ($exhibitorId) {
+            $query->where('entries.exhibitor_id', $exhibitorId);
         }
 
         if ($filter === 'unprinted') {
@@ -57,6 +63,7 @@ class ResultCardsController extends Controller
             'allCount' => $allCount,
             'unprintedCount' => $unprintedCount,
             'showClass' => $showClassId ? ShowClass::find($showClassId) : null,
+            'exhibitor' => $exhibitorId ? Exhibitor::find($exhibitorId) : null,
         ]);
     }
 

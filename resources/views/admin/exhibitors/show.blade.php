@@ -12,6 +12,9 @@
                 @if ($exhibitor->entries->isNotEmpty())
                     <flux:button :href="route('admin.exhibitors.labels', $exhibitor)" target="_blank" icon="printer">Print Labels</flux:button>
                 @endif
+                @if ($exhibitor->entries->contains(fn ($entry) => $entry->result?->placement))
+                    <flux:button :href="route('admin.result-cards', ['filter' => 'all', 'exhibitor_id' => $exhibitor->id])" target="_blank" icon="printer">Print Result Cards</flux:button>
+                @endif
                 <flux:button :href="route('admin.exhibitors.edit', $exhibitor)" wire:navigate>Edit</flux:button>
                 <form method="POST" action="{{ route('admin.exhibitors.destroy', $exhibitor) }}">
                     @csrf

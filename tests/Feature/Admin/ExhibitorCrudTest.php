@@ -206,6 +206,24 @@ it('admin can mark an exhibitor as paid', function () {
         ->and($fresh->amount_paid_pence)->toBe($exhibitor->feeOwedPence());
 });
 
+it('admin marking an exhibitor as paid nets off winnings so the balance settles to zero', function () {
+    $prizeLevel = PrizeLevel::factory()->create(['first_place_pence' => 300]);
+    $section = ShowSection::factory()->create();
+    $class = ShowClass::factory()->for($prizeLevel, 'prizeLevel')->create(['show_section_id' => $section->id]);
+    $exhibitor = Exhibitor::factory()->adult()->create(['has_paid' => false, 'amount_paid_pence' => 0]);
+    $entry = Entry::factory()->for($class, 'showClass')->for($exhibitor)->create();
+    Result::factory()->for($entry)->create(['placement' => '1st']);
+
+    $this->actingAs(exhibitorAdmin())
+        ->patch(route('admin.exhibitors.mark-paid', $exhibitor))
+        ->assertRedirect();
+
+    $fresh = $exhibitor->fresh();
+    expect($fresh->has_paid)->toBeTrue()
+        ->and($fresh->amount_paid_pence)->toBe($exhibitor->feeOwedPence() - 300)
+        ->and($fresh->balancePence())->toBe(0);
+});
+
 it('admin can mark an exhibitor as unpaid', function () {
     $exhibitor = Exhibitor::factory()->create(['has_paid' => true, 'amount_paid_pence' => 100]);
 

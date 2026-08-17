@@ -47,7 +47,7 @@ class ExhibitorController extends Controller
 
     public function show(Exhibitor $exhibitor): View
     {
-        $exhibitor->load('entries');
+        $exhibitor->load('entries.result');
 
         return view('admin.exhibitors.show', compact('exhibitor'));
     }
@@ -122,7 +122,7 @@ class ExhibitorController extends Controller
     {
         $exhibitor->update([
             'has_paid' => true,
-            'amount_paid_pence' => $exhibitor->feeOwedPence(),
+            'amount_paid_pence' => $exhibitor->feeOwedPence() - $exhibitor->winningsPence(),
         ]);
 
         return back()->with('success', "{$exhibitor->full_name} marked as paid.");
