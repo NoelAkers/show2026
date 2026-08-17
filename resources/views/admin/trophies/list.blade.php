@@ -32,11 +32,12 @@
         td {
             border: 1px solid #d1d5db;
             padding: 2mm 3mm;
-            vertical-align: top;
+            vertical-align: middle;
         }
 
         .trophy-name { font-weight: 700; }
         .trophy-description { color: #6b7280; }
+        .trophy-winner { font-weight: 700; }
         .no-winner { color: #9ca3af; }
 
         @media screen {
@@ -114,7 +115,7 @@
                 <thead>
                     <tr>
                         <th>Trophy</th>
-                        <th>Current Leader(s)</th>
+                        <th>Winner</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -132,11 +133,11 @@
                                     @if ($winners->isEmpty())
                                         <span class="no-winner">No winner yet</span>
                                     @else
-                                        {{ $winners->pluck('exhibitor')->pluck('full_name')->join(', ') }}
+                                        <span class="trophy-winner">{{ $winners->pluck('exhibitor')->pluck('full_name')->join(', ') }}</span>
                                     @endif
                                 @else
                                     @if ($trophy->winningEntry)
-                                        {{ $trophy->winningEntry->exhibitor->full_name }}
+                                        <span class="trophy-winner">{{ $trophy->winningEntry->exhibitor->full_name }}</span>
                                     @else
                                         <span class="no-winner">Not yet awarded</span>
                                     @endif

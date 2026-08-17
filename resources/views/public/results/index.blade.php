@@ -3,40 +3,58 @@
         <flux:heading size="xl">Results</flux:heading>
 
         @forelse ($sections as $section)
-            <div>
-                <flux:heading size="lg" class="mb-3">{{ $section->name }}</flux:heading>
+            @if ($loop->first)
+                <div class="flex flex-col gap-2" x-data="{ openSection: null }">
+            @endif
 
-                @foreach ($section->showClasses as $class)
-                    <div class="mb-4">
-                        <flux:subheading class="mb-2">{{ $class->id }}. {{ $class->name }}</flux:subheading>
+                <div class="overflow-hidden rounded-lg border border-zinc-200 dark:border-zinc-700">
+                    <button
+                        type="button"
+                        class="flex w-full items-center justify-between bg-zinc-50 px-4 py-3 text-left transition-colors hover:bg-zinc-100 dark:bg-zinc-800 dark:hover:bg-zinc-700/75"
+                        @click="openSection = (openSection === {{ $section->id }} ? null : {{ $section->id }})"
+                    >
+                        <flux:heading size="lg">{{ $section->name }}</flux:heading>
+                        <flux:icon.chevron-down
+                            class="size-4 text-zinc-400 transition-transform duration-200"
+                            x-bind:class="openSection === {{ $section->id }} ? 'rotate-180' : ''"
+                        />
+                    </button>
 
-                        @if ($class->entries->isEmpty())
-                            <flux:text class="text-zinc-500 italic">Results pending.</flux:text>
-                        @else
-                            <flux:table>
-                                <flux:table.columns>
-                                    <flux:table.column>Exhibitor</flux:table.column>
-                                    <flux:table.column>Placement</flux:table.column>
-                                </flux:table.columns>
-                                <flux:table.rows>
-                                    @foreach ($class->entries->sortBy(fn ($e) => match($e->result?->placement) { '1st' => 1, '2nd' => 2, '3rd' => 3, default => 4 }) as $entry)
-                                        <flux:table.row :key="$entry->id">
-                                            <flux:table.cell variant="strong">{{ $entry->exhibitor->full_name }}</flux:table.cell>
-                                            <flux:table.cell>
+                    <div
+                        x-show="openSection === {{ $section->id }}"
+                        x-transition:enter="transition duration-150"
+                        x-transition:enter-start="opacity-0"
+                        x-transition:enter-end="opacity-100"
+                        class="px-4 py-3"
+                    >
+                        @foreach ($section->showClasses as $class)
+                            <div class="{{ $loop->last ? '' : 'mb-3' }}">
+                                <p class="text-base font-bold text-zinc-900 dark:text-zinc-100">{{ $class->id }}. {{ $class->name }}</p>
+
+                                @if ($class->entries->isEmpty())
+                                    <p class="mt-0.5 text-sm text-zinc-500 italic">No entries.</p>
+                                @else
+                                    <div class="mt-0.5 flex flex-col">
+                                        @foreach ($class->entries->sortBy(fn ($e) => $e->result->placementRank()) as $entry)
+                                            <div class="flex items-center gap-3 py-0.5 text-sm">
+                                                <span class="w-36 shrink-0 truncate text-zinc-700 dark:text-zinc-300">{{ $entry->exhibitor->full_name }}</span>
                                                 @if ($entry->result?->placement)
-                                                    <flux:badge color="{{ match($entry->result->placement) { '1st' => 'red', '2nd' => 'blue', '3rd' => 'green', default => 'grey' } }}">
+                                                    <flux:badge size="sm" color="{{ $entry->result->badgeColour() }}" class="w-32 shrink-0 justify-center">
                                                         {{ $entry->result->placementLabel() }}
                                                     </flux:badge>
                                                 @endif
-                                            </flux:table.cell>
-                                        </flux:table.row>
-                                    @endforeach
-                                </flux:table.rows>
-                            </flux:table>
-                        @endif
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                @endif
+                            </div>
+                        @endforeach
                     </div>
-                @endforeach
-            </div>
+                </div>
+
+            @if ($loop->last)
+                </div>
+            @endif
         @empty
             <flux:text class="text-zinc-500">Results have not been published yet.</flux:text>
         @endforelse

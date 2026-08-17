@@ -1,33 +1,38 @@
 <x-layouts::public :title="__('Trophies')">
-    <div class="flex flex-col gap-4">
+    <div class="flex flex-col gap-6">
         <flux:heading size="xl">Trophies</flux:heading>
 
-        @forelse ($trophies as $trophy)
-            @php $winners = $trophy->winners(); @endphp
-            <div class="rounded-lg border border-zinc-200 p-4 dark:border-zinc-700">
-                <flux:heading size="lg">{{ $trophy->name }}</flux:heading>
-
-                @if ($trophy->description)
-                    <flux:text class="mt-1 mb-3">{{ $trophy->description }}</flux:text>
-                @endif
-
-                <div class="mt-2">
-                    @if ($winners->isEmpty())
-                        <flux:text class="text-zinc-500 italic">To be announced.</flux:text>
-                    @else
-                        <flux:text class="text-sm font-medium text-zinc-600 dark:text-zinc-400">
-                            {{ $winners->count() > 1 ? 'Winners' : 'Winner' }}:
-                        </flux:text>
-                        <ul class="mt-1 space-y-0.5">
-                            @foreach ($winners as $winner)
-                                <li class="font-semibold">{{ $winner['exhibitor']->full_name }}</li>
-                            @endforeach
-                        </ul>
-                    @endif
-                </div>
-            </div>
-        @empty
+        @if ($trophies->isEmpty())
             <flux:text class="text-zinc-500">No trophies have been configured yet.</flux:text>
-        @endforelse
+        @else
+            <div class="overflow-x-auto">
+                <flux:table>
+                    <flux:table.columns>
+                        <flux:table.column>Trophy</flux:table.column>
+                        <flux:table.column>Winner</flux:table.column>
+                    </flux:table.columns>
+                    <flux:table.rows>
+                        @foreach ($trophies as $trophy)
+                            @php $winners = $trophy->winners(); @endphp
+                            <flux:table.row :key="$trophy->id">
+                                <flux:table.cell class="align-top whitespace-normal wrap-break-word">
+                                    <div class="font-semibold text-zinc-900 dark:text-zinc-100">{{ $trophy->name }}</div>
+                                    @if ($trophy->description)
+                                        <div class="text-sm text-zinc-500">{{ $trophy->description }}</div>
+                                    @endif
+                                </flux:table.cell>
+                                <flux:table.cell class="align-top whitespace-normal wrap-break-word">
+                                    @if ($winners->isEmpty())
+                                        <span class="text-zinc-500 italic">To be announced.</span>
+                                    @else
+                                        <span class="font-semibold">{{ $winners->pluck('exhibitor')->pluck('full_name')->join(', ') }}</span>
+                                    @endif
+                                </flux:table.cell>
+                            </flux:table.row>
+                        @endforeach
+                    </flux:table.rows>
+                </flux:table>
+            </div>
+        @endif
     </div>
 </x-layouts::public>

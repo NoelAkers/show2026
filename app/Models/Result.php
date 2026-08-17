@@ -39,9 +39,9 @@ class Result extends Model
     public function placementLabel(): string
     {
         return match ($this->placement) {
-            '1st' => '1st Place',
-            '2nd' => '2nd Place',
-            '3rd' => '3rd Place',
+            '1st' => '1st',
+            '2nd' => '2nd',
+            '3rd' => '3rd',
             'highly_commended' => 'Highly Commended',
             default => 'No Placement',
         };

@@ -29,19 +29,20 @@
 
                 <div class="text-center">
                     <h2 class="text-2xl font-semibold tracking-tight text-zinc-900">Saturday 15 August 2026</h2>
-                    <h2 class="text-xl font-semibold tracking-tight text-zinc-900">Doors open 1.00 pm</h2>
+                    {{-- <h2 class="text-xl font-semibold tracking-tight text-zinc-900">Doors open 1.00 pm</h2> --}}
                 </div>
 
                 <div class="max-w-2xl px-8 py-7 text-center">
                     <p class="leading-relaxed text-zinc-700">
-                        It's our 105th show this year, we're hoping it will be bigger and better than ever. There's the traditional vegetable, fruit and flower classes displayed in the main hall. Baking and junior classes 
-                        will be in the school room and for the first time, art in the church. There will be refreshments, stalls and a tombola, we're also delighted to welcome back Drighlington Brass Band.
+                        Our 105th show was very successful, even the weather cooperated! Many thanks to the exhibitors who put in so much effort to make it a full show and to the Methodist Church for the use of their facilities; 
+                        the art display in the church was particularly impressive. Thanks also to the many volunteers who set up and closed the event, provided stewarding, refreshments and ran the always 
+                        popular tombola. We were also delighted to welcome back Drighlington Brass Band and a variety of stall holders.
                     </p>
                     <p class="mt-4 leading-relaxed text-zinc-700">
-                        If you're visiting, find out more <a href="{{ route('public.visitor-details') }}" class="text-zinc-900 underline underline-offset-2 transition-colors hover:text-zinc-600">here</a>.
+                        Results are available <a href="{{ route('public.results') }}" class="text-zinc-900 underline underline-offset-2 transition-colors hover:text-zinc-600">here</a>.
                     </p>
                     <p class="mt-4 leading-relaxed text-zinc-700">
-                        For exhibitors click <a href="{{ route('public.exhibitor-details') }}" class="text-zinc-900 underline underline-offset-2 transition-colors hover:text-zinc-600">here</a>.
+                        Trophy winners are listed <a href="{{ route('public.trophies') }}" class="text-zinc-900 underline underline-offset-2 transition-colors hover:text-zinc-600">here</a>.
                     </p>
                 </div>
             </main>
