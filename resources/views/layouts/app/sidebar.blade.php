@@ -17,6 +17,9 @@
 
                 @if (auth()->user()?->isAdmin())
                     <flux:sidebar.group :heading="__('Pre-show')" class="grid">
+                        <flux:sidebar.item icon="banknotes" :href="route('admin.prize-levels.index')" :current="request()->routeIs('admin.prize-levels.*')" wire:navigate>
+                            {{ __('Prize Levels') }}
+                        </flux:sidebar.item>
                         <flux:sidebar.item icon="rectangle-stack" :href="route('admin.show-sections.index')" :current="request()->routeIs('admin.show-sections.*')" wire:navigate>
                             {{ __('Sections') }}
                         </flux:sidebar.item>

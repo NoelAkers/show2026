@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\ExhibitorController;
 use App\Http\Controllers\Admin\JudgeController;
 use App\Http\Controllers\Admin\LeaderboardController;
 use App\Http\Controllers\Admin\PaperBackupController;
+use App\Http\Controllers\Admin\PrizeLevelController;
 use App\Http\Controllers\Admin\ResultCardsController;
 use App\Http\Controllers\Admin\ResultController as AdminResultController;
 use App\Http\Controllers\Admin\ShowClassController;
@@ -44,6 +45,7 @@ Route::prefix('exhibitor')->name('exhibitor.')->middleware(['auth', 'exhibitor']
 });
 
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(function () {
+    Route::resource('prize-levels', PrizeLevelController::class)->except(['show']);
     Route::resource('show-sections', ShowSectionController::class)->except(['show']);
     Route::resource('show-sections.show-classes', ShowClassController::class);
     Route::post('show-sections/{show_section}/show-classes/{show_class}/entries', [EntryController::class, 'store'])->name('show-sections.show-classes.entries.store');

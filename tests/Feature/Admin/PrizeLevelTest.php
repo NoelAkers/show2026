@@ -14,8 +14,8 @@ it('prize levels are seeded with correct values', function () {
 
     $standard = PrizeLevel::where('name', 'Standard')->firstOrFail();
     expect($standard->first_place_pence)->toBe(100)
-        ->and($standard->second_place_pence)->toBe(50)
-        ->and($standard->third_place_pence)->toBe(25);
+        ->and($standard->second_place_pence)->toBe(75)
+        ->and($standard->third_place_pence)->toBe(50);
 
     $top = PrizeLevel::where('name', 'Top')->firstOrFail();
     expect($top->first_place_pence)->toBe(500)
