@@ -22,6 +22,7 @@
                 <p class="mt-1 text-3xl font-bold text-zinc-900 dark:text-white">{{ $adultCount + $juniorCount }}</p>
                 <flux:text class="mt-1 text-sm text-zinc-500 dark:text-zinc-400">{{ $adultCount }} adult · {{ $juniorCount }} junior</flux:text>
                 <flux:text class="mt-1 text-sm text-zinc-500 dark:text-zinc-400">{{ $paidCount }} paid · {{ $unpaidCount }} unpaid</flux:text>
+                <flux:text class="mt-1 text-sm text-zinc-500 dark:text-zinc-400">£{{ number_format($totalReceivedPence / 100, 2) }} received · £{{ number_format($totalDuePence / 100, 2) }} due</flux:text>
             </div>
 
             {{-- Entries --}}

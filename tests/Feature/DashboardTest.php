@@ -98,3 +98,19 @@ test('correct paid and unpaid exhibitor count is displayed', function () {
         ->assertSee('3')
         ->assertSee('2 unpaid');
 });
+
+test('correct total received and due amounts are displayed', function () {
+    // has overpaid/paid in full: fee owed £0, £10.00 paid, so no balance due
+    Exhibitor::factory()->adult()->create(['amount_paid_pence' => 1000]);
+
+    // fee owed for 10 entries is £5.00 (10 × 50p), only £2.00 paid, so £3.00 due
+    $owingExhibitor = Exhibitor::factory()->adult()->create(['amount_paid_pence' => 200]);
+    $section = ShowSection::factory()->create();
+    $class = ShowClass::factory()->for($section)->create();
+    Entry::factory()->for($class)->for($owingExhibitor)->count(10)->create();
+
+    $this->actingAs(User::factory()->admin()->create())
+        ->get(route('dashboard'))
+        ->assertSee('£12.00 received')
+        ->assertSee('£3.00 due');
+});

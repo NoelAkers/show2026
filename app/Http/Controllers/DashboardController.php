@@ -37,6 +37,10 @@ class DashboardController extends Controller
         $paidCount = Exhibitor::where('type', 'adult')->where('has_paid', true)->count();
         $unpaidCount = Exhibitor::where('type', 'adult')->where('has_paid', false)->count();
 
+        $balances = Exhibitor::all()->map->balancePence();
+        $totalReceivedPence = Exhibitor::sum('amount_paid_pence');
+        $totalDuePence = $balances->filter(fn (int $balance) => $balance > 0)->sum();
+
         return view('dashboard', compact(
             'sectionCount',
             'classCount',
@@ -49,6 +53,8 @@ class DashboardController extends Controller
             'resultsOutstanding',
             'paidCount',
             'unpaidCount',
+            'totalReceivedPence',
+            'totalDuePence',
         ));
     }
 }
