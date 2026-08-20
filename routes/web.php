@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\EntryController;
 use App\Http\Controllers\Admin\ExhibitorController;
 use App\Http\Controllers\Admin\JudgeController;
 use App\Http\Controllers\Admin\LeaderboardController;
+use App\Http\Controllers\Admin\NetBalanceController;
 use App\Http\Controllers\Admin\PaperBackupController;
 use App\Http\Controllers\Admin\PrizeLevelController;
 use App\Http\Controllers\Admin\ResultCardsController;
@@ -57,6 +58,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     Route::post('exhibitors/{exhibitor}/add-entry', [ExhibitorController::class, 'storeEntry'])->name('exhibitors.store-entry');
     Route::get('exhibitors/{exhibitor}/labels', [ExhibitorController::class, 'labels'])->name('exhibitors.labels');
     Route::patch('exhibitors/{exhibitor}/update-payment', [ExhibitorController::class, 'updatePayment'])->name('exhibitors.update-payment');
+    Route::get('net-balances', NetBalanceController::class)->name('net-balances');
     Route::resource('users', UserController::class)->except(['show']);
     Route::resource('judges', JudgeController::class)->except(['show']);
     Route::resource('stewards', StewardController::class)->except(['show']);

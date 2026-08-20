@@ -41,6 +41,9 @@
                         <flux:sidebar.item icon="users" :href="route('admin.exhibitors.index')" :current="request()->routeIs('admin.exhibitors.*')" wire:navigate>
                             {{ __('Exhibitors') }}
                         </flux:sidebar.item>
+                        <flux:sidebar.item icon="banknotes" :href="route('admin.net-balances')" :current="request()->routeIs('admin.net-balances')" wire:navigate>
+                            {{ __('Net Balances') }}
+                        </flux:sidebar.item>
                     </flux:sidebar.group>
 
                     <flux:sidebar.group :heading="__('Results')" class="grid">
