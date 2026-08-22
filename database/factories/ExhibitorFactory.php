@@ -25,8 +25,6 @@ class ExhibitorFactory extends Factory
             'sort_name' => "{$lastName}, {$firstName}",
             'type' => 'adult',
             'is_resident' => false,
-            'has_paid' => false,
-            'amount_paid_pence' => 0,
             'is_novice' => true,
         ];
     }

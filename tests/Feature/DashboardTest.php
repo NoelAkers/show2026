@@ -5,6 +5,7 @@ use App\Models\Exhibitor;
 use App\Models\Result;
 use App\Models\ShowClass;
 use App\Models\ShowSection;
+use App\Models\Transaction;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -89,8 +90,18 @@ test('correct class counts are displayed', function () {
 });
 
 test('correct paid and unpaid exhibitor count is displayed', function () {
-    Exhibitor::factory()->adult()->count(3)->create(['has_paid' => true]);
-    Exhibitor::factory()->adult()->count(2)->create(['has_paid' => false]);
+    $section = ShowSection::factory()->create();
+    $class = ShowClass::factory()->for($section)->create();
+
+    $paidExhibitors = Exhibitor::factory()->adult()->count(3)->create();
+    $paidExhibitors->each(function (Exhibitor $exhibitor) use ($class) {
+        Entry::factory()->for($class)->for($exhibitor)->create();
+        Transaction::factory()->cashReceipt()->for($exhibitor)->create(['amount_pence' => $exhibitor->feeOwedPence()]);
+    });
+
+    $unpaidExhibitors = Exhibitor::factory()->adult()->count(2)->create();
+    $unpaidExhibitors->each(fn (Exhibitor $exhibitor) => Entry::factory()->for($class)->for($exhibitor)->create());
+
     Exhibitor::factory()->junior()->count(4)->create();
 
     $this->actingAs(User::factory()->admin()->create())
@@ -101,13 +112,15 @@ test('correct paid and unpaid exhibitor count is displayed', function () {
 
 test('correct total received and due amounts are displayed', function () {
     // has overpaid/paid in full: fee owed £0, £10.00 paid, so no balance due
-    Exhibitor::factory()->adult()->create(['amount_paid_pence' => 1000]);
+    $paidExhibitor = Exhibitor::factory()->adult()->create();
+    Transaction::factory()->cashReceipt()->for($paidExhibitor)->create(['amount_pence' => 1000]);
 
     // fee owed for 10 entries is £5.00 (10 × 50p), only £2.00 paid, so £3.00 due
-    $owingExhibitor = Exhibitor::factory()->adult()->create(['amount_paid_pence' => 200]);
+    $owingExhibitor = Exhibitor::factory()->adult()->create();
     $section = ShowSection::factory()->create();
     $class = ShowClass::factory()->for($section)->create();
     Entry::factory()->for($class)->for($owingExhibitor)->count(10)->create();
+    Transaction::factory()->cardPayment()->for($owingExhibitor)->create(['amount_pence' => 200]);
 
     $this->actingAs(User::factory()->admin()->create())
         ->get(route('dashboard'))

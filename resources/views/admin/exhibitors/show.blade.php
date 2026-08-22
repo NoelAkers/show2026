@@ -79,7 +79,7 @@
                     </div>
                     <div>
                         <dt class="font-medium text-zinc-500">Amount Paid</dt>
-                        <dd class="font-semibold">£{{ number_format($exhibitor->amount_paid_pence / 100, 2) }}</dd>
+                        <dd class="font-semibold">£{{ number_format($exhibitor->amountPaidPence() / 100, 2) }}</dd>
                     </div>
                     <div>
                         <dt class="font-medium text-zinc-500">Balance</dt>
@@ -94,7 +94,7 @@
                     <div>
                         <dt class="font-medium text-zinc-500">Payment Status</dt>
                         <dd>
-                            @if ($exhibitor->has_paid)
+                            @if ($exhibitor->hasPaid())
                                 <flux:badge color="green">Paid</flux:badge>
                             @else
                                 <flux:badge color="red">Unpaid</flux:badge>
@@ -104,34 +104,48 @@
                 </dl>
 
                 <div class="mt-4 flex flex-wrap items-end gap-4">
-                    <form method="POST" action="{{ route('admin.exhibitors.update-payment', $exhibitor) }}">
+                    <form method="POST" action="{{ route('admin.exhibitors.transactions.store', $exhibitor) }}">
                         @csrf
-                        @method('PATCH')
                         <flux:field>
-                            <flux:label>Amount Paid (pence)</flux:label>
-                            <div class="flex gap-2">
-                                <flux:input type="number" name="amount_paid_pence" :value="$exhibitor->amount_paid_pence" min="0" class="w-32" />
-                                <flux:button type="submit">Update</flux:button>
-                            </div>
+                            <flux:label>Amount (£)</flux:label>
+                            <flux:input type="number" name="amount_pounds" step="0.01" min="0.01" class="w-28" required />
                         </flux:field>
+                        <flux:field>
+                            <flux:label>Type</flux:label>
+                            <flux:select name="type">
+                                <flux:select.option value="cash_receipt">Cash receipt</flux:select.option>
+                                <flux:select.option value="card_payment">Card payment</flux:select.option>
+                                <flux:select.option value="cash_payment">Cash payment (refund/payout)</flux:select.option>
+                            </flux:select>
+                        </flux:field>
+                        <flux:button type="submit">Record Transaction</flux:button>
                     </form>
-
-                    <div class="flex gap-2">
-                        @if ($exhibitor->has_paid)
-                            <form method="POST" action="{{ route('admin.exhibitors.mark-unpaid', $exhibitor) }}">
-                                @csrf
-                                @method('PATCH')
-                                <flux:button variant="ghost" type="submit">Mark as Unpaid</flux:button>
-                            </form>
-                        @else
-                            <form method="POST" action="{{ route('admin.exhibitors.mark-paid', $exhibitor) }}">
-                                @csrf
-                                @method('PATCH')
-                                <flux:button variant="primary" type="submit">Mark as Paid</flux:button>
-                            </form>
-                        @endif
-                    </div>
                 </div>
+            </div>
+
+            <div class="rounded-lg border border-zinc-200 p-4 dark:border-zinc-700">
+                <flux:heading size="lg" class="mb-3">Transaction History</flux:heading>
+
+                @if ($exhibitor->transactions->isEmpty())
+                    <p class="text-sm text-zinc-500">No transactions recorded.</p>
+                @else
+                    <flux:table>
+                        <flux:table.columns>
+                            <flux:table.column>Date</flux:table.column>
+                            <flux:table.column>Type</flux:table.column>
+                            <flux:table.column>Amount</flux:table.column>
+                        </flux:table.columns>
+                        <flux:table.rows>
+                            @foreach ($exhibitor->transactions->sortByDesc('created_at') as $transaction)
+                                <flux:table.row :key="$transaction->id">
+                                    <flux:table.cell>{{ $transaction->created_at->format('d M Y H:i') }}</flux:table.cell>
+                                    <flux:table.cell>{{ str($transaction->type->value)->replace('_', ' ')->title() }}</flux:table.cell>
+                                    <flux:table.cell>£{{ number_format($transaction->amount_pence / 100, 2) }}</flux:table.cell>
+                                </flux:table.row>
+                            @endforeach
+                        </flux:table.rows>
+                    </flux:table>
+                @endif
             </div>
         </div>
 

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\TransactionType;
 use Database\Factories\ExhibitorFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -11,7 +12,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 #[Fillable([
     'user_id', 'first_name', 'last_name', 'full_name', 'sort_name', 'email',
-    'type', 'is_resident', 'has_paid', 'is_novice', 'amount_paid_pence',
+    'type', 'is_resident', 'is_novice',
 ])]
 class Exhibitor extends Model
 {
@@ -22,7 +23,6 @@ class Exhibitor extends Model
     {
         return [
             'is_resident' => 'boolean',
-            'has_paid' => 'boolean',
             'is_novice' => 'boolean',
         ];
     }
@@ -35,6 +35,11 @@ class Exhibitor extends Model
     public function entries(): HasMany
     {
         return $this->hasMany(Entry::class);
+    }
+
+    public function transactions(): HasMany
+    {
+        return $this->hasMany(Transaction::class);
     }
 
     public function isAdult(): bool
@@ -88,8 +93,25 @@ class Exhibitor extends Model
             });
     }
 
+    public function amountPaidPence(): int
+    {
+        $totals = $this->transactions()
+            ->selectRaw('type, SUM(amount_pence) as total')
+            ->groupBy('type')
+            ->pluck('total', 'type');
+
+        return ($totals[TransactionType::CashReceipt->value] ?? 0)
+            + ($totals[TransactionType::CardPayment->value] ?? 0)
+            - ($totals[TransactionType::CashPayment->value] ?? 0);
+    }
+
     public function balancePence(): int
     {
-        return $this->feeOwedPence() - $this->winningsPence() - $this->amount_paid_pence;
+        return $this->feeOwedPence() - $this->winningsPence() - $this->amountPaidPence();
+    }
+
+    public function hasPaid(): bool
+    {
+        return $this->balancePence() <= 0;
     }
 }

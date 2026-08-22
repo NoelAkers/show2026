@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\TransactionType;
 use App\Models\Entry;
 use App\Models\Exhibitor;
 use App\Models\Result;
 use App\Models\ShowClass;
 use App\Models\ShowSection;
+use App\Models\Transaction;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -34,11 +36,13 @@ class DashboardController extends Controller
         $entryCount = Entry::count();
         $resultsEntered = Result::whereNotNull('placement')->count();
         $resultsOutstanding = Entry::whereDoesntHave('result')->count();
-        $paidCount = Exhibitor::where('type', 'adult')->where('has_paid', true)->count();
-        $unpaidCount = Exhibitor::where('type', 'adult')->where('has_paid', false)->count();
+        $adultExhibitors = Exhibitor::where('type', 'adult')->get();
+        $paidCount = $adultExhibitors->filter->hasPaid()->count();
+        $unpaidCount = $adultExhibitors->count() - $paidCount;
 
         $balances = Exhibitor::all()->map->balancePence();
-        $totalReceivedPence = Exhibitor::sum('amount_paid_pence');
+        $totalReceivedPence = Transaction::whereIn('type', [TransactionType::CashReceipt->value, TransactionType::CardPayment->value])->sum('amount_pence')
+            - Transaction::where('type', TransactionType::CashPayment->value)->sum('amount_pence');
         $totalDuePence = $balances->filter(fn (int $balance) => $balance > 0)->sum();
 
         return view('dashboard', compact(

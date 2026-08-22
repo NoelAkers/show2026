@@ -2,10 +2,12 @@
 
 namespace App\Http\Requests\Admin;
 
+use App\Enums\TransactionType;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
-class UpdateExhibitorPaymentRequest extends FormRequest
+class StoreTransactionRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -21,7 +23,8 @@ class UpdateExhibitorPaymentRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'amount_paid_pence' => ['required', 'integer', 'min:0'],
+            'amount_pounds' => ['required', 'numeric', 'min:0.01'],
+            'type' => ['required', Rule::enum(TransactionType::class)],
         ];
     }
 }

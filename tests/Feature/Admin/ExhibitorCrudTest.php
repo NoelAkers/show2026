@@ -1,11 +1,13 @@
 <?php
 
+use App\Enums\TransactionType;
 use App\Models\Entry;
 use App\Models\Exhibitor;
 use App\Models\PrizeLevel;
 use App\Models\Result;
 use App\Models\ShowClass;
 use App\Models\ShowSection;
+use App\Models\Transaction;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -191,49 +193,78 @@ it('admin cannot delete an exhibitor who has entries', function () {
     $this->assertDatabaseHas('exhibitors', ['id' => $exhibitor->id]);
 });
 
-it('admin can mark an exhibitor as paid', function () {
+it('admin can record a cash receipt for an exhibitor', function () {
     $section = ShowSection::factory()->create();
     $class = ShowClass::factory()->create(['show_section_id' => $section->id]);
-    $exhibitor = Exhibitor::factory()->adult()->create(['has_paid' => false, 'amount_paid_pence' => 0]);
+    $exhibitor = Exhibitor::factory()->adult()->create();
     Entry::factory()->count(2)->create(['show_class_id' => $class->id, 'exhibitor_id' => $exhibitor->id]);
 
     $this->actingAs(exhibitorAdmin())
-        ->patch(route('admin.exhibitors.mark-paid', $exhibitor))
+        ->post(route('admin.exhibitors.transactions.store', $exhibitor), [
+            'amount_pounds' => number_format($exhibitor->feeOwedPence() / 100, 2, '.', ''),
+            'type' => 'cash_receipt',
+        ])
         ->assertRedirect();
 
     $fresh = $exhibitor->fresh();
-    expect($fresh->has_paid)->toBeTrue()
-        ->and($fresh->amount_paid_pence)->toBe($exhibitor->feeOwedPence());
+    expect($fresh->hasPaid())->toBeTrue()
+        ->and($fresh->amountPaidPence())->toBe($exhibitor->feeOwedPence());
+
+    $this->assertDatabaseHas('transactions', [
+        'exhibitor_id' => $exhibitor->id,
+        'amount_pence' => $exhibitor->feeOwedPence(),
+        'type' => TransactionType::CashReceipt->value,
+    ]);
 });
 
-it('admin marking an exhibitor as paid nets off winnings so the balance settles to zero', function () {
+it('recording a cash payment reduces the amount paid, e.g. for a winnings payout', function () {
     $prizeLevel = PrizeLevel::factory()->create(['first_place_pence' => 300]);
     $section = ShowSection::factory()->create();
     $class = ShowClass::factory()->for($prizeLevel, 'prizeLevel')->create(['show_section_id' => $section->id]);
-    $exhibitor = Exhibitor::factory()->adult()->create(['has_paid' => false, 'amount_paid_pence' => 0]);
+    $exhibitor = Exhibitor::factory()->adult()->create();
     $entry = Entry::factory()->for($class, 'showClass')->for($exhibitor)->create();
     Result::factory()->for($entry)->create(['placement' => '1st']);
 
+    // exhibitor pays fee owed in cash, then the show pays out their winnings in cash
     $this->actingAs(exhibitorAdmin())
-        ->patch(route('admin.exhibitors.mark-paid', $exhibitor))
+        ->post(route('admin.exhibitors.transactions.store', $exhibitor), [
+            'amount_pounds' => number_format($exhibitor->feeOwedPence() / 100, 2, '.', ''),
+            'type' => 'cash_receipt',
+        ])
+        ->assertRedirect();
+
+    $this->actingAs(exhibitorAdmin())
+        ->post(route('admin.exhibitors.transactions.store', $exhibitor), [
+            'amount_pounds' => '3.00',
+            'type' => 'cash_payment',
+        ])
         ->assertRedirect();
 
     $fresh = $exhibitor->fresh();
-    expect($fresh->has_paid)->toBeTrue()
-        ->and($fresh->amount_paid_pence)->toBe($exhibitor->feeOwedPence() - 300)
+    expect($fresh->amountPaidPence())->toBe($exhibitor->feeOwedPence() - 300)
         ->and($fresh->balancePence())->toBe(0);
 });
 
-it('admin can mark an exhibitor as unpaid', function () {
-    $exhibitor = Exhibitor::factory()->create(['has_paid' => true, 'amount_paid_pence' => 100]);
+it('amount_pounds must be a positive number when recording a transaction', function () {
+    $exhibitor = Exhibitor::factory()->create();
 
     $this->actingAs(exhibitorAdmin())
-        ->patch(route('admin.exhibitors.mark-unpaid', $exhibitor))
-        ->assertRedirect();
+        ->post(route('admin.exhibitors.transactions.store', $exhibitor), [
+            'amount_pounds' => '-10',
+            'type' => 'cash_receipt',
+        ])
+        ->assertSessionHasErrors('amount_pounds');
+});
 
-    $fresh = $exhibitor->fresh();
-    expect($fresh->has_paid)->toBeFalse()
-        ->and($fresh->amount_paid_pence)->toBe(0);
+it('type must be a valid transaction type when recording a transaction', function () {
+    $exhibitor = Exhibitor::factory()->create();
+
+    $this->actingAs(exhibitorAdmin())
+        ->post(route('admin.exhibitors.transactions.store', $exhibitor), [
+            'amount_pounds' => '10.00',
+            'type' => 'bitcoin',
+        ])
+        ->assertSessionHasErrors('type');
 });
 
 it('show page displays fee summary correctly', function () {
@@ -251,37 +282,20 @@ it('show page displays fee summary correctly', function () {
         ->assertSee('Balance');
 });
 
-it('admin can update amount paid for an exhibitor', function () {
-    $exhibitor = Exhibitor::factory()->create(['amount_paid_pence' => 0]);
-
-    $this->actingAs(exhibitorAdmin())
-        ->patch(route('admin.exhibitors.update-payment', $exhibitor), ['amount_paid_pence' => 75])
-        ->assertRedirect();
-
-    expect($exhibitor->fresh()->amount_paid_pence)->toBe(75);
-});
-
-it('amount_paid_pence must be a non-negative integer', function () {
-    $exhibitor = Exhibitor::factory()->create();
-
-    $this->actingAs(exhibitorAdmin())
-        ->patch(route('admin.exhibitors.update-payment', $exhibitor), ['amount_paid_pence' => -10])
-        ->assertSessionHasErrors('amount_paid_pence');
-});
-
 it('balance is zero when amount paid equals fee owed', function () {
     $section = ShowSection::factory()->create();
     $class = ShowClass::factory()->create(['show_section_id' => $section->id]);
-    $exhibitor = Exhibitor::factory()->adult()->create(['amount_paid_pence' => 0]);
+    $exhibitor = Exhibitor::factory()->adult()->create();
     Entry::factory()->count(2)->create(['show_class_id' => $class->id, 'exhibitor_id' => $exhibitor->id]);
 
-    $exhibitor->update(['amount_paid_pence' => $exhibitor->feeOwedPence()]);
+    Transaction::factory()->cashReceipt()->for($exhibitor)->create(['amount_pence' => $exhibitor->feeOwedPence()]);
 
     expect($exhibitor->balancePence())->toBe(0);
 });
 
 it('balance is negative when overpaid', function () {
-    $exhibitor = Exhibitor::factory()->adult()->create(['amount_paid_pence' => 500]);
+    $exhibitor = Exhibitor::factory()->adult()->create();
+    Transaction::factory()->cashReceipt()->for($exhibitor)->create(['amount_pence' => 500]);
 
     // no entries, so fee owed = 0; 500 pence paid = refund owed
     expect($exhibitor->balancePence())->toBe(-500);
@@ -392,7 +406,7 @@ it('balance is reduced by winnings', function () {
         'third_place_pence' => 50,
     ]);
     $class = ShowClass::factory()->for($prizeLevel, 'prizeLevel')->create();
-    $exhibitor = Exhibitor::factory()->adult()->create(['amount_paid_pence' => 0]);
+    $exhibitor = Exhibitor::factory()->adult()->create();
     $entry = Entry::factory()->for($class, 'showClass')->for($exhibitor)->create();
     Result::factory()->for($entry)->create(['placement' => '1st']);
 

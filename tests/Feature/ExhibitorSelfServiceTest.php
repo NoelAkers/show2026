@@ -1,6 +1,8 @@
 <?php
 
+use App\Models\Entry;
 use App\Models\Exhibitor;
+use App\Models\ShowClass;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -189,10 +191,10 @@ it('exhibitor email must be a valid email address on profile update', function (
     'jane@doe', // no TLD — accepted by Laravel's default RFC email validator, so must reject explicitly
 ]);
 
-it('exhibitor cannot update has_paid via the profile update endpoint', function () {
+it('exhibitor cannot record a payment via the profile update endpoint', function () {
     $user = User::factory()->withExhibitor()->create();
     $exhibitor = $user->exhibitor;
-    $exhibitor->update(['has_paid' => false]);
+    Entry::factory()->for(ShowClass::factory())->for($exhibitor)->create();
 
     $this->actingAs($user)->put(route('exhibitor.profile.update'), [
         'first_name' => 'Jane',
@@ -205,8 +207,9 @@ it('exhibitor cannot update has_paid via the profile update endpoint', function 
     ]);
 
     $exhibitor->refresh();
-    expect($exhibitor->has_paid)->toBeFalse();
-    expect($exhibitor->amount_paid_pence)->toBe(0);
+    expect($exhibitor->hasPaid())->toBeFalse();
+    expect($exhibitor->amountPaidPence())->toBe(0);
+    expect($exhibitor->transactions)->toBeEmpty();
 });
 
 it('profile update requires all required fields', function () {

@@ -75,7 +75,7 @@
                                 @endif
                             </flux:table.cell>
                             <flux:table.cell>
-                                @if ($exhibitor->has_paid)
+                                @if ($exhibitor->hasPaid())
                                     <flux:badge color="green">Paid</flux:badge>
                                 @else
                                     <flux:badge color="red">Unpaid</flux:badge>
@@ -85,19 +85,6 @@
                                 <div class="flex gap-2">
                                     <flux:button size="sm" variant="primary" :href="route('admin.exhibitors.add-entry', $exhibitor)" wire:navigate>Add Entries</flux:button>
                                     <flux:button size="sm" :href="route('admin.exhibitors.edit', $exhibitor)" wire:navigate>Edit</flux:button>
-                                    @if ($exhibitor->has_paid)
-                                        <form method="POST" action="{{ route('admin.exhibitors.mark-unpaid', $exhibitor) }}">
-                                            @csrf
-                                            @method('PATCH')
-                                            <flux:button size="sm" variant="ghost" type="submit">Mark Unpaid</flux:button>
-                                        </form>
-                                    @else
-                                        <form method="POST" action="{{ route('admin.exhibitors.mark-paid', $exhibitor) }}">
-                                            @csrf
-                                            @method('PATCH')
-                                            <flux:button size="sm" variant="primary" type="submit">Mark Paid</flux:button>
-                                        </form>
-                                    @endif
                                 </div>
                             </flux:table.cell>
                         </flux:table.row>

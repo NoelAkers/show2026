@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\StoreExhibitorEntryRequest;
 use App\Http\Requests\Admin\StoreExhibitorRequest;
-use App\Http\Requests\Admin\UpdateExhibitorPaymentRequest;
+use App\Http\Requests\Admin\StoreTransactionRequest;
 use App\Http\Requests\Admin\UpdateExhibitorRequest;
 use App\Models\Entry;
 use App\Models\Exhibitor;
@@ -21,9 +21,12 @@ class ExhibitorController extends Controller
             ->when($request->filled('search'), fn ($q) => $q->where('full_name', 'like', '%'.$request->search.'%'))
             ->when($request->filled('type'), fn ($q) => $q->where('type', $request->type))
             ->when($request->filled('is_resident'), fn ($q) => $q->where('is_resident', (bool) $request->is_resident))
-            ->when($request->filled('has_paid'), fn ($q) => $q->where('has_paid', (bool) $request->has_paid))
             ->orderBy('sort_name')
-            ->get();
+            ->get()
+            ->when(
+                $request->filled('has_paid'),
+                fn ($exhibitors) => $exhibitors->filter(fn (Exhibitor $exhibitor) => $exhibitor->hasPaid() === (bool) $request->has_paid)->values()
+            );
 
         return view('admin.exhibitors.index', compact('exhibitors'));
     }
@@ -118,30 +121,13 @@ class ExhibitorController extends Controller
         return view('admin.exhibitors.labels', compact('exhibitor', 'entries'));
     }
 
-    public function markPaid(Exhibitor $exhibitor): RedirectResponse
+    public function storeTransaction(StoreTransactionRequest $request, Exhibitor $exhibitor): RedirectResponse
     {
-        $exhibitor->update([
-            'has_paid' => true,
-            'amount_paid_pence' => $exhibitor->feeOwedPence() - $exhibitor->winningsPence(),
+        $exhibitor->transactions()->create([
+            'amount_pence' => (int) round($request->validated('amount_pounds') * 100),
+            'type' => $request->validated('type'),
         ]);
 
-        return back()->with('success', "{$exhibitor->full_name} marked as paid.");
-    }
-
-    public function markUnpaid(Exhibitor $exhibitor): RedirectResponse
-    {
-        $exhibitor->update([
-            'has_paid' => false,
-            'amount_paid_pence' => 0,
-        ]);
-
-        return back()->with('success', "{$exhibitor->full_name} marked as unpaid.");
-    }
-
-    public function updatePayment(UpdateExhibitorPaymentRequest $request, Exhibitor $exhibitor): RedirectResponse
-    {
-        $exhibitor->update($request->validated());
-
-        return back()->with('success', 'Payment amount updated.');
+        return back()->with('success', 'Transaction recorded.');
     }
 }

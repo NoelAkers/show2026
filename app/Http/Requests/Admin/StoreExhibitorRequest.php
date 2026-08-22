@@ -23,7 +23,6 @@ class StoreExhibitorRequest extends FormRequest
             'email' => ['nullable', 'email:filter', 'max:255'],
             'type' => ['required', 'in:adult,junior'],
             'is_resident' => ['boolean'],
-            'has_paid' => ['boolean'],
             'is_novice' => ['boolean'],
         ];
     }

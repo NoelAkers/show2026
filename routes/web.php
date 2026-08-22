@@ -52,12 +52,10 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     Route::post('show-sections/{show_section}/show-classes/{show_class}/entries', [EntryController::class, 'store'])->name('show-sections.show-classes.entries.store');
     Route::delete('show-sections/{show_section}/show-classes/{show_class}/entries/{entry}', [EntryController::class, 'destroy'])->name('show-sections.show-classes.entries.destroy');
     Route::resource('exhibitors', ExhibitorController::class);
-    Route::patch('exhibitors/{exhibitor}/mark-paid', [ExhibitorController::class, 'markPaid'])->name('exhibitors.mark-paid');
-    Route::patch('exhibitors/{exhibitor}/mark-unpaid', [ExhibitorController::class, 'markUnpaid'])->name('exhibitors.mark-unpaid');
+    Route::post('exhibitors/{exhibitor}/transactions', [ExhibitorController::class, 'storeTransaction'])->name('exhibitors.transactions.store');
     Route::get('exhibitors/{exhibitor}/add-entry', [ExhibitorController::class, 'addEntry'])->name('exhibitors.add-entry');
     Route::post('exhibitors/{exhibitor}/add-entry', [ExhibitorController::class, 'storeEntry'])->name('exhibitors.store-entry');
     Route::get('exhibitors/{exhibitor}/labels', [ExhibitorController::class, 'labels'])->name('exhibitors.labels');
-    Route::patch('exhibitors/{exhibitor}/update-payment', [ExhibitorController::class, 'updatePayment'])->name('exhibitors.update-payment');
     Route::get('net-balances', NetBalanceController::class)->name('net-balances');
     Route::resource('users', UserController::class)->except(['show']);
     Route::resource('judges', JudgeController::class)->except(['show']);
