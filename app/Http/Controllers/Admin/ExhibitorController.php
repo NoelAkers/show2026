@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Enums\TransactionType;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\StoreExhibitorEntryRequest;
 use App\Http\Requests\Admin\StoreExhibitorRequest;
@@ -123,9 +124,23 @@ class ExhibitorController extends Controller
 
     public function storeTransaction(StoreTransactionRequest $request, Exhibitor $exhibitor): RedirectResponse
     {
+        $type = TransactionType::from($request->validated('type'));
+        $amountPounds = $request->validated('amount_pounds');
+
+        $amountPence = $amountPounds !== null
+            ? (int) round($amountPounds * 100)
+            : match ($type) {
+                TransactionType::CashReceipt, TransactionType::CardPayment => $exhibitor->outstandingFromExhibitorPence(),
+                TransactionType::CashPayment => $exhibitor->owedToExhibitorPence(),
+            };
+
+        if ($amountPence <= 0) {
+            return back()->with('error', 'No amount is due, so no transaction was recorded.');
+        }
+
         $exhibitor->transactions()->create([
-            'amount_pence' => (int) round($request->validated('amount_pounds') * 100),
-            'type' => $request->validated('type'),
+            'amount_pence' => $amountPence,
+            'type' => $type,
         ]);
 
         return back()->with('success', 'Transaction recorded.');

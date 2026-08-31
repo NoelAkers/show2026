@@ -93,16 +93,23 @@ class Exhibitor extends Model
             });
     }
 
+    public function receivedFromExhibitorPence(): int
+    {
+        return $this->transactions()
+            ->whereIn('type', [TransactionType::CashReceipt, TransactionType::CardPayment])
+            ->sum('amount_pence');
+    }
+
+    public function paidToExhibitorPence(): int
+    {
+        return $this->transactions()
+            ->where('type', TransactionType::CashPayment)
+            ->sum('amount_pence');
+    }
+
     public function amountPaidPence(): int
     {
-        $totals = $this->transactions()
-            ->selectRaw('type, SUM(amount_pence) as total')
-            ->groupBy('type')
-            ->pluck('total', 'type');
-
-        return ($totals[TransactionType::CashReceipt->value] ?? 0)
-            + ($totals[TransactionType::CardPayment->value] ?? 0)
-            - ($totals[TransactionType::CashPayment->value] ?? 0);
+        return $this->receivedFromExhibitorPence() - $this->paidToExhibitorPence();
     }
 
     public function balancePence(): int
@@ -110,8 +117,36 @@ class Exhibitor extends Model
         return $this->feeOwedPence() - $this->winningsPence() - $this->amountPaidPence();
     }
 
+    /**
+     * Signed balance owed to the exhibitor: positive means the show owes
+     * the exhibitor money, negative means the exhibitor owes the show.
+     */
+    public function balanceDueToExhibitorPence(): int
+    {
+        return -$this->balancePence();
+    }
+
     public function hasPaid(): bool
     {
         return $this->balancePence() <= 0;
+    }
+
+    /**
+     * Default amount for a "from exhibitor" transaction: the net balance
+     * owed by the exhibitor to the show, i.e. the entry fee outstanding
+     * after payments already received, offset by any winnings due.
+     */
+    public function outstandingFromExhibitorPence(): int
+    {
+        return max(0, $this->balancePence());
+    }
+
+    /**
+     * Default amount for a "to exhibitor" transaction: winnings and any
+     * overpayment not yet paid out.
+     */
+    public function owedToExhibitorPence(): int
+    {
+        return max(0, $this->balanceDueToExhibitorPence());
     }
 }

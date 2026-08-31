@@ -86,6 +86,6 @@ it('fee summary on exhibitor detail is correct', function () {
         ->get(route('admin.exhibitors.show', $exhibitor))
         ->assertOk()
         ->assertSee($expectedFee)
-        ->assertSee('Amount Paid')
-        ->assertSee('Balance');
+        ->assertSee('Amount received from exhibitor')
+        ->assertSee('Balance due to exhibitor');
 });

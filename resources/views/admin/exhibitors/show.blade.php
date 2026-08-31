@@ -78,49 +78,50 @@
                         </dd>
                     </div>
                     <div>
-                        <dt class="font-medium text-zinc-500">Amount Paid</dt>
-                        <dd class="font-semibold">£{{ number_format($exhibitor->amountPaidPence() / 100, 2) }}</dd>
+                        <dt class="font-medium text-zinc-500">Amount received from exhibitor</dt>
+                        <dd class="font-semibold">£{{ number_format($exhibitor->receivedFromExhibitorPence() / 100, 2) }}</dd>
                     </div>
                     <div>
-                        <dt class="font-medium text-zinc-500">Balance</dt>
-                        <dd class="font-semibold {{ $exhibitor->balancePence() > 0 ? 'text-amber-600 dark:text-amber-400' : 'text-green-600 dark:text-green-400' }}">
-                            @if ($exhibitor->balancePence() < 0)
-                                −£{{ number_format(abs($exhibitor->balancePence()) / 100, 2) }} (refund owed)
+                        <dt class="font-medium text-zinc-500">Amount paid to exhibitor</dt>
+                        <dd class="font-semibold">£{{ number_format($exhibitor->paidToExhibitorPence() / 100, 2) }}</dd>
+                    </div>
+                    <div>
+                        <dt class="font-medium text-zinc-500">Balance due to exhibitor</dt>
+                        <dd class="font-semibold {{ $exhibitor->balanceDueToExhibitorPence() < 0 ? 'text-amber-600 dark:text-amber-400' : 'text-green-600 dark:text-green-400' }}">
+                            @if ($exhibitor->balanceDueToExhibitorPence() < 0)
+                                −£{{ number_format(abs($exhibitor->balanceDueToExhibitorPence()) / 100, 2) }} (owed by exhibitor)
                             @else
-                                £{{ number_format($exhibitor->balancePence() / 100, 2) }}
+                                £{{ number_format($exhibitor->balanceDueToExhibitorPence() / 100, 2) }}
                             @endif
                         </dd>
                     </div>
                     <div>
                         <dt class="font-medium text-zinc-500">Payment Status</dt>
                         <dd>
-                            @if ($exhibitor->hasPaid())
-                                <flux:badge color="green">Paid</flux:badge>
+                            @if ($exhibitor->balancePence() === 0)
+                                <flux:badge color="green">Settled</flux:badge>
+                            @elseif ($exhibitor->balancePence() > 0)
+                                <flux:badge color="amber">Owes £{{ number_format($exhibitor->balancePence() / 100, 2) }}</flux:badge>
                             @else
-                                <flux:badge color="red">Unpaid</flux:badge>
+                                <flux:badge color="green">Owed £{{ number_format(abs($exhibitor->balancePence()) / 100, 2) }}</flux:badge>
                             @endif
                         </dd>
                     </div>
                 </dl>
 
                 <div class="mt-4 flex flex-wrap items-end gap-4">
-                    <form method="POST" action="{{ route('admin.exhibitors.transactions.store', $exhibitor) }}">
+                    <form method="POST" action="{{ route('admin.exhibitors.transactions.store', $exhibitor) }}" class="flex flex-wrap items-end gap-2">
                         @csrf
+                        <flux:button type="submit" name="type" value="cash_receipt">From exhibitor (cash)</flux:button>
+                        <flux:button type="submit" name="type" value="card_payment">From exhibitor (card)</flux:button>
+                        <flux:button type="submit" name="type" value="cash_payment">To exhibitor</flux:button>
                         <flux:field>
                             <flux:label>Amount (£)</flux:label>
-                            <flux:input type="number" name="amount_pounds" step="0.01" min="0.01" class="w-28" required />
+                            <flux:input type="number" name="amount_pounds" step="0.01" min="0.01" class="w-28" placeholder="auto" />
                         </flux:field>
-                        <flux:field>
-                            <flux:label>Type</flux:label>
-                            <flux:select name="type">
-                                <flux:select.option value="cash_receipt">Cash receipt</flux:select.option>
-                                <flux:select.option value="card_payment">Card payment</flux:select.option>
-                                <flux:select.option value="cash_payment">Cash payment (refund/payout)</flux:select.option>
-                            </flux:select>
-                        </flux:field>
-                        <flux:button type="submit">Record Transaction</flux:button>
                     </form>
                 </div>
+                <p class="mt-2 text-xs text-zinc-500">Leave amount blank to use the balance owed, net of winnings (for "From exhibitor") or the amount owed to the exhibitor (for "To exhibitor").</p>
             </div>
 
             <div class="rounded-lg border border-zinc-200 p-4 dark:border-zinc-700">
@@ -139,7 +140,7 @@
                             @foreach ($exhibitor->transactions->sortByDesc('created_at') as $transaction)
                                 <flux:table.row :key="$transaction->id">
                                     <flux:table.cell>{{ $transaction->created_at->format('d M Y H:i') }}</flux:table.cell>
-                                    <flux:table.cell>{{ str($transaction->type->value)->replace('_', ' ')->title() }}</flux:table.cell>
+                                    <flux:table.cell>{{ $transaction->type->label() }}</flux:table.cell>
                                     <flux:table.cell>£{{ number_format($transaction->amount_pence / 100, 2) }}</flux:table.cell>
                                 </flux:table.row>
                             @endforeach

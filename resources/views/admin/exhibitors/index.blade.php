@@ -52,8 +52,8 @@
                     <flux:table.column>Type</flux:table.column>
                     <flux:table.column>Resident</flux:table.column>
                     <flux:table.column>Entries</flux:table.column>
-                    <flux:table.column>Balance Owed</flux:table.column>
-                    <flux:table.column>Paid</flux:table.column>
+                    <flux:table.column>Financials</flux:table.column>
+                    <flux:table.column>Status</flux:table.column>
                     <flux:table.column></flux:table.column>
                 </flux:table.columns>
                 <flux:table.rows>
@@ -67,24 +67,39 @@
                             <flux:table.cell>{{ ucfirst($exhibitor->type) }}</flux:table.cell>
                             <flux:table.cell>{{ $exhibitor->is_resident ? 'Yes' : 'No' }}</flux:table.cell>
                             <flux:table.cell>{{ $exhibitor->totalEntries() }}</flux:table.cell>
-                            <flux:table.cell class="{{ $exhibitor->balancePence() > 0 ? 'text-amber-600 dark:text-amber-400' : 'text-green-600 dark:text-green-400' }}">
-                                @if ($exhibitor->balancePence() < 0)
-                                    −£{{ number_format(abs($exhibitor->balancePence()) / 100, 2) }} (refund owed)
+                            <flux:table.cell>
+                                <dl class="space-y-0.5 text-xs whitespace-nowrap">
+                                    <div><dt class="inline text-zinc-500">Received:</dt> £{{ number_format($exhibitor->receivedFromExhibitorPence() / 100, 2) }}</div>
+                                    <div><dt class="inline text-zinc-500">Paid out:</dt> £{{ number_format($exhibitor->paidToExhibitorPence() / 100, 2) }}</div>
+                                    <div class="font-semibold {{ $exhibitor->balanceDueToExhibitorPence() < 0 ? 'text-amber-600 dark:text-amber-400' : 'text-green-600 dark:text-green-400' }}">
+                                        <dt class="inline font-normal text-zinc-500">Balance:</dt>
+                                        @if ($exhibitor->balanceDueToExhibitorPence() < 0)
+                                            −£{{ number_format(abs($exhibitor->balanceDueToExhibitorPence()) / 100, 2) }}
+                                        @else
+                                            £{{ number_format($exhibitor->balanceDueToExhibitorPence() / 100, 2) }}
+                                        @endif
+                                    </div>
+                                </dl>
+                            </flux:table.cell>
+                            <flux:table.cell>
+                                @if ($exhibitor->balancePence() === 0)
+                                    <flux:badge color="green">Settled</flux:badge>
+                                @elseif ($exhibitor->balancePence() > 0)
+                                    <flux:badge color="amber">Owes £{{ number_format($exhibitor->balancePence() / 100, 2) }}</flux:badge>
                                 @else
-                                    £{{ number_format($exhibitor->balancePence() / 100, 2) }}
+                                    <flux:badge color="green">Owed £{{ number_format(abs($exhibitor->balancePence()) / 100, 2) }}</flux:badge>
                                 @endif
                             </flux:table.cell>
                             <flux:table.cell>
-                                @if ($exhibitor->hasPaid())
-                                    <flux:badge color="green">Paid</flux:badge>
-                                @else
-                                    <flux:badge color="red">Unpaid</flux:badge>
-                                @endif
-                            </flux:table.cell>
-                            <flux:table.cell>
-                                <div class="flex gap-2">
+                                <div class="flex flex-wrap items-center gap-2">
                                     <flux:button size="sm" variant="primary" :href="route('admin.exhibitors.add-entry', $exhibitor)" wire:navigate>Add Entries</flux:button>
                                     <flux:button size="sm" :href="route('admin.exhibitors.edit', $exhibitor)" wire:navigate>Edit</flux:button>
+                                    <form method="POST" action="{{ route('admin.exhibitors.transactions.store', $exhibitor) }}" class="flex flex-wrap gap-2">
+                                        @csrf
+                                        <flux:button size="sm" type="submit" name="type" value="cash_receipt">Cash in</flux:button>
+                                        <flux:button size="sm" type="submit" name="type" value="card_payment">Card in</flux:button>
+                                        <flux:button size="sm" type="submit" name="type" value="cash_payment">Pay out</flux:button>
+                                    </form>
                                 </div>
                             </flux:table.cell>
                         </flux:table.row>

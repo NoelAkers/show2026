@@ -23,7 +23,7 @@ class StoreTransactionRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'amount_pounds' => ['required', 'numeric', 'min:0.01'],
+            'amount_pounds' => ['nullable', 'numeric', 'min:0.01'],
             'type' => ['required', Rule::enum(TransactionType::class)],
         ];
     }

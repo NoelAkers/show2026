@@ -256,6 +256,78 @@ it('amount_pounds must be a positive number when recording a transaction', funct
         ->assertSessionHasErrors('amount_pounds');
 });
 
+it('recording a cash receipt with no amount defaults to the outstanding fee', function () {
+    $section = ShowSection::factory()->create();
+    $class = ShowClass::factory()->create(['show_section_id' => $section->id]);
+    $exhibitor = Exhibitor::factory()->adult()->create();
+    Entry::factory()->count(2)->create(['show_class_id' => $class->id, 'exhibitor_id' => $exhibitor->id]);
+
+    $this->actingAs(exhibitorAdmin())
+        ->post(route('admin.exhibitors.transactions.store', $exhibitor), [
+            'type' => 'cash_receipt',
+        ])
+        ->assertRedirect();
+
+    $this->assertDatabaseHas('transactions', [
+        'exhibitor_id' => $exhibitor->id,
+        'amount_pence' => $exhibitor->feeOwedPence(),
+        'type' => TransactionType::CashReceipt->value,
+    ]);
+});
+
+it('recording a cash receipt with no amount nets off winnings due against the fee owed', function () {
+    $prizeLevel = PrizeLevel::factory()->create(['first_place_pence' => 300]);
+    $section = ShowSection::factory()->create();
+    $class = ShowClass::factory()->for($prizeLevel, 'prizeLevel')->create(['show_section_id' => $section->id]);
+    $exhibitor = Exhibitor::factory()->adult()->create();
+    Entry::factory()->count(6)->create(['show_class_id' => $class->id, 'exhibitor_id' => $exhibitor->id]);
+    $entry = Entry::factory()->for($class, 'showClass')->for($exhibitor)->create();
+    Result::factory()->for($entry)->create(['placement' => '1st']);
+
+    // 7 entries owed at the fee rate, minus 300p of winnings due
+    $this->actingAs(exhibitorAdmin())
+        ->post(route('admin.exhibitors.transactions.store', $exhibitor), [
+            'type' => 'cash_receipt',
+        ])
+        ->assertRedirect();
+
+    $this->assertDatabaseHas('transactions', [
+        'exhibitor_id' => $exhibitor->id,
+        'amount_pence' => $exhibitor->feeOwedPence() - 300,
+        'type' => TransactionType::CashReceipt->value,
+    ]);
+});
+
+it('recording a payout with no amount defaults to the amount owed to the exhibitor', function () {
+    $exhibitor = Exhibitor::factory()->adult()->create();
+    Transaction::factory()->cashReceipt()->for($exhibitor)->create(['amount_pence' => 700]);
+
+    $this->actingAs(exhibitorAdmin())
+        ->post(route('admin.exhibitors.transactions.store', $exhibitor), [
+            'type' => 'cash_payment',
+        ])
+        ->assertRedirect();
+
+    $this->assertDatabaseHas('transactions', [
+        'exhibitor_id' => $exhibitor->id,
+        'amount_pence' => 700,
+        'type' => TransactionType::CashPayment->value,
+    ]);
+});
+
+it('recording a transaction with no amount and nothing due records no transaction', function () {
+    $exhibitor = Exhibitor::factory()->adult()->create();
+
+    $this->actingAs(exhibitorAdmin())
+        ->post(route('admin.exhibitors.transactions.store', $exhibitor), [
+            'type' => 'cash_receipt',
+        ])
+        ->assertRedirect()
+        ->assertSessionHas('error');
+
+    $this->assertDatabaseCount('transactions', 0);
+});
+
 it('type must be a valid transaction type when recording a transaction', function () {
     $exhibitor = Exhibitor::factory()->create();
 
@@ -278,8 +350,8 @@ it('show page displays fee summary correctly', function () {
         ->assertOk()
         ->assertSee('3')         // total entries
         ->assertSee('£1.50')     // fee owed: 3 × 50p = £1.50
-        ->assertSee('Amount Paid')
-        ->assertSee('Balance');
+        ->assertSee('Amount received from exhibitor')
+        ->assertSee('Balance due to exhibitor');
 });
 
 it('balance is zero when amount paid equals fee owed', function () {
